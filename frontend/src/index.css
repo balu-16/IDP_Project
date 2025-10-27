@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* Import Tailwind's base styles */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Coffee Color Palette Design System */
+
+@layer base {
+  :root {
+    /* Coffee Palette - Light theme not used, keeping for compatibility */
+    --deep-black: 16 82% 1%;
+    --charcoal: 86 10% 4%;
+    --charcoal-ink: 86 7% 5%;
+    --dark-espresso: 20 73% 10%;
+    --roast-brown: 19 80% 19%;
+    --mocha: 12 42% 29%;
+    --caramel: 33 37% 45%;
+    --burnt-amber: 33 48% 41%;
+    --honey: 39 67% 52%;
+    --toffee: 33 51% 46%;
+    --latte-beige: 28 63% 78%;
+    --oat-milk: 33 31% 67%;
+    --cashmere: 33 24% 68%;
+    --sandstone: 33 19% 71%;
+    --cocoa: 27 73% 17%;
+    --walnut: 24 66% 29%;
+
+    /* Core Theme Variables */
+    --background: var(--deep-black);
+    --surface: var(--charcoal);
+    --foreground: 210 20% 98%;
+
+    --card: var(--charcoal);
+    --card-foreground: 210 20% 98%;
+
+    --popover: var(--charcoal);
+    --popover-foreground: 210 20% 98%;
+
+    --primary: var(--caramel);
+    --primary-foreground: var(--deep-black);
+
+    --secondary: var(--cashmere);
+    --secondary-foreground: var(--deep-black);
+
+    --muted: var(--dark-espresso);
+    --muted-foreground: var(--sandstone);
+
+    --accent: var(--honey);
+    --accent-foreground: var(--deep-black);
+
+    --destructive: var(--roast-brown);
+    --destructive-foreground: var(--latte-beige);
+
+    --border: 0 0% 100% / 0.14;
+    --input: var(--charcoal);
+    --ring: var(--caramel);
+
+    --radius: 1rem;
+
+    /* Semantic Notification Colors */
+    --info-bg: var(--charcoal);
+    --info-border: var(--sandstone);
+    --info-text: var(--sandstone);
+    --info-icon: var(--cashmere);
+
+    --success-bg: var(--dark-espresso);
+    --success-border: var(--caramel);
+    --success-text: var(--latte-beige);
+    --success-icon: var(--caramel);
+
+    --warning-bg: var(--dark-espresso);
+    --warning-border: var(--honey);
+    --warning-text: var(--latte-beige);
+    --warning-icon: var(--honey);
+
+    --error-bg: var(--dark-espresso);
+    --error-border: var(--roast-brown);
+    --error-text: var(--latte-beige);
+    --error-icon: var(--roast-brown);
+
+    /* Glass Panel Token */
+    --glass-panel: 0 0% 100% / 0.05;
+    --glass-border: 0 0% 100% / 0.15;
+    
+    /* Text Colors */
+    --text-primary: 210 20% 98%;
+    --text-secondary: var(--sandstone);
+    --text-link: var(--latte-beige);
+    --text-link-hover: var(--honey);
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Glass Panel Utility */
+  .glass-panel {
+    backdrop-filter: blur(24px);
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 1rem;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.45);
+  }
+
+  /* Grain Overlay */
+  .grain-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.06;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+
+  /* Custom Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary));
+    border-radius: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--accent));
+  }
+}
+
+@layer components {
+  /* Password Strength Indicators */
+  .password-weak {
+    background-color: hsl(var(--roast-brown));
+    color: hsl(var(--latte-beige));
+  }
+  
+  .password-medium {
+    background-color: hsl(var(--honey));
+    color: hsl(var(--deep-black));
+  }
+  
+  .password-strong {
+    background-color: hsl(var(--caramel));
+    color: hsl(var(--deep-black));
+  }
+
+  /* Glow Effects */
+  .glow-caramel {
+    box-shadow: 0 0 20px hsl(var(--caramel) / 0.3);
+  }
+  
+  .glow-honey {
+    box-shadow: 0 0 20px hsl(var(--honey) / 0.3);
+  }
+}
