@@ -1,10 +1,11 @@
-# Aroma Chat - Intelligent Document Chat
+# Qubit Chat - Intelligent Document Chat
 
-Aroma Chat is an intelligent document analysis application that allows users to upload PDFs and images, chat with AI, and unlock insights from their documents.
+Qubit Chat is an intelligent document analysis application that allows users to upload PDFs and images, chat with AI, and unlock insights from their documents.
 
 ## Project Overview
 
 This application features:
+
 - PDF and image document upload
 - AI-powered chat interface with Gemini API integration
 - Quantum-enhanced search capabilities
@@ -65,15 +66,18 @@ This project is built with:
 You can deploy this project using various hosting platforms:
 
 ### Frontend Deployment
+
 - Vercel, Netlify, or GitHub Pages for the React frontend
 - Build the frontend using `npm run build`
 
 ### Backend Deployment
+
 - Deploy the FastAPI backend to platforms like Railway, Render, or Heroku
 - Ensure environment variables are properly configured
 
 ## Configuration
 
 Make sure to set up the required environment variables:
+
 - `GEMINI_API_KEY` for AI chat functionality
 - Other configuration as needed for your deployment environment
