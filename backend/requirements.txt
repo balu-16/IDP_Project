@@ -1,0 +1,57 @@
+# FastAPI and web server (Python 3.11 compatible)
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.6.0
+pydantic-settings==2.2.0
+
+# Quantum computing (Python 3.11 compatible)
+qiskit==0.46.0
+qiskit-aer==0.13.3
+numpy==1.26.0
+scipy==1.12.0
+
+# Vector database (Python 3.11 compatible)
+chromadb==0.4.24
+protobuf>=3.19.5,<5.0.0
+
+# AI and embeddings (Python 3.11 compatible)
+transformers==4.37.0
+torch==2.2.0
+sentence-transformers==2.4.0
+google-generativeai==0.3.2
+
+# Document processing (Python 3.11 compatible)
+langchain==0.1.10
+langchain-community==0.0.25
+pypdf==4.0.1
+python-multipart==0.0.9
+
+# Database (optional, Python 3.11 compatible)
+psycopg2-binary==2.9.9
+sqlalchemy==2.0.27
+alembic==1.13.1
+supabase==2.3.4
+
+# Environment and configuration (Python 3.11 compatible)
+python-dotenv==1.0.1
+
+# Utilities (Python 3.11 compatible)
+requests==2.31.0
+aiofiles==23.2.1
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+pandas==2.2.0
+
+# Development tools (Python 3.11 compatible)
+black==24.2.0
+flake8==7.0.0
+mypy==1.8.0
+httpx==0.25.2
+
+# Logging and monitoring (Python 3.11 compatible)
+loguru==0.7.2
+prometheus-client==0.19.0
+
+# Security (Python 3.11 compatible)
+cryptography==41.0.7
+bcrypt==4.1.2

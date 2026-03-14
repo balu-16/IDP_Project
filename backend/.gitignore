@@ -1,0 +1,49 @@
+# -----------------------------
+# Backend (Python/FastAPI)
+# -----------------------------
+
+# Secrets / environment
+.env
+.env.*
+!.env.example
+
+# Virtual environments
+.venv/
+venv/
+
+# Python bytecode/cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Test / type / lint caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Packaging/build
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Runtime logs/temp
+logs/
+*.log
+tmp/
+
+# Local DB/vector data and uploads
+chroma_db/
+uploads/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE/OS
+.DS_Store
+.idea/
+.vscode/
+
