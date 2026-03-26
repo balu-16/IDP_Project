@@ -8,6 +8,7 @@ This module manages all configuration settings including:
 """
 
 from typing import List, Optional
+import json
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
@@ -42,7 +43,8 @@ class Settings(BaseSettings):
             "http://localhost:8080", 
             "http://localhost:5173",
             "http://127.0.0.1:3000",
-            "http://127.0.0.1:5173"
+            "http://127.0.0.1:5173",
+            "https://idp-frontend-798522160894.asia-south1.run.app"
         ],
         env="ALLOWED_ORIGINS"
     )
@@ -112,6 +114,32 @@ class Settings(BaseSettings):
                 return True
             if normalized in falsy:
                 return False
+
+        return value
+
+    @field_validator("ALLOWED_ORIGINS", mode="before")
+    @classmethod
+    def normalize_allowed_origins(cls, value):
+        """Allow ALLOWED_ORIGINS to be provided as JSON array or comma-separated string."""
+        if isinstance(value, list) or value is None:
+            return value
+
+        if isinstance(value, str):
+            raw = value.strip()
+            if not raw:
+                return []
+
+            # Support JSON list syntax from container envs.
+            if raw.startswith("["):
+                try:
+                    parsed = json.loads(raw)
+                    if isinstance(parsed, list):
+                        return [str(origin).strip() for origin in parsed if str(origin).strip()]
+                except json.JSONDecodeError:
+                    pass
+
+            # Fallback to comma-separated values.
+            return [origin.strip() for origin in raw.split(",") if origin.strip()]
 
         return value
     
