@@ -1,8 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Database } from '@/integration/types';
 import { apiUrl } from '@/lib/api';
-import { onAuthStateChange } from '@/lib/firebase';
-import type { User as FirebaseUser } from 'firebase/auth';
 
 // Define user type based on our database schema
 type User = Database['public']['Tables']['signup_users']['Row'];
@@ -47,7 +45,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { detail: rawBody };
   };
 
-  // Initialize auth state from localStorage and Firebase
+  // Initialize auth state from localStorage
   useEffect(() => {
     const initializeAuth = () => {
       try {
@@ -68,41 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     };
 
-    // Listen to Firebase auth state changes
-    const unsubscribe = onAuthStateChange(async (firebaseUser: FirebaseUser | null) => {
-      if (firebaseUser) {
-        // User signed in with Firebase (Google)
-        const userData = {
-          id: firebaseUser.uid,
-          full_name: firebaseUser.displayName || 'Google User',
-          email: firebaseUser.email || '',
-          phone_number: firebaseUser.phoneNumber,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        };
-        
-        setUser({
-          ...userData,
-          id: parseInt(userData.id), // Convert string id to number
-          password: '', // Add required password field
-          created_at: userData.created_at
-        });
-        setToken('firebase_token'); // Use a placeholder token for Firebase users
-        
-        // Store in localStorage
-        localStorage.setItem('user', JSON.stringify(userData));
-        localStorage.setItem('token', 'firebase_token');
-        
-        setLoading(false);
-      } else {
-        // User signed out or no Firebase user
-        initializeAuth();
-      }
-    });
-
     initializeAuth();
-    
-    return () => unsubscribe();
   }, []);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
@@ -191,14 +155,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
-    try {
-      // Import logout function from Firebase
-      const { logout: firebaseLogout } = await import('@/lib/firebase');
-      await firebaseLogout();
-    } catch (error) {
-      console.error('Firebase logout error:', error);
-    }
-    
     setUser(null);
     setToken(null);
     localStorage.removeItem('user');

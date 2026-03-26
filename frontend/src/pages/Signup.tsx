@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input';
 import PasswordField from '@/components/PasswordField';
 import { useAuth } from '@/components/auth/AuthContext';
 import { showToast } from '@/components/Toast';
-import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
@@ -97,11 +96,6 @@ const Signup: React.FC = () => {
     }
   };
 
-  const handleGoogleSuccess = () => {
-    showToast('success', 'Welcome to QubitChat AI!');
-    navigate('/chat', { replace: true });
-  };
-
   return (
     <div className="relative min-h-screen flex items-center justify-center p-6">
       {/* Muted Coffee Background */}
@@ -133,19 +127,6 @@ const Signup: React.FC = () => {
             <div>
               <h1 className="text-2xl font-bold text-text-primary">Create Account</h1>
               <p className="text-text-secondary">Join QubitChat AI and start your intelligent conversations</p>
-            </div>
-          </div>
-
-          {/* Google Sign In */}
-          <GoogleSignInButton onSuccess={handleGoogleSuccess} className="w-full" />
-
-          {/* Divider */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-border" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-surface text-text-secondary">Or create account with email</span>
             </div>
           </div>
 

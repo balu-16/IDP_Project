@@ -1,8 +1,6 @@
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: balarakesh/idp-backend:latest
     environment:
       HOST: 0.0.0.0
       PORT: 8000
@@ -17,11 +15,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-      args:
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-}
+    image: balarakesh/idp-frontend:latest
     depends_on:
       - backend
     ports:
