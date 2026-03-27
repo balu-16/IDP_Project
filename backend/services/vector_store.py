@@ -113,6 +113,63 @@ class VectorStore:
         except Exception as e:
             logger.error(f"Failed to initialize ChromaDB: {e}")
             raise
+
+    @staticmethod
+    def _normalize_filter_value(value: Any) -> str:
+        """Normalize metadata filter values to match stored Chroma metadata."""
+        return str(value)
+
+    @classmethod
+    def _build_chroma_where(
+        cls,
+        metadata: Optional[Dict[str, Any]] = None,
+        session_id: Optional[str] = None,
+        user_id: Optional[int] = None,
+    ) -> Optional[Dict[str, Any]]:
+        """Build a Chroma-compatible metadata filter.
+
+        Chroma accepts either a single field filter like `{"session_id": "9"}`
+        or an operator expression like `{"$and": [{"session_id": "9"}, {"user_id": "1"}]}`.
+        """
+        # Preserve prebuilt operator filters and only add scope clauses around them.
+        operator_filter = None
+        raw_metadata = {
+            key: value
+            for key, value in (metadata or {}).items()
+            if value is not None
+        }
+        if raw_metadata and any(str(key).startswith("$") for key in raw_metadata):
+            operator_filter = raw_metadata
+            raw_metadata = {}
+
+        normalized_metadata = {
+            key: cls._normalize_filter_value(value)
+            for key, value in raw_metadata.items()
+        }
+
+        clauses: List[Dict[str, Any]] = [
+            {key: value}
+            for key, value in normalized_metadata.items()
+        ]
+
+        if session_id is not None:
+            clauses.append({"session_id": cls._normalize_filter_value(session_id)})
+
+        if user_id is not None:
+            clauses.append({"user_id": cls._normalize_filter_value(user_id)})
+
+        if operator_filter:
+            if not clauses:
+                return operator_filter
+            clauses.append(operator_filter)
+
+        if not clauses:
+            return None
+
+        if len(clauses) == 1:
+            return clauses[0]
+
+        return {"$and": clauses}
     
     async def add_documents(self, embedded_chunks: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Add embedded document chunks to the vector store.
@@ -217,13 +274,15 @@ class VectorStore:
             if not self.collection:
                 await self.initialize()
             
+            chroma_where = self._build_chroma_where(metadata=where)
             logger.info(f"Performing similarity search for {n_results} results")
+            logger.info("Similarity search Chroma filter: %s", chroma_where)
             
             # Perform query
             results = self.collection.query(
                 query_embeddings=[query_embedding],
                 n_results=n_results,
-                where=where,
+                where=chroma_where,
                 include=["documents", "metadatas", "distances"]
             )
             
@@ -271,14 +330,11 @@ class VectorStore:
                 user_id,
             )
             
-            # Build where filter
-            where_filter = None
-            if session_id and user_id is not None:
-                where_filter = {"session_id": str(session_id), "user_id": str(user_id)}
-            elif session_id:
-                where_filter = {"session_id": str(session_id)}
-            elif user_id is not None:
-                where_filter = {"user_id": str(user_id)}
+            where_filter = self._build_chroma_where(
+                session_id=session_id,
+                user_id=user_id,
+            )
+            logger.info("Quantum retrieval Chroma filter: %s", where_filter)
             
             # Get documents (filtered by session if provided)
             results = self.collection.get(
@@ -298,7 +354,12 @@ class VectorStore:
                     }
                     all_embeddings.append(embedding_data)
             
-            logger.info(f"Retrieved {len(all_embeddings)} embeddings")
+            logger.info(
+                "Retrieved %s embeddings for quantum search (session: %s, user: %s)",
+                len(all_embeddings),
+                session_id,
+                user_id,
+            )
             return all_embeddings
             
         except Exception as e:
@@ -361,11 +422,13 @@ class VectorStore:
             if not self.collection:
                 await self.initialize()
             
+            chroma_where = self._build_chroma_where(metadata=where)
             logger.info(f"Searching by metadata: {where}")
+            logger.info("Metadata search Chroma filter: %s", chroma_where)
             
             # Perform metadata search
             results = self.collection.get(
-                where=where,
+                where=chroma_where,
                 limit=n_results,
                 include=["documents", "metadatas"]
             )

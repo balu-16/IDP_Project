@@ -17,6 +17,7 @@ from routes.query_routes import router as query_router
 from services.quantum_search import QuantumSearch
 from services.retrieval import retrieve_ranked_documents
 from services.shared import get_pdf_processor, get_quantum_search, get_vector_store
+from services.vector_store import VectorStore
 
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
@@ -149,6 +150,83 @@ class RetrievalTimingTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result["fallback_reason"], "no_marked_items")
 
 
+class VectorStoreFilterTests(unittest.IsolatedAsyncioTestCase):
+    def test_build_chroma_where_returns_none_for_empty_filters(self):
+        self.assertIsNone(VectorStore._build_chroma_where())
+
+    def test_build_chroma_where_returns_single_session_clause(self):
+        self.assertEqual(
+            VectorStore._build_chroma_where(session_id="session-1"),
+            {"session_id": "session-1"},
+        )
+
+    def test_build_chroma_where_returns_single_user_clause(self):
+        self.assertEqual(
+            VectorStore._build_chroma_where(user_id=1),
+            {"user_id": "1"},
+        )
+
+    def test_build_chroma_where_combines_session_and_user_with_and(self):
+        self.assertEqual(
+            VectorStore._build_chroma_where(session_id="session-1", user_id=1),
+            {"$and": [{"session_id": "session-1"}, {"user_id": "1"}]},
+        )
+
+    def test_build_chroma_where_preserves_prebuilt_operator_filter(self):
+        operator_filter = {"$and": [{"topic": "report"}, {"page": "1"}]}
+        self.assertEqual(
+            VectorStore._build_chroma_where(metadata=operator_filter),
+            operator_filter,
+        )
+
+    async def test_get_all_embeddings_uses_and_filter_for_session_and_user(self):
+        calls = []
+
+        class FakeCollection:
+            def get(self, **kwargs):
+                calls.append(kwargs)
+                return {
+                    "ids": ["doc-1"],
+                    "embeddings": [[1.0, 0.0]],
+                    "documents": ["document body"],
+                    "metadatas": [{"session_id": "session-1", "user_id": "1"}],
+                }
+
+        store = object.__new__(VectorStore)
+        store.collection = FakeCollection()
+
+        results = await VectorStore.get_all_embeddings(store, session_id="session-1", user_id=1)
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(
+            calls[0]["where"],
+            {"$and": [{"session_id": "session-1"}, {"user_id": "1"}]},
+        )
+
+    async def test_search_by_metadata_normalizes_plain_multi_field_filter(self):
+        calls = []
+
+        class FakeCollection:
+            def get(self, **kwargs):
+                calls.append(kwargs)
+                return {
+                    "ids": ["doc-1"],
+                    "documents": ["document body"],
+                    "metadatas": [{"topic": "report", "page": "1"}],
+                }
+
+        store = object.__new__(VectorStore)
+        store.collection = FakeCollection()
+
+        results = await VectorStore.search_by_metadata(store, {"topic": "report", "page": 1})
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(
+            calls[0]["where"],
+            {"$and": [{"topic": "report"}, {"page": "1"}]},
+        )
+
+
 class ApiTimingTests(unittest.TestCase):
     def _build_query_client(self, vector_store, quantum_search, pdf_processor):
         app = FastAPI()
@@ -244,6 +322,9 @@ class ApiTimingTests(unittest.TestCase):
         self.assertGreater(payload["retrieval_time_ms"], 0.0)
         self.assertGreater(payload["processing_time_ms"], payload["retrieval_time_ms"])
         self.assertEqual(payload["metadata"]["retrieval_method"], "quantum_enhanced")
+        self.assertTrue(payload["context_used"])
+        self.assertEqual(payload["metadata"]["candidate_count"], 4)
+        self.assertEqual(len(payload["context_sources"]), 1)
 
     def test_debug_release_environment_imports_main_successfully(self):
         result = subprocess.run(

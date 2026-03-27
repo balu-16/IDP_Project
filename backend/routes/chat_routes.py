@@ -114,6 +114,7 @@ async def chat_message(
         retrieval_time_ms = 0.0
         retrieval_method = "none"
         fallback_reason = None
+        candidate_count = 0
         
         # Search for relevant context if requested and not forcing general mode
         if request.use_context and not request.force_general:
@@ -144,6 +145,16 @@ async def chat_message(
                     retrieval_time_ms = search_result["retrieval_time_ms"]
                     retrieval_method = search_result["search_method"]
                     fallback_reason = search_result.get("fallback_reason")
+                    candidate_count = search_result.get("candidate_count", 0)
+                    logger.info(
+                        "Chat retrieval completed (session: %s, user: %s, candidates: %s, results: %s, method: %s, fallback: %s)",
+                        session_id,
+                        request.user_id,
+                        candidate_count,
+                        len(results),
+                        retrieval_method,
+                        fallback_reason,
+                    )
                     
                     if results:
                         context_used = True
@@ -162,7 +173,13 @@ async def chat_message(
                         logger.info(f"First 200 chars of context: {context_text[:200]}...")
                         logger.info(f"Sample result structure: {results[0] if results else 'No results'}")
                     else:
-                        logger.info("No relevant context found")
+                        logger.info(
+                            "No relevant context found for session-scoped retrieval (session: %s, user: %s, candidates: %s, fallback: %s)",
+                            session_id,
+                            request.user_id,
+                            candidate_count,
+                            fallback_reason,
+                        )
                 else:
                     logger.info("No documents in vector store for context")
             except ValueError as e:
@@ -196,6 +213,7 @@ async def chat_message(
                 "model": "gemini-2.5-flash",
                 "temperature": request.temperature,
                 "context_documents": len(context_sources),
+                "candidate_count": candidate_count,
                 "retrieval_method": retrieval_method,
                 "fallback_reason": fallback_reason,
                 "timestamp": datetime.now(timezone.utc).isoformat()
