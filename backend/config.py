@@ -37,15 +37,8 @@ class Settings(BaseSettings):
     PORT: int = Field(default=8000, env="PORT")
     
     # CORS settings
-    ALLOWED_ORIGINS: List[str] = Field(
-        default=[
-            "http://localhost:3000", 
-            "http://localhost:8080", 
-            "http://localhost:5173",
-            "http://127.0.0.1:3000",
-            "http://127.0.0.1:5173",
-            "https://idp-frontend-798522160894.asia-south1.run.app"
-        ],
+    ALLOWED_ORIGINS: str = Field(
+        default="https://idp-frontend-798522160894.asia-south1.run.app,http://localhost:5173,http://localhost:3000,http://localhost:8080,http://127.0.0.1:3000,http://127.0.0.1:5173",
         env="ALLOWED_ORIGINS"
     )
     
@@ -117,31 +110,38 @@ class Settings(BaseSettings):
 
         return value
 
-    @field_validator("ALLOWED_ORIGINS", mode="before")
-    @classmethod
-    def normalize_allowed_origins(cls, value):
-        """Allow ALLOWED_ORIGINS to be provided as JSON array or comma-separated string."""
-        if isinstance(value, list) or value is None:
-            return value
+    @property
+    def allowed_origins_list(self) -> List[str]:
+        """Return CORS origins parsed from ALLOWED_ORIGINS (JSON array or comma-separated string)."""
+        required_origins = {
+            "https://idp-frontend-798522160894.asia-south1.run.app",
+            "http://localhost:5173",
+            "http://localhost:8080",
+        }
 
-        if isinstance(value, str):
-            raw = value.strip()
-            if not raw:
-                return []
+        def normalize(origin: str) -> str:
+            return origin.strip().strip('"').strip("'").rstrip("/")
 
-            # Support JSON list syntax from container envs.
-            if raw.startswith("["):
-                try:
-                    parsed = json.loads(raw)
-                    if isinstance(parsed, list):
-                        return [str(origin).strip() for origin in parsed if str(origin).strip()]
-                except json.JSONDecodeError:
-                    pass
+        raw = (self.ALLOWED_ORIGINS or "").strip()
+        if not raw:
+            return sorted(required_origins)
 
-            # Fallback to comma-separated values.
-            return [origin.strip() for origin in raw.split(",") if origin.strip()]
+        parsed_origins: List[str] = []
 
-        return value
+        if raw.startswith("["):
+            try:
+                parsed = json.loads(raw)
+                if isinstance(parsed, list):
+                    parsed_origins = [normalize(str(origin)) for origin in parsed if normalize(str(origin))]
+            except json.JSONDecodeError:
+                parsed_origins = []
+
+        if not parsed_origins:
+            # Handle odd env formats like ['https://...'] or "https://...".
+            cleaned = raw.strip().lstrip("[").rstrip("]")
+            parsed_origins = [normalize(origin) for origin in cleaned.split(",") if normalize(origin)]
+
+        return sorted(set(parsed_origins).union(required_origins))
     
     @property
     def database_url(self) -> str:

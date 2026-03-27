@@ -110,7 +110,14 @@ async def register_user(
         JSONResponse: Registration result with user data
     """
     try:
-        logger.info(f"Attempting to register user: {request.email}")
+        logger.info(
+            "register_user request",
+            extra={
+                "email": request.email,
+                "full_name": request.full_name,
+                "has_phone_number": bool(request.phone_number),
+            },
+        )
         
         # Check if user already exists
         existing_user = await database.get_user_by_email(request.email)
@@ -159,7 +166,7 @@ async def register_user(
         # Re-raise HTTP exceptions
         raise
     except Exception as e:
-        logger.error(f"User registration failed for {request.email}: {e}")
+        logger.exception(f"User registration failed for {request.email}: {e}")
         raise HTTPException(
             status_code=500,
             detail=f"Internal server error during registration: {str(e)}"
@@ -180,7 +187,13 @@ async def login_user(
         JSONResponse: Login result with user data and token
     """
     try:
-        logger.info(f"Attempting to login user: {request.email}")
+        logger.info(
+            "login_user request",
+            extra={
+                "email": request.email,
+                "has_password": bool(request.password),
+            },
+        )
         
         # Get user by email
         user = await database.get_user_by_email(request.email)
@@ -219,7 +232,7 @@ async def login_user(
         # Re-raise HTTP exceptions
         raise
     except Exception as e:
-        logger.error(f"User login failed for {request.email}: {e}")
+        logger.exception(f"User login failed for {request.email}: {e}")
         raise HTTPException(
             status_code=500,
             detail=f"Internal server error during login: {str(e)}"

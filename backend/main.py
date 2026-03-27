@@ -8,7 +8,7 @@ This is the main entry point for the FastAPI application that provides:
 """
 
 import uvicorn
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
@@ -40,6 +40,7 @@ async def lifespan(app: FastAPI):
     """Application lifespan manager for startup and shutdown events."""
     # Startup
     logger.info("🚀 Starting Quantum PDF Chatbot Backend...")
+    logger.info("Resolved CORS origins: %s", settings.allowed_origins_list)
     
     try:
         # Initialize all shared services (VectorStore, PDFProcessor, etc.)
@@ -70,7 +71,7 @@ app = FastAPI(
 # Configure CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.ALLOWED_ORIGINS,
+    allow_origins=settings.allowed_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -90,7 +91,7 @@ async def health_check():
         vector_store_status = "healthy" if vector_store and vector_store.client else "not_initialized"
         
         return {
-            "status": "healthy",
+            "status": "ok",
             "timestamp": datetime.utcnow().isoformat(),
             "version": "1.0.0",
             "services": {
@@ -113,12 +114,18 @@ app.include_router(auth_router, tags=["Authentication"])
 
 # Global exception handler
 @app.exception_handler(Exception)
-async def global_exception_handler(request, exc):
+async def global_exception_handler(request: Request, exc: Exception):
     """Global exception handler for unhandled errors."""
-    logger.error(f"Unhandled exception: {exc}")
+    if isinstance(exc, HTTPException):
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={"detail": exc.detail}
+        )
+
+    logger.exception("Unhandled exception on %s %s", request.method, request.url.path)
     return JSONResponse(
         status_code=500,
-        content={"detail": "Internal server error", "error": str(exc)}
+        content={"error": str(exc)}
     )
 
 # Root endpoint

@@ -9,13 +9,23 @@ Note: Chat history operations have been moved to frontend local storage.
 """
 
 import logging
+import os
 from typing import Dict, Any, List, Optional
 from datetime import datetime
-import os
+from fastapi import HTTPException
 from supabase import create_client, Client
 from config import settings
 
 logger = logging.getLogger(__name__)
+
+
+SUPABASE_PROXY_MISMATCH = "unexpected keyword argument 'proxy'"
+
+
+def _is_supabase_dependency_mismatch(exc: Exception) -> bool:
+    """Detect known Supabase/httpx incompatibility seen in container builds."""
+    return SUPABASE_PROXY_MISMATCH in str(exc)
+
 
 class DatabaseService:
     """Service for handling Supabase database operations."""
@@ -28,19 +38,51 @@ class DatabaseService:
     async def initialize(self) -> None:
         """Initialize Supabase client."""
         try:
-            supabase_url = os.getenv('SUPABASE_URL')
-            supabase_key = os.getenv('SUPABASE_ANON_KEY')
+            supabase_url = self._resolve_env_value("SUPABASE_URL")
+            supabase_key = self._resolve_env_value("SUPABASE_ANON_KEY")
             
             if not supabase_url or not supabase_key:
-                raise ValueError("SUPABASE_URL and SUPABASE_ANON_KEY must be set in environment variables")
+                raise RuntimeError(
+                    "SUPABASE_URL and SUPABASE_ANON_KEY must be set for authentication endpoints"
+                )
+
+            if not (supabase_url.startswith("http://") or supabase_url.startswith("https://")):
+                raise RuntimeError("SUPABASE_URL must start with http:// or https://")
             
             self.client = create_client(supabase_url, supabase_key)
             self._initialized = True
-            logger.info("✅ Supabase client initialized successfully")
+            logger.info(
+                "Supabase client initialized",
+                extra={"supabase_url": supabase_url, "has_supabase_key": bool(supabase_key)},
+            )
             
         except Exception as e:
-            logger.error(f"❌ Failed to initialize Supabase client: {e}")
+            logger.exception(f"Failed to initialize Supabase client: {e}")
             raise
+
+    @staticmethod
+    def _clean_env_value(value: Optional[str]) -> Optional[str]:
+        """Trim common formatting artifacts from injected env values."""
+        if value is None:
+            return None
+
+        cleaned = str(value).strip().strip('"').strip("'").strip()
+        return cleaned or None
+
+    @staticmethod
+    def _resolve_env_value(*names: str) -> Optional[str]:
+        """Return the first populated value from settings or process env."""
+        for name in names:
+            cleaned = DatabaseService._clean_env_value(os.getenv(name))
+            if cleaned:
+                return cleaned
+
+        for name in names:
+            cleaned = DatabaseService._clean_env_value(getattr(settings, name, None))
+            if cleaned:
+                return cleaned
+
+        return None
     
     def _ensure_initialized(self) -> None:
         """Ensure the database service is initialized."""
@@ -215,6 +257,29 @@ async def get_database_service() -> DatabaseService:
     
     if _database_service is None:
         _database_service = DatabaseService()
-        await _database_service.initialize()
+        try:
+            await _database_service.initialize()
+        except RuntimeError as exc:
+            logger.exception("Database service initialization failed: %s", exc)
+            _database_service = None
+            raise HTTPException(
+                status_code=503,
+                detail=str(exc),
+            )
+        except Exception as exc:
+            logger.exception("Unexpected database initialization failure: %s", exc)
+            _database_service = None
+            if _is_supabase_dependency_mismatch(exc):
+                raise HTTPException(
+                    status_code=503,
+                    detail=(
+                        "Authentication backend initialization failed: incompatible "
+                        "Supabase/httpx dependency versions in the deployed container"
+                    ),
+                )
+            raise HTTPException(
+                status_code=503,
+                detail="Authentication backend initialization failed: invalid Supabase configuration",
+            )
     
     return _database_service
