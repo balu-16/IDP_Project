@@ -594,7 +594,7 @@ const Chat: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex">
+    <div className="relative flex h-screen overflow-hidden">
       {/* Muted Coffee Background */}
       <CoffeeBackground variant="muted" />
 
@@ -629,13 +629,12 @@ const Chat: React.FC = () => {
 
       {/* Main Chat Area */}
         <div className={cn(
-          "flex-1 flex flex-col relative z-10 min-w-0 transition-all duration-300",
+          "flex-1 flex flex-col relative z-10 min-w-0 h-screen overflow-hidden transition-all duration-300",
           isSidebarCollapsed ? "ml-20 pl-12" : "ml-64 pl-12"
         )}>
         {/* Chat Messages */}
           <div className={cn(
-            "flex-1 overflow-y-auto custom-scrollbar p-6 min-h-0",
-            uploadedFileRecords.length > 0 ? "pb-40" : "pb-32"
+            "flex-1 overflow-y-auto custom-scrollbar p-6 pb-6 min-h-0"
           )}>
           <div className="w-full space-y-6">
             {messages.map((message) => (
@@ -697,10 +696,7 @@ const Chat: React.FC = () => {
         </AnimatePresence>
 
         {/* Chat Input */}
-        <div className={cn(
-          "fixed bottom-0 right-0 p-6 bg-surface/90 dark:bg-glass-bg backdrop-blur-md border-t border-border shadow-soft transition-all duration-300",
-          isSidebarCollapsed ? "left-20 pl-12" : "left-64 pl-12"
-        )}>
+        <div className="shrink-0 border-t border-border bg-surface/90 dark:bg-glass-bg backdrop-blur-md shadow-soft px-6 pt-4 pb-6">
           <div className="w-full max-w-full">
             {/* File Upload Status - Above input, always visible */}
             {uploadedFileRecords.length > 0 && !isUploadingFiles && (

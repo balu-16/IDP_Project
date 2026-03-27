@@ -73,13 +73,14 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
           'rounded-2xl px-4 py-3 relative w-full min-h-fit',
           isBot 
             ? 'border-primary/20 text-text-primary' 
-            : 'text-primary-foreground'
+            : 'text-text-primary dark:text-white'
         )}>
           {isTyping ? (
             <TypingDots />
           ) : (
             <div className={cn(
               "whitespace-pre-wrap break-words word-wrap overflow-wrap-anywhere w-full min-h-fit",
+              !isBot && "text-text-primary dark:text-white",
               !isBot && "text-right"
             )}>
               {message}
