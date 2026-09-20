@@ -1,0 +1,20 @@
+\begin{tabular}{ll}
+\toprule
+Setting & Value\\
+\midrule
+Encoder & sentence-transformers/all-MiniLM-L6-v2@1110a243fdf4706b3f48f1d95db1a4f5529b4d41\\
+Embedding dimension & 384\\
+Chunk / overlap & 192 / 32 tokens\\
+Candidate budget & 64\\
+Threshold (SciFact / NFCorpus) & 0.700 / 0.700\\
+Development tuning & SciFact: SHA-256 20\% train sample / NFCorpus: official dev\\
+Shots & 1024\\
+Boost $\beta$ & 2.0\\
+Seeds & 0, 1, 2, 3, 4\\
+CPU threads & 2\\
+Resource-grid total-qubit cap & 18\\
+HNSW & efConstruction=100, ef=64, M=16, overfetch=4, seed=0, threads=1\\
+Host & Linux; 12 logical CPUs\\
+Manifest schema & research-v1\\
+\bottomrule
+\end{tabular}

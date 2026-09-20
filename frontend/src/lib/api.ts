@@ -1,18 +1,23 @@
-const LOCAL_API_BASE = 'http://localhost:8000';
+import { getSupabase } from '@/integration/client';
 
-const configuredApiBase = import.meta.env.VITE_API_BASE_URL?.trim() || '';
-const runningOnLocalhost =
-  typeof window !== 'undefined' &&
-  ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
-
-// Keep local development pinned to local backend even if a remote env value is present.
-const API_BASE = (runningOnLocalhost ? LOCAL_API_BASE : configuredApiBase || LOCAL_API_BASE).replace(
-  /\/+$/,
-  ''
-);
-
+const API_BASE = (import.meta.env.VITE_API_BASE_URL?.trim() || 'http://localhost:8000').replace(/\/+$/, '');
 export function apiUrl(path: string): string {
-  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-
-  return `${API_BASE}${normalizedPath}`;
+  return API_BASE + (path.startsWith('/') ? path : '/' + path);
+}
+export async function apiFetch(path: string, init: RequestInit = {}): Promise<Response> {
+  const { data, error } = await getSupabase().auth.getSession();
+  if (error || !data.session) throw new Error('Please sign in again.');
+  const headers = new Headers(init.headers);
+  headers.set('Authorization', 'Bearer ' + data.session.access_token);
+  const response = await fetch(apiUrl(path), { ...init, headers });
+  if (!response.ok) {
+    const body: unknown = await response.json().catch(() => null);
+    const message = body && typeof body === 'object' && 'detail' in body && typeof body.detail === 'string'
+      ? body.detail : 'Request failed (HTTP ' + response.status + ')';
+    throw new Error(message);
+  }
+  return response;
+}
+export function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : 'The operation failed.';
 }

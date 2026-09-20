@@ -16,7 +16,8 @@ interface SidebarProps {
   isOpen: boolean;
   onToggle: () => void;
   onNewChat: () => void;
-  chatHistory: any[];
+  chatHistory: ChatHistory[];
+  onLoadMore?: () => void;
   onSelectChat: (chatId: string) => void;
   onDeleteChat?: (chatId: string) => void;
   onRenameChat?: (chatId: string, newTitle: string) => void;
@@ -64,6 +65,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   onToggle,
   onNewChat,
   chatHistory,
+  onLoadMore,
   onSelectChat,
   onDeleteChat,
   onRenameChat,
@@ -94,13 +96,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
   }, [internalIsCollapsed, externalIsCollapsed]);
 
-  // Save chat history to localStorage
-  useEffect(() => {
-    localStorage.setItem('chat-history', JSON.stringify(chatHistory));
-  }, [chatHistory]);
-
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     localStorage.removeItem('chat-history');
     navigate('/');
   };
@@ -220,6 +217,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             {/* Mobile Close Button */}
             <button
               onClick={onToggle}
+              aria-label="Close sidebar"
               className="lg:hidden p-2 rounded-lg hover:bg-surface/80 text-text-secondary hover:text-text-primary transition-colors"
             >
               <X size={20} />
@@ -286,6 +284,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 
                 {!isCollapsed && (
                   <button
+                    aria-label={"Options for " + chat.title}
                     onClick={(e) => handleDropdownToggle(chat.id, e)}
                     className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-lg hover:bg-surface/80 text-text-secondary hover:text-text-primary transition-colors opacity-0 group-hover:opacity-100"
                   >
@@ -308,6 +307,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           )}
         </div>
 
+        {onLoadMore && <button onClick={onLoadMore} className="p-3 text-sm">Load more chats</button>}
         {/* Footer */}
         <div className="p-3 border-t border-border space-y-1">
           <button

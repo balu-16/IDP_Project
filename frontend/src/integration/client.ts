@@ -34,13 +34,3 @@ export function getSupabase(): SupabaseClient<Database> {
   }
   return _supabase;
 }
-
-/**
- * Convenience re-export.  Prefer `getSupabase()` in new code; this export
- * exists for backward compatibility with files that already import `supabase`.
- */
-export const supabase = new Proxy({} as SupabaseClient<Database>, {
-  get(_target, prop, receiver) {
-    return Reflect.get(getSupabase(), prop, receiver);
-  },
-});

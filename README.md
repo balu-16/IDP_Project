@@ -1,83 +1,58 @@
-# Qubit Chat - Intelligent Document Chat
+# QubitChat — Intelligent Document Chat
 
-Qubit Chat is an intelligent document analysis application that allows users to upload PDFs and images, chat with AI, and unlock insights from their documents.
+QubitChat is an intelligent document-analysis application for uploading PDFs and images, asking questions about document contents, and retrieving cited evidence. The React/Vite frontend is backed by a FastAPI service with Supabase, Gemini, ChromaDB, MiniLM embeddings, and optional Grover-inspired retrieval controls.
 
-## Project Overview
+## Requirements
 
-This application features:
+- Node.js 20 or later and npm
+- Python 3.12 and pip
+- Optional: Docker Compose, a Gemini API key, and Supabase project credentials
 
-- PDF and image document upload
-- AI-powered chat interface with Gemini API integration
-- Quantum-enhanced search capabilities
-- Both document-based and general conversation modes
-- Modern React frontend with TypeScript
-- FastAPI backend with Python
+## Local development
 
-## How to run this project locally
-
-**Use your preferred IDE**
-
-You can clone this repo and run the application locally.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+Create local environment files from the checked-in examples. Add credentials only to these ignored local copies:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Run the API in one terminal:
 
-# Step 3: Install the necessary dependencies.
-npm i
+```sh
+cd backend
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+Run the frontend in another terminal:
+
+```sh
+cd frontend
+npm ci
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Set `VITE_API_BASE_URL=http://localhost:8000` in `frontend/.env`. The backend allows the local Vite origin by default. Add Gemini and Supabase values to the relevant local environment files as needed; never commit those files. The API documentation is available at `http://localhost:8000/docs` while the backend is running.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Docker Compose
 
-**Use GitHub Codespaces**
+The checked-in Compose file builds both services locally:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```sh
+cp .env.example .env
+docker compose up --build
+```
 
-## What technologies are used for this project?
+The frontend is served at `http://localhost:8080` and the API at `http://localhost:8000`. Add optional credentials to the local root `.env`. `docker-compose.deploy.example.yml` describes image-based deployment configuration; keep actual registry names and production origins in the ignored `docker-compose.deploy.local.yml`.
 
-This project is built with:
+## Checks
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```sh
+(cd frontend && npm run lint && npm run build)
+(cd backend && python -m pip install pytest && python -m pytest)
+```
 
-## How can I deploy this project?
-
-You can deploy this project using various hosting platforms:
-
-### Frontend Deployment
-
-- Vercel, Netlify, or GitHub Pages for the React frontend
-- Build the frontend using `npm run build`
-
-### Backend Deployment
-
-- Deploy the FastAPI backend to platforms like Railway, Render, or Heroku
-- Ensure environment variables are properly configured
-
-## Configuration
-
-Make sure to set up the required environment variables:
-
-- `GEMINI_API_KEY` for AI chat functionality
-- Other configuration as needed for your deployment environment
+The research verification suite is in `research/test_research.py` and requires the research dependencies plus locally downloaded BEIR data. The manuscript source, figures, generated tables, and verified PDF are in `new_paper/`. Raw datasets and sealed run directories are intentionally not stored in this repository; the manuscript README describes the inputs needed to regenerate its tables.

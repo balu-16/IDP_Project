@@ -1,0 +1,28 @@
+# Runtime and research dependencies. requirements.txt is the resolved lock
+# (regenerate with uv pip compile after editing this file).
+# Keep the verified Qiskit/Aer pair together; circuit equivalence tests gate upgrades.
+# NOTE: bcrypt/cryptography (auth hashing), requests (unused; httpx is the client),
+# matplotlib (no backend plots), psycopg (research runs offline, no live Postgres)
+# were removed as unused direct deps and remain available transitively if needed.
+# pip-audit lives in dev tooling, not runtime. hnswlib stays: research HNSW baseline.
+fastapi>=0.115,<1
+uvicorn[standard]>=0.30,<1
+pydantic[email]>=2.10,<3
+pydantic-settings>=2.7,<3
+python-dotenv>=1.1,<2
+httpx>=0.28,<1
+torch==2.12.0+cpu
+python-multipart>=0.0.20,<1
+numpy>=1.26.4,<2
+scipy>=1.12,<1.14
+qiskit==0.46.0
+qiskit-aer==0.13.3
+chromadb>=1.0,<2
+transformers>=4.48,<5
+sentence-transformers>=3.4,<4
+google-genai>=1,<3
+pypdf>=6,<7
+pypdfium2>=4.30,<6
+pytesseract>=0.3.13,<1
+pillow>=11,<13
+hnswlib==0.8.0

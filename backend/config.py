@@ -1,210 +1,82 @@
-"""Configuration settings for the Quantum PDF Chatbot Backend.
-
-This module manages all configuration settings including:
-- API keys (HuggingFace, Gemini)
-- Database connections (PostgreSQL, ChromaDB)
-- Application settings
-- Environment-specific configurations
-"""
-
-from typing import List, Optional
+"""Validated runtime configuration. Secrets are excluded from experiment manifests."""
 import json
-from pydantic import Field, field_validator
-from pydantic_settings import BaseSettings
-from dotenv import load_dotenv
+from pathlib import Path
+from pydantic import Field, field_validator, model_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-# Load environment variables from .env file
-load_dotenv()
 
 class Settings(BaseSettings):
-    """Application settings loaded from environment variables."""
-    
-    # Application settings
-    APP_NAME: str = "Quantum PDF Chatbot Backend"
-    VERSION: str = "1.0.0"
-    ENVIRONMENT: str = Field(default="development", env="ENVIRONMENT")
-    DEBUG: bool = Field(default=True, env="DEBUG")
-    
-    # Firebase settings
-    FIREBASE_PROJECT_ID: Optional[str] = Field(default=None, env="FIREBASE_PROJECT_ID")
-    
-    # ChromaDB settings (additional)
-    CHROMADB_HOST: str = Field(default="localhost", env="CHROMADB_HOST")
-    CHROMADB_PORT: int = Field(default=8000, env="CHROMADB_PORT")
-    
-    # Server settings
-    HOST: str = Field(default="0.0.0.0", env="HOST")
-    PORT: int = Field(default=8000, env="PORT")
-    
-    # CORS settings
-    ALLOWED_ORIGINS: str = Field(
-        default="https://idp-frontend-798522160894.asia-south1.run.app,http://localhost:5173,http://localhost:3000,http://localhost:8080,http://127.0.0.1:3000,http://127.0.0.1:5173,http://13.206.221.88:8080,http://3.110.144.77:8000,http://3.110.144.77:8080",
-        env="ALLOWED_ORIGINS"
-    )
-    
-    # HuggingFace settings for embeddings
-    HUGGINGFACE_API_KEY: Optional[str] = Field(default=None, env="HUGGINGFACE_API_KEY")
-    HUGGINGFACE_MODEL: str = Field(
-        default="sentence-transformers/all-MiniLM-L6-v2", 
-        env="HUGGINGFACE_MODEL"
-    )
-    
-    # Gemini API settings
-    GEMINI_API_KEY: Optional[str] = Field(default=None, env="GEMINI_API_KEY")
-    
-    # ChromaDB settings
-    CHROMA_DB_PATH: str = Field(default="./chroma_db", env="CHROMA_DB_PATH")
-    CHROMA_COLLECTION_NAME: str = Field(default="pdf_documents", env="CHROMA_COLLECTION_NAME")
-    
-    # Supabase settings
-    SUPABASE_URL: Optional[str] = Field(default=None, env="SUPABASE_URL")
-    SUPABASE_ANON_KEY: Optional[str] = Field(default=None, env="SUPABASE_ANON_KEY")
-    
-    # PostgreSQL settings (optional, for user/session metadata)
-    DATABASE_URL: Optional[str] = Field(default=None, env="DATABASE_URL")
-    POSTGRES_HOST: str = Field(default="localhost", env="POSTGRES_HOST")
-    POSTGRES_PORT: int = Field(default=5432, env="POSTGRES_PORT")
-    POSTGRES_DB: str = Field(default="chatbot_db", env="POSTGRES_DB")
-    POSTGRES_USER: str = Field(default="postgres", env="POSTGRES_USER")
-    POSTGRES_PASSWORD: str = Field(default="password", env="POSTGRES_PASSWORD")
-    
-    # PDF processing settings
-    MAX_FILE_SIZE: int = Field(default=10 * 1024 * 1024, env="MAX_FILE_SIZE")  # 10MB
-    CHUNK_SIZE: int = Field(default=1000, env="CHUNK_SIZE")  # Characters per chunk
-    CHUNK_OVERLAP: int = Field(default=200, env="CHUNK_OVERLAP")  # Overlap between chunks
-    
-    # Quantum computing settings
-    QUANTUM_BACKEND: str = Field(default="qasm_simulator", env="QUANTUM_BACKEND")
-    QUANTUM_SHOTS: int = Field(default=1024, env="QUANTUM_SHOTS")
-    QUANTUM_MAX_QUBITS: int = Field(default=10, env="QUANTUM_MAX_QUBITS")
-    QUANTUM_BOOST_FACTOR: float = Field(default=2.0, env="QUANTUM_BOOST_FACTOR")
-    GROVER_ITERATIONS: int = Field(default=2, env="GROVER_ITERATIONS")
-    
-    # Search settings
-    MAX_SEARCH_RESULTS: int = Field(default=5, env="MAX_SEARCH_RESULTS")
-    SIMILARITY_THRESHOLD: float = Field(default=0.7, env="SIMILARITY_THRESHOLD")
-    
-    # Logging settings
-    LOG_LEVEL: str = Field(default="INFO", env="LOG_LEVEL")
-    LOG_FORMAT: str = Field(
-        default="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        env="LOG_FORMAT"
-    )
+    model_config = SettingsConfigDict(env_file=Path(__file__).parent / '.env', extra='ignore')
+    APP_NAME: str = 'QubitChat'
+    VERSION: str = '2.0.0'
+    ENVIRONMENT: str = 'development'
+    DEBUG: bool = False
+    HOST: str = '0.0.0.0'
+    PORT: int = 8000
+    ALLOWED_ORIGINS: str = 'http://localhost:5173,http://localhost:8080'
+    SUPABASE_URL: str | None = None
+    SUPABASE_ANON_KEY: str | None = None
+    GEMINI_API_KEY: str | None = None
+    GEMINI_MODEL: str = 'gemini-2.5-flash'
+    GENERATION_TIMEOUT_SECONDS: int = Field(default=60, ge=1, le=300)
+    HUGGINGFACE_API_KEY: str | None = None
+    HUGGINGFACE_MODEL: str = 'sentence-transformers/all-MiniLM-L6-v2'
+    HUGGINGFACE_REVISION: str = '1110a243fdf4706b3f48f1d95db1a4f5529b4d41'
+    MODEL_CACHE_DIR: str = './model_cache'
+    EMBEDDING_DIMENSION: int = 384
+    EMBEDDING_BATCH_SIZE: int = Field(default=8, ge=1, le=128)
+    CPU_THREADS: int = Field(default=2, ge=1, le=32)
+    CHUNK_TOKENS: int = Field(default=192, ge=16, le=254)
+    CHUNK_OVERLAP_TOKENS: int = Field(default=32, ge=0)
+    CHROMA_DB_PATH: str = './chroma_db'
+    CHROMA_COLLECTION_NAME: str = 'pdf_documents'
+    DOCUMENT_STORE_PATH: str = './documents'
+    MAX_FILE_SIZE: int = Field(default=10 * 1024 * 1024, ge=1)
+    MAX_DOCUMENT_PAGES: int = Field(default=100, ge=1, le=1000)
+    MAX_PAGE_PIXELS: int = Field(default=20_000_000, ge=1)
+    DOCUMENT_TIMEOUT_SECONDS: int = Field(default=120, ge=1, le=600)
+    OCR_LANGUAGE: str = 'eng'
+    WORKER_LIMIT: int = Field(default=2, ge=1, le=8)
+    QUANTUM_SHOTS: int = Field(default=1024, ge=1, le=100_000)
+    QUANTUM_MAX_QUBITS: int = Field(default=10, ge=1, le=18)
+    QUANTUM_MAX_ITERATIONS: int = Field(default=64, ge=0, le=1000)
+    QUANTUM_BOOST_FACTOR: float = Field(default=2.0, ge=0)
+    QUANTUM_SEED: int = Field(default=0, ge=0)
+    CANDIDATE_LIMIT: int = Field(default=64, ge=1, le=1024)
+    MAX_SEARCH_RESULTS: int = 5
+    SIMILARITY_THRESHOLD: float = Field(default=0.5, ge=0, le=1)
+    LOG_LEVEL: str = 'INFO'
 
-    @field_validator("DEBUG", mode="before")
+    @field_validator('DEBUG', mode='before')
     @classmethod
     def normalize_debug(cls, value):
-        """Accept common deployment strings for DEBUG without crashing startup."""
-        if isinstance(value, bool) or value is None:
-            return value
-
         if isinstance(value, str):
-            normalized = value.strip().lower()
-            truthy = {"1", "true", "yes", "on", "debug", "dev", "development"}
-            falsy = {"0", "false", "no", "off", "release", "prod", "production"}
-
-            if normalized in truthy:
-                return True
-            if normalized in falsy:
+            if value.lower() in {'release', 'prod', 'production', 'off', 'false', '0'}:
                 return False
-
+            if value.lower() in {'development', 'dev', 'debug', 'on', 'true', '1'}:
+                return True
         return value
 
+    @model_validator(mode='after')
+    def validate_processing(self):
+        if self.CHUNK_OVERLAP_TOKENS >= self.CHUNK_TOKENS:
+            raise ValueError('Chunk overlap must be smaller than chunk size')
+        return self
+
     @property
-    def allowed_origins_list(self) -> List[str]:
-        """Return CORS origins parsed from ALLOWED_ORIGINS (JSON array or comma-separated string)."""
-        required_origins = {
-            "https://idp-frontend-798522160894.asia-south1.run.app",
-            "http://localhost:5173",
-            "http://localhost:8080",
-            "http://13.206.221.88:8080",
-            "http://3.110.144.77:8000",
-            "http://3.110.144.77:8080",
-        }
+    def allowed_origins_list(self):
+        raw = self.ALLOWED_ORIGINS.strip()
+        values = json.loads(raw) if raw.startswith('[') else raw.split(',')
+        return sorted({str(x).strip().rstrip('/') for x in values if str(x).strip()})
 
-        def normalize(origin: str) -> str:
-            return origin.strip().strip('"').strip("'").rstrip("/")
+    def path(self, value: str) -> Path:
+        path = Path(value).expanduser()
+        return path if path.is_absolute() else Path(__file__).parent / path
 
-        raw = (self.ALLOWED_ORIGINS or "").strip()
-        if not raw:
-            return sorted(required_origins)
 
-        parsed_origins: List[str] = []
-
-        if raw.startswith("["):
-            try:
-                parsed = json.loads(raw)
-                if isinstance(parsed, list):
-                    parsed_origins = [normalize(str(origin)) for origin in parsed if normalize(str(origin))]
-            except json.JSONDecodeError:
-                parsed_origins = []
-
-        if not parsed_origins:
-            # Handle odd env formats like ['https://...'] or "https://...".
-            cleaned = raw.strip().lstrip("[").rstrip("]")
-            parsed_origins = [normalize(origin) for origin in cleaned.split(",") if normalize(origin)]
-
-        return sorted(set(parsed_origins).union(required_origins))
-    
-    @property
-    def database_url(self) -> str:
-        """Construct PostgreSQL database URL from components."""
-        if self.DATABASE_URL:
-            return self.DATABASE_URL
-        return (
-            f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
-            f"@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
-        )
-    
-    @property
-    def use_huggingface(self) -> bool:
-        """Check if HuggingFace is available for embeddings."""
-        return True  # Always use HuggingFace for embeddings
-    
-    class Config:
-        """Pydantic configuration."""
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = True
-
-# Create global settings instance
 settings = Settings()
 
-# Validation functions
-def validate_api_keys() -> dict:
-    """Validate that required API keys are present.
-    
-    Returns:
-        dict: Validation results with available services
-    """
-    validation_results = {
-        "huggingface_available": settings.use_huggingface,
-        "embedding_service": "huggingface",
-        "warnings": []
-    }
-    
-    if not settings.use_huggingface:
-        validation_results["warnings"].append(
-            "HuggingFace embedding service not available."
-        )
-    
-    return validation_results
 
-def get_embedding_config() -> dict:
-    """Get the HuggingFace embedding configuration.
-    
-    Returns:
-        dict: Embedding service configuration
-    """
-    return {
-        "service": "huggingface",
-        "model": settings.HUGGINGFACE_MODEL,
-        "api_key": settings.HUGGINGFACE_API_KEY
-    }
-
-# Export commonly used settings
-__all__ = [
-    "settings",
-    "validate_api_keys",
-    "get_embedding_config"
-]
+def get_embedding_config():
+    return {'service': 'huggingface', 'model': settings.HUGGINGFACE_MODEL,
+            'revision': settings.HUGGINGFACE_REVISION, 'dimension': settings.EMBEDDING_DIMENSION}

@@ -1,6 +1,7 @@
 services:
   backend:
-    image: 985420682353.dkr.ecr.ap-south-1.amazonaws.com/balarakesh/idp-backend:latest
+    build:
+      context: ./backend
     environment:
       HOST: 0.0.0.0
       PORT: 8000
@@ -8,7 +9,7 @@ services:
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       SUPABASE_URL: ${SUPABASE_URL:-}
       SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY:-}
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-https://idp-frontend-798522160894.asia-south1.run.app,http://localhost:5173,http://localhost:8080,http://13.206.221.88:8080,http://3.110.144.77:8000,http://3.110.144.77:8080}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:5173,http://localhost:8080}
     ports:
       - "8000:8000"
     volumes:
@@ -16,11 +17,16 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: 985420682353.dkr.ecr.ap-south-1.amazonaws.com/balarakesh/idp-frontend:latest
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000}
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL:-}
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY:-}
     depends_on:
       - backend
     ports:
-      - "8080:80"
+      - "8080:8080"
     restart: unless-stopped
 
 volumes:

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Coffee, Mail, Lock, User, Phone } from 'lucide-react';
+import { ArrowLeft, Coffee, Mail, Lock, User } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import CoffeeBackground from '@/components/CoffeeBackground';
 import { Button } from '@/components/ui/button';
@@ -11,19 +11,11 @@ import { showToast } from '@/components/Toast';
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
-  const { register, user, loading } = useAuth();
-
-  // Redirect authenticated users to chat
-  useEffect(() => {
-    if (!loading && user) {
-      navigate('/chat', { replace: true });
-    }
-  }, [user, loading, navigate]);
+  const { register } = useAuth();
 
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
-    phoneNumber: '',
     password: '',
     confirmPassword: ''
   });
@@ -41,10 +33,6 @@ const Signup: React.FC = () => {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Invalid email address';
-    }
-
-    if (!formData.phoneNumber.trim()) {
-      newErrors.phoneNumber = 'Phone number is required';
     }
 
     if (!formData.password) {
@@ -79,13 +67,12 @@ const Signup: React.FC = () => {
       const result = await register({
         full_name: formData.fullName,
         email: formData.email,
-        password: formData.password,
-        phone_number: formData.phoneNumber
+        password: formData.password
       });
       
       if (result.success) {
-        showToast('success', `Welcome to QubitChat AI, ${formData.fullName}!`);
-        navigate('/chat', { replace: true });
+        showToast('success', result.confirmationRequired ? 'Check your email to confirm your account.' : 'Account created.');
+        navigate(result.confirmationRequired ? '/login' : '/chat', { replace: true });
       } else {
         showToast('error', result.error || 'Registration failed');
       }
@@ -174,25 +161,6 @@ const Signup: React.FC = () => {
               </div>
               {errors.email && (
                 <div className="text-sm text-error-text">{errors.email}</div>
-              )}
-            </div>
-
-            {/* Phone Number */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-text-primary">Phone Number</label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary z-10" size={18} />
-                <Input
-                  type="tel"
-                  value={formData.phoneNumber}
-                  onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
-                  placeholder="+1 (555) 123-4567"
-                  className="pl-10 glass-panel border-border focus:border-primary/50 focus:ring-primary/20"
-                  disabled={isLoading}
-                />
-              </div>
-              {errors.phoneNumber && (
-                <div className="text-sm text-error-text">{errors.phoneNumber}</div>
               )}
             </div>
 

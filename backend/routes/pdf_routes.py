@@ -1,408 +1,175 @@
-"""PDF upload routes for the FastAPI backend.
-
-This module handles:
-- PDF file upload endpoint
-- File validation and processing
-- Integration with PDF processor service
-- Vector store operations for embeddings
-- Error handling and response formatting
-"""
-
+"""Validated PDF/image uploads and owner-scoped source access and deletion."""
+import hashlib
 import os
 import tempfile
-import logging
-from typing import Dict, Any
-from datetime import datetime
-
-# FastAPI imports
-from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Depends, BackgroundTasks, Request
-from fastapi.responses import JSONResponse
-from typing import Optional
-
-# Services
-from services.shared import get_vector_store, get_pdf_processor
-from services.vector_store import VectorStore
-
-# Configuration
+import time
+from pathlib import Path
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi.responses import Response
+from services.database import DatabaseService, Identity, get_database_service, get_identity, require_matching_user
+from services.documents import owner_lock, document_path, delete_record, delete_session_documents
+from services.shared import get_pdf_processor, get_vector_store
+from services.workers import run_blocking
 from config import settings
 
+router = APIRouter(tags=['documents'])
 
-async def _require_auth(request: Request) -> None:
-    """Reject requests that lack a non-empty Bearer token."""
-    auth_header = request.headers.get("Authorization", "")
-    if not auth_header.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Missing or invalid Authorization header")
-    token = auth_header[len("Bearer "):].strip()
-    if not token:
-        raise HTTPException(status_code=401, detail="Empty bearer token")
 
-logger = logging.getLogger(__name__)
-
-# Create router
-router = APIRouter(tags=["pdf"])
-
-# Get shared service instances
-pdf_processor = get_pdf_processor()
-
-@router.post("/upload_pdf")
-async def upload_pdf(
-    background_tasks: BackgroundTasks,
-    file: UploadFile = File(...),
-    session_id: Optional[str] = Form(None),
-    user_id: Optional[str] = Form(None),
-    _auth: None = Depends(_require_auth),
-    vector_store: VectorStore = Depends(get_vector_store),
-) -> JSONResponse:
-    """Upload and process a PDF file with session tracking.
-    
-    This endpoint:
-    1. Validates the uploaded PDF file
-    2. Saves it temporarily
-    3. Extracts text and creates chunks
-    4. Generates embeddings
-    5. Stores embeddings in ChromaDB with session_id metadata
-    6. Returns processing results
-    
-    Args:
-        background_tasks: FastAPI background tasks
-        file: Uploaded PDF file
-        session_id: Optional chat session ID to associate with this PDF
-        user_id: Optional user ID
-        vector_store: ChromaDB vector store instance
-        
-    Returns:
-        JSONResponse: Processing results and metadata
-    """
-    temp_file_path = None
-    
+@router.post('/upload_pdf')
+async def upload_pdf(file: UploadFile = File(...), session_id: str = Form(...),
+                     user_id: str | None = Form(None),
+                     identity: Identity = Depends(get_identity),
+                     database: DatabaseService = Depends(get_database_service),
+                     processor=Depends(get_pdf_processor), store=Depends(get_vector_store)):
+    require_matching_user(identity, user_id)
+    await database.require_session(session_id, identity)
+    session_id = str(int(session_id))
+    filename = Path(file.filename or '').name
+    suffix = Path(filename).suffix.lower()
+    if suffix not in {'.pdf', '.png', '.jpg', '.jpeg'} or len(filename) > 255:
+        raise HTTPException(415, 'Upload a PDF, PNG or JPEG file')
+    temporary, record = None, None
+    start = time.perf_counter()
     try:
-        logger.info(f"Received PDF upload request: {file.filename} (session_id: {session_id}, user_id: {user_id})")
-        
-        # Validate file
-        validation_result = await _validate_pdf_file(file)
-        if not validation_result["valid"]:
-            raise HTTPException(
-                status_code=400,
-                detail=validation_result["error"]
-            )
-        
-        # Save uploaded file temporarily
-        temp_file_path = await _save_temp_file(file)
-        
-        # Process PDF in background for better performance
-        processing_task = _process_pdf_background(
-            temp_file_path, 
-            file.filename, 
-            vector_store,
-            session_id=session_id,
-            user_id=user_id
-        )
-        
-        # For now, process synchronously to return results immediately
-        # In production, you might want to use background processing with job IDs
-        result = await processing_task
-        
-        # Clean up temp file
-        background_tasks.add_task(_cleanup_temp_file, temp_file_path)
-        
-        if result["success"]:
-            response_data = {
-                "success": True,
-                "message": "PDF processed successfully",
-                "file_name": file.filename,
-                "file_size": result["file_metadata"].get("file_size", 0),
-                "pages_processed": result["file_metadata"].get("num_pages", 0),
-                "chunks_created": result["chunks_count"],
-                "embeddings_stored": result["chunks_count"],
-                "processing_time": result["processing_time"],
-                "file_hash": result["file_metadata"].get("file_hash"),
-                "metadata": {
-                    "title": result["file_metadata"].get("title", ""),
-                    "author": result["file_metadata"].get("author", ""),
-                    "processed_at": result["file_metadata"].get("processed_at")
-                }
-            }
-            
-            logger.info(f"PDF processing completed successfully: {file.filename}")
-            return JSONResponse(
-                status_code=200,
-                content=response_data
-            )
-        else:
-            raise HTTPException(
-                status_code=500,
-                detail=f"PDF processing failed: {result.get('error', 'Unknown error')}"
-            )
-    
-    except HTTPException:
-        # Re-raise HTTP exceptions
-        raise
-    except Exception as e:
-        logger.error(f"Unexpected error in PDF upload: {e}")
-        
-        # Clean up temp file on error
-        if temp_file_path and os.path.exists(temp_file_path):
+        descriptor, temporary = tempfile.mkstemp(suffix=suffix)
+        size = 0
+        digest = hashlib.sha256()
+        with os.fdopen(descriptor, 'wb') as handle:
+            while block := await file.read(64*1024):
+                size += len(block)
+                if size > settings.MAX_FILE_SIZE:
+                    raise HTTPException(413, 'File exceeds the configured size limit')
+                digest.update(block)
+                handle.write(block)
+        if size == 0:
+            raise HTTPException(422, 'File is empty')
+        with open(temporary, 'rb') as handle:
+            signature = handle.read(8)
+        valid = ((suffix == '.pdf' and signature.startswith(b'%PDF-')) or
+                 (suffix == '.png' and signature.startswith(b'\x89PNG\r\n\x1a\n')) or
+                 (suffix in {'.jpg', '.jpeg'} and signature.startswith(b'\xff\xd8\xff')))
+        if not valid:
+            raise HTTPException(415, 'File contents do not match the declared format')
+        document_id = hashlib.sha256(f'{digest.hexdigest()}:{processor.processing_version}'.encode()).hexdigest()
+        async with owner_lock(identity.user_id):
+            # Recheck after waiting: the session may have been deleted meanwhile.
+            await database.require_session(session_id, identity)
+            records = await database.uploaded_files(identity, session_id)
+            record = next((r for r in records if r.get('document_id') == document_id), None)
+            if record and record.get('status') == 'ready':
+                return {'success': True, 'status': 'ready', 'document_id': document_id,
+                        'file_name': filename, 'chunks_created': record['chunks_count'],
+                        'deduplicated': True, 'processing_time_ms': (time.perf_counter()-start)*1000}
+            if record:
+                await database.request('PATCH', '/rest/v1/uploaded_files',
+                    params={'id': f"eq.{record['id']}"}, json={'status': 'processing'})
+            else:
+                records = await database.request('POST', '/rest/v1/uploaded_files',
+                    json={'user_id': identity.user_id, 'chat_session_id': int(session_id),
+                          'document_id': document_id, 'file_name': filename, 'file_size': size,
+                          'file_type': 'pdf' if suffix == '.pdf' else 'image',
+                          'status': 'processing', 'processing_version': processor.processing_version},
+                    headers={'Prefer': 'return=representation'})
+                record = records[0]
             try:
-                os.unlink(temp_file_path)
-            except Exception as cleanup_error:
-                logger.error(f"Failed to cleanup temp file: {cleanup_error}")
-        
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal server error during PDF processing: {str(e)}"
-        )
+                result = await processor.process_pdf(temporary, document_id=document_id, filename=filename)
+                await store.add_documents(result['embedded_chunks'], user_id=identity.user_id, session_id=session_id)
+                destination = document_path(identity.user_id, session_id, document_id)
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                # Atomic replacement, with staging in the destination filesystem.
+                import shutil
+                stage = destination.with_suffix('.staging')
+                await run_blocking(shutil.copyfile, temporary, stage)
+                os.replace(stage, destination)
+                await database.request('PATCH', '/rest/v1/uploaded_files',
+                    params={'id': f"eq.{record['id']}"}, json={'status': 'ready', 'chunks_count': result['chunks_count']})
+            except Exception:
+                # If the database is unavailable, the record remains non-ready and
+                # therefore excluded from retrieval. A later upload can retry it.
+                try:
+                    await database.request('PATCH', '/rest/v1/uploaded_files',
+                        params={'id': f"eq.{record['id']}"}, json={'status': 'failed'})
+                except HTTPException:
+                    pass
+                raise
+        return {'success': True, 'status': 'ready', 'document_id': document_id, 'file_name': filename,
+                'file_size': size, 'chunks_created': result['chunks_count'],
+                'pages_processed': result['file_metadata']['num_pages'],
+                'deduplicated': False, 'processing_time_ms': (time.perf_counter()-start)*1000,
+                'timings_ms': result['timings_ms']}
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from None
+    finally:
+        await file.close()
+        if temporary:
+            Path(temporary).unlink(missing_ok=True)
 
-@router.get("/pdf_stats")
-async def get_pdf_stats(
-    vector_store: VectorStore = Depends(get_vector_store)
-) -> JSONResponse:
-    """Get statistics about processed PDFs in the vector store.
-    
-    Args:
-        vector_store: ChromaDB vector store instance
-        
-    Returns:
-        JSONResponse: Vector store statistics
-    """
-    try:
-        logger.info("Retrieving PDF processing statistics")
-        
-        # Get collection statistics
-        stats = await vector_store.get_collection_stats()
-        
-        # Add processing service info
-        stats.update({
-            "pdf_processor": {
-                "embedding_service": pdf_processor.embedding_config["service"],
-                "embedding_model": pdf_processor.embedding_config["model"],
-                "chunk_size": settings.CHUNK_SIZE,
-                "chunk_overlap": settings.CHUNK_OVERLAP
-            },
-            "supported_formats": ["pdf"],
-            "max_file_size_mb": settings.MAX_FILE_SIZE // (1024 * 1024)
-        })
-        
-        return JSONResponse(
-            status_code=200,
-            content=stats
-        )
-        
-    except Exception as e:
-        logger.error(f"Failed to get PDF stats: {e}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Failed to retrieve statistics: {str(e)}"
-        )
 
-@router.delete("/clear_pdfs")
-async def clear_all_pdfs(
-    _auth: None = Depends(_require_auth),
-    vector_store: VectorStore = Depends(get_vector_store),
-) -> JSONResponse:
-    """Clear all PDF data from the vector store.
-    
-    WARNING: This will delete all processed PDFs and embeddings!
-    
-    Args:
-        vector_store: ChromaDB vector store instance
-        
-    Returns:
-        JSONResponse: Deletion result
-    """
-    try:
-        logger.warning("Clearing all PDF data from vector store")
-        
-        # Reset the collection
-        result = await vector_store.reset_collection()
-        
-        if result["success"]:
-            return JSONResponse(
-                status_code=200,
-                content={
-                    "success": True,
-                    "message": "All PDF data cleared successfully",
-                    "collection_reset": True
-                }
-            )
-        else:
-            raise HTTPException(
-                status_code=500,
-                detail=f"Failed to clear PDF data: {result.get('error', 'Unknown error')}"
-            )
-    
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Failed to clear PDF data: {e}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal server error: {str(e)}"
-        )
+@router.get('/documents')
+async def documents(session_id: str, identity: Identity = Depends(get_identity),
+                    database: DatabaseService = Depends(get_database_service)):
+    await database.require_session(session_id, identity)
+    return {'documents': await database.uploaded_files(identity, session_id)}
 
-async def _validate_pdf_file(file: UploadFile) -> Dict[str, Any]:
-    """Validate uploaded PDF file.
-    
-    Args:
-        file: Uploaded file to validate
-        
-    Returns:
-        dict: Validation result with success status and error message
-    """
-    try:
-        # Check file extension
-        if not file.filename or not file.filename.lower().endswith('.pdf'):
-            return {
-                "valid": False,
-                "error": "File must be a PDF (.pdf extension required)"
-            }
-        
-        # Check content type
-        if file.content_type and not file.content_type.startswith('application/pdf'):
-            logger.warning(f"Unexpected content type: {file.content_type}")
-            # Don't fail on content type as it can be unreliable
-        
-        # Check file size
-        if hasattr(file, 'size') and file.size:
-            if file.size > settings.MAX_FILE_SIZE:
-                return {
-                    "valid": False,
-                    "error": f"File size exceeds maximum limit of {settings.MAX_FILE_SIZE // (1024 * 1024)}MB"
-                }
-        
-        # Basic filename validation
-        if len(file.filename) > 255:
-            return {
-                "valid": False,
-                "error": "Filename too long (maximum 255 characters)"
-            }
-        
-        return {"valid": True}
-        
-    except Exception as e:
-        logger.error(f"File validation error: {e}")
-        return {
-            "valid": False,
-            "error": f"File validation failed: {str(e)}"
-        }
 
-async def _save_temp_file(file: UploadFile) -> str:
-    """Save uploaded file to temporary location.
-    
-    Args:
-        file: Uploaded file to save
-        
-    Returns:
-        str: Path to temporary file
-    """
-    try:
-        # Create temporary file
-        temp_fd, temp_path = tempfile.mkstemp(suffix='.pdf', prefix='upload_')
-        
-        # Write file content
-        with os.fdopen(temp_fd, 'wb') as temp_file:
-            content = await file.read()
-            temp_file.write(content)
-        
-        # Reset file position for potential re-reading
-        await file.seek(0)
-        
-        logger.info(f"Saved temporary file: {temp_path}")
-        return temp_path
-        
-    except Exception as e:
-        logger.error(f"Failed to save temporary file: {e}")
-        raise
+@router.get('/documents/{document_id}/source')
+async def source(document_id: str, session_id: str, identity: Identity = Depends(get_identity),
+                 database: DatabaseService = Depends(get_database_service)):
+    async with owner_lock(identity.user_id):
+        await database.require_session(session_id, identity)
+        records = await database.uploaded_files(identity, session_id)
+        record = next((r for r in records if r.get('document_id') == document_id and r.get('status') == 'ready'), None)
+        if not record:
+            raise HTTPException(404, 'Source not found')
+        path = document_path(identity.user_id, session_id, document_id)
+        if not path.is_file():
+            raise HTTPException(409, 'Original document is unavailable; upload it again')
+        data = await run_blocking(path.read_bytes)
+    content_type = 'application/pdf' if data.startswith(b'%PDF-') else 'image/png' if data.startswith(b'\x89PNG') else 'image/jpeg'
+    return Response(data, media_type=content_type,
+                    headers={'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff'})
 
-async def _process_pdf_background(
-    file_path: str, 
-    filename: str, 
-    vector_store: VectorStore,
-    session_id: Optional[str] = None,
-    user_id: Optional[str] = None
-) -> Dict[str, Any]:
-    """Process PDF file and store embeddings with session metadata (background task).
-    
-    Args:
-        file_path: Path to the PDF file
-        filename: Original filename
-        vector_store: Vector store instance
-        session_id: Optional chat session ID
-        user_id: Optional user ID
-        
-    Returns:
-        dict: Processing result
-    """
-    try:
-        logger.info(f"Starting background PDF processing: {filename} (session: {session_id})")
-        
-        # Process PDF through the pipeline
-        processing_result = await pdf_processor.process_pdf(file_path)
-        
-        if not processing_result["success"]:
-            return processing_result
-        
-        # Ensure source metadata (original filename/title) is persisted with each vector.
-        for chunk in processing_result["embedded_chunks"]:
-            chunk_metadata = chunk.get("metadata", {})
-            chunk_metadata["original_file_name"] = filename
-            chunk_metadata["source_file_name"] = filename
-            # Keep compatibility with existing readers that use `file_name`/`filename`.
-            chunk_metadata["file_name"] = filename
-            chunk_metadata["filename"] = filename
 
-            source_title = chunk_metadata.get("title") or ""
-            chunk_metadata["source"] = source_title if source_title else filename
+@router.delete('/documents/{document_id}')
+async def delete_document(document_id: str, session_id: str, identity: Identity = Depends(get_identity),
+                          database: DatabaseService = Depends(get_database_service)):
+    async with owner_lock(identity.user_id):
+        await database.require_session(session_id, identity)
+        record = next((r for r in await database.uploaded_files(identity, session_id)
+                       if r.get('document_id') == document_id), None)
+        if record:
+            await delete_record(database, identity, record)
+    return {'success': True}
 
-            if session_id:
-                chunk_metadata["session_id"] = session_id
-            if user_id:
-                chunk_metadata["user_id"] = user_id
 
-            chunk["metadata"] = chunk_metadata
+@router.delete('/sessions/{session_id}/documents')
+async def clear_session_documents(session_id: str, identity: Identity = Depends(get_identity),
+                                  database: DatabaseService = Depends(get_database_service)):
+    async with owner_lock(identity.user_id):
+        await database.require_session(session_id, identity)
+        await delete_session_documents(database, identity, str(int(session_id)))
+    return {'success': True}
 
-        logger.info(
-            "Added source/session metadata to %s chunks (source_file_name=%s)",
-            len(processing_result["embedded_chunks"]),
-            filename,
-        )
-        
-        # Store embeddings in vector store
-        storage_result = await vector_store.add_documents(
-            processing_result["embedded_chunks"]
-        )
-        
-        if not storage_result["success"]:
-            return {
-                "success": False,
-                "error": f"Failed to store embeddings: {storage_result.get('error', 'Unknown error')}"
-            }
-        
-        # Combine results
-        final_result = processing_result.copy()
-        final_result["storage_result"] = storage_result
-        
-        logger.info(f"Background PDF processing completed: {filename}")
-        return final_result
-        
-    except Exception as e:
-        logger.error(f"Background PDF processing failed: {e}")
-        return {
-            "success": False,
-            "error": str(e)
-        }
 
-def _cleanup_temp_file(file_path: str):
-    """Clean up temporary file (background task).
-    
-    Args:
-        file_path: Path to temporary file to delete
-    """
-    try:
-        if os.path.exists(file_path):
-            os.unlink(file_path)
-            logger.info(f"Cleaned up temporary file: {file_path}")
-    except Exception as e:
-        logger.error(f"Failed to cleanup temporary file {file_path}: {e}")
+@router.delete('/sessions/{session_id}')
+async def delete_session(session_id: str, identity: Identity = Depends(get_identity),
+                         database: DatabaseService = Depends(get_database_service)):
+    async with owner_lock(identity.user_id):
+        await database.require_session(session_id, identity)
+        await delete_session_documents(database, identity, str(int(session_id)))
+        await database.request('DELETE', '/rest/v1/chat_history', params={
+            'chat_id': f'eq.{int(session_id)}', 'user_id': f'eq.{identity.user_id}'})
+        await database.request('DELETE', '/rest/v1/chats', params={
+            'id': f'eq.{int(session_id)}', 'user_id': f'eq.{identity.user_id}'})
+    return {'success': True}
 
-# Export router
-__all__ = ["router"]
+
+@router.get('/pdf_stats')
+async def pdf_stats(session_id: str, identity: Identity = Depends(get_identity),
+                    database: DatabaseService = Depends(get_database_service)):
+    await database.require_session(session_id, identity)
+    records = await database.uploaded_files(identity, session_id)
+    ready = [r for r in records if r.get('status') == 'ready']
+    return {'total_documents': len(ready), 'total_chunks': sum(r['chunks_count'] for r in ready),
+            'supported_formats': ['pdf', 'png', 'jpeg'], 'chunk_unit': 'tokens',
+            'chunk_size': settings.CHUNK_TOKENS, 'chunk_overlap': settings.CHUNK_OVERLAP_TOKENS}

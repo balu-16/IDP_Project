@@ -1,137 +1,93 @@
-import os
+"""Protocol fault injection is isolated from the real-data experiment runner."""
 import unittest
-from unittest.mock import patch
-
+import httpx
 from fastapi import HTTPException
+from main import app, global_exception_handler
+from config import Settings
+from services.database import DatabaseService, Identity, require_matching_user
 from starlette.requests import Request
 
-from main import global_exception_handler
-import services.database as database_module
-from services.database import DatabaseService
+AUTH_ID = '00000000-0000-4000-8000-000000000001'
 
 
-class SupabaseConfigTests(unittest.IsolatedAsyncioTestCase):
-    async def test_initialize_uses_supabase_url_and_anon_key(self):
-        service = DatabaseService()
+class AuthenticationTests(unittest.IsolatedAsyncioTestCase):
+    async def test_every_private_route_rejects_missing_authentication(self):
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url='http://test') as client:
+            for method, path, body in [
+                ('GET', '/api/auth/me', None),
+                ('PUT', '/api/auth/user/1', {'full_name': 'Updated name'}),
+                ('GET', '/api/v1/documents?session_id=1', None),
+                ('GET', '/api/v1/pdf_stats?session_id=1', None),
+                ('GET', '/api/v1/documents/abc/source?session_id=1', None),
+                ('DELETE', '/api/v1/sessions/1', None),
+                ('POST', '/api/v1/query', {'query': 'test', 'session_id': '1'}),
+                ('POST', '/api/chat', {'message': 'test', 'session_id': '1'}),
+            ]:
+                with self.subTest(path=path):
+                    response = await client.request(method, path, json=body)
+                    self.assertEqual(response.status_code, 401)
 
-        with patch.dict(
-            os.environ,
-            {
-                "SUPABASE_URL": "https://example.supabase.co",
-                "SUPABASE_ANON_KEY": "frontend-anon-key",
-            },
-            clear=False,
-        ):
-            with patch("services.database.create_client") as create_client_mock:
-                fake_client = object()
-                create_client_mock.return_value = fake_client
+    async def test_provider_rejecting_arbitrary_token_is_not_accepted_locally(self):
+        async with httpx.AsyncClient(transport=httpx.MockTransport(
+            lambda request: httpx.Response(401, json={'message': 'invalid token'})),
+            base_url='https://auth.invalid') as client:
+            with self.assertRaises(HTTPException) as ctx:
+                await DatabaseService(client).verify_identity()
+            self.assertEqual(ctx.exception.status_code, 401)
 
-                await service.initialize()
+    async def test_verified_identity_requires_a_linked_profile(self):
+        def transport(request):
+            if request.url.path == '/auth/v1/user':
+                return httpx.Response(200, json={'id': AUTH_ID, 'email_confirmed_at': '2026-09-10'})
+            return httpx.Response(200, json=[])
+        async with httpx.AsyncClient(transport=httpx.MockTransport(transport), base_url='https://auth.invalid') as client:
+            with self.assertRaises(HTTPException) as ctx:
+                await DatabaseService(client).verify_identity()
+            self.assertEqual(ctx.exception.status_code, 403)
 
-        create_client_mock.assert_called_once_with(
-            "https://example.supabase.co",
-            "frontend-anon-key",
-        )
-        self.assertTrue(service._initialized)
-        self.assertIs(service.client, fake_client)
+    async def test_unverified_email_is_rejected(self):
+        async with httpx.AsyncClient(transport=httpx.MockTransport(
+            lambda request: httpx.Response(200, json={'id': AUTH_ID, 'email_confirmed_at': None})),
+            base_url='https://auth.invalid') as client:
+            with self.assertRaises(HTTPException) as ctx:
+                await DatabaseService(client).verify_identity()
+            self.assertEqual(ctx.exception.status_code, 403)
 
-    async def test_initialize_requires_supabase_anon_key(self):
-        service = DatabaseService()
+    def test_client_user_id_cannot_override_identity(self):
+        identity = Identity(1, AUTH_ID, {})
+        with self.assertRaises(HTTPException) as ctx:
+            require_matching_user(identity, 2)
+        self.assertEqual(ctx.exception.status_code, 403)
+        require_matching_user(identity, 1)
 
-        with patch.dict(
-            os.environ,
-            {
-                "SUPABASE_URL": "https://example.supabase.co",
-                "SUPABASE_ANON_KEY": "",
-            },
-            clear=False,
-        ):
-            with patch("services.database.settings.SUPABASE_URL", None), patch(
-                "services.database.settings.SUPABASE_ANON_KEY",
-                None,
-            ):
-                with patch("services.database.create_client") as create_client_mock:
-                    with self.assertRaisesRegex(
-                        RuntimeError,
-                        "SUPABASE_URL and SUPABASE_ANON_KEY must be set",
-                    ):
-                        await service.initialize()
+    async def test_database_failure_does_not_turn_into_empty_success(self):
+        async with httpx.AsyncClient(transport=httpx.MockTransport(
+            lambda request: httpx.Response(500, json={'secret': 'not for clients'})),
+            base_url='https://auth.invalid') as client:
+            with self.assertRaises(HTTPException) as ctx:
+                await DatabaseService(client).uploaded_files(Identity(1, AUTH_ID, {}))
+            self.assertEqual(ctx.exception.status_code, 503)
+            self.assertNotIn('secret', ctx.exception.detail)
 
-        create_client_mock.assert_not_called()
+    async def test_profile_update_contract_accepts_json_and_forbids_identity_fields(self):
+        from routes.auth_routes import ProfileUpdate
+        self.assertEqual(ProfileUpdate.model_validate({'full_name': 'Updated name'}).full_name, 'Updated name')
+        with self.assertRaises(ValueError):
+            ProfileUpdate.model_validate({'auth_user_id': AUTH_ID})
 
+    async def test_legacy_auth_and_global_reset_are_disabled(self):
+        async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url='http://test') as client:
+            self.assertEqual((await client.post('/api/auth/login', json={})).status_code, 410)
+            self.assertEqual((await client.delete('/api/v1/clear_pdfs')).status_code, 404)
 
-class GlobalExceptionHandlerTests(unittest.TestCase):
-    def test_global_exception_handler_preserves_http_exception_status(self):
-        scope = {
-            "type": "http",
-            "method": "GET",
-            "path": "/boom",
-            "headers": [],
-        }
-        request = Request(scope)
-        response = self._run_async(
-            global_exception_handler(
-                request,
-                HTTPException(
-                    status_code=503,
-                    detail="Authentication backend initialization failed",
-                ),
-            )
-        )
+    async def test_exception_details_are_not_returned_to_clients(self):
+        request = Request({'type': 'http', 'method': 'GET', 'path': '/', 'headers': []})
+        response = await global_exception_handler(request, RuntimeError('secret-db-password'))
+        self.assertNotIn(b'secret-db-password', response.body)
 
-        self.assertEqual(response.status_code, 503)
-        self.assertEqual(
-            response.body,
-            b'{"detail":"Authentication backend initialization failed"}',
-        )
+    def test_explicit_cors_configuration_is_not_extended(self):
+        config = Settings(_env_file=None, ALLOWED_ORIGINS='https://college.example')
+        self.assertEqual(config.allowed_origins_list, ['https://college.example'])
 
-    def _run_async(self, coroutine):
-        import asyncio
-
-        return asyncio.run(coroutine)
-
-
-class DatabaseDependencyTests(unittest.IsolatedAsyncioTestCase):
-    async def test_get_database_service_returns_503_when_supabase_env_is_missing(self):
-        with patch.dict(
-            os.environ,
-            {
-                "SUPABASE_URL": "",
-                "SUPABASE_ANON_KEY": "",
-            },
-            clear=False,
-        ):
-            with patch("services.database.settings.SUPABASE_URL", None), patch(
-                "services.database.settings.SUPABASE_ANON_KEY",
-                None,
-            ), patch.object(database_module, "_database_service", None):
-                with self.assertRaises(HTTPException) as ctx:
-                    await database_module.get_database_service()
-
-        self.assertEqual(ctx.exception.status_code, 503)
-        self.assertEqual(
-            ctx.exception.detail,
-            "SUPABASE_URL and SUPABASE_ANON_KEY must be set for authentication endpoints",
-        )
-
-    async def test_get_database_service_surfaces_supabase_httpx_version_mismatch(self):
-        with patch.dict(
-            os.environ,
-            {
-                "SUPABASE_URL": "https://example.supabase.co",
-                "SUPABASE_ANON_KEY": "anon-key",
-            },
-            clear=False,
-        ):
-            with patch.object(database_module, "_database_service", None), patch(
-                "services.database.create_client",
-                side_effect=TypeError("Client.__init__() got an unexpected keyword argument 'proxy'"),
-            ):
-                with self.assertRaises(HTTPException) as ctx:
-                    await database_module.get_database_service()
-
-        self.assertEqual(ctx.exception.status_code, 503)
-        self.assertEqual(
-            ctx.exception.detail,
-            "Authentication backend initialization failed: incompatible Supabase/httpx dependency versions in the deployed container",
-        )
+    def test_debug_release_is_parsed(self):
+        self.assertFalse(Settings(_env_file=None, DEBUG='release').DEBUG)

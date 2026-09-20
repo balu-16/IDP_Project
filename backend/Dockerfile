@@ -20,13 +20,9 @@ RUN apt-get update -o Acquire::ForceIPv4=true \
 # Copy dependency file first (layer caching)
 COPY requirements.txt .
 
-# Upgrade pip and install CPU-only ML libraries
+# Upgrade pip and install the locked CPU dependency set (torch comes from
+# requirements.txt as torch==2.12.0+cpu; torchvision/torchaudio are unused).
 RUN pip install --upgrade pip \
-    && pip install --no-cache-dir \
-        torch \
-        torchvision \
-        torchaudio \
-        --index-url https://download.pytorch.org/whl/cpu \
     && pip install --no-cache-dir -r requirements.txt
 
 # Create non-root user

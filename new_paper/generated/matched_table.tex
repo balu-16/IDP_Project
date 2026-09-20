@@ -1,0 +1,16 @@
+\begin{tabular}{llrrrrrl}
+\toprule
+Dataset & Comparison & $\Delta$ nDCG ($10^{-3}$) & 95\% CI low & 95\% CI high & raw $p$ & $d_z$ & Holm reject\\
+\midrule
+scifact & BM25 full pipeline vs. exact & -0.723 & -39.987 & 39.714 & 0.970 & -0.002 & No\\
+scifact & HNSW full pipeline vs. exact & 0.146 & 0.000 & 0.438 & 1.000 & 0.058 & No\\
+scifact & Analytical vs. exact & 0.000 & 0.000 & 0.000 & 1.000 & 0.000 & No\\
+scifact & Sampling vs. exact & -0.851 & -4.294 & 2.825 & 0.621 & -0.027 & No\\
+scifact & Grover policy vs. exact & -0.279 & -5.412 & 5.096 & 0.918 & -0.006 & No\\
+nfcorpus & BM25 full pipeline vs. exact & 9.834 & -11.046 & 30.968 & 0.360 & 0.050 & No\\
+nfcorpus & HNSW full pipeline vs. exact & -3.511 & -10.386 & 0.213 & 0.241 & -0.062 & No\\
+nfcorpus & Analytical vs. exact & 0.000 & 0.000 & 0.000 & 1.000 & 0.000 & No\\
+nfcorpus & Sampling vs. exact & 0.084 & -0.146 & 0.329 & 0.501 & 0.039 & No\\
+nfcorpus & Grover policy vs. exact & -0.149 & -0.706 & 0.356 & 0.600 & -0.030 & No\\
+\bottomrule
+\end{tabular}

@@ -1,340 +1,166 @@
-"""PDF processing service for chunking and embedding generation.
-
-This service handles:
-- PDF text extraction using PyPDF
-- Text chunking with LangChain
-- Embedding generation using HuggingFace
-- Document metadata extraction
-"""
-
-import os
+"""Deterministic token windows and pinned, normalized CPU embeddings."""
 import hashlib
-import logging
-from typing import List, Dict, Any, Optional
-from datetime import datetime
-import asyncio
-
-# PDF processing
-import pypdf
-from pypdf import PdfReader
-
-# LangChain for text processing
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.schema import Document
-
-# Embeddings
-from langchain_community.embeddings import HuggingFaceEmbeddings
-
-# Configuration
+import json
+import subprocess
+import sys
+import threading
+import time
+from dataclasses import dataclass
+from pathlib import Path
 from config import settings, get_embedding_config
+from services.workers import run_blocking
+from services.quantum_search import normalized_matrix
 
-logger = logging.getLogger(__name__)
+
+@dataclass
+class TextChunk:
+    page_content: str
+    metadata: dict
+
 
 class PDFProcessor:
-    """Service for processing PDF documents and generating embeddings."""
-
-    _instance = None
-    _initialized = False
-
-    def __new__(cls):
-        """Singleton pattern to ensure only one instance exists."""
-        if cls._instance is None:
-            cls._instance = super(PDFProcessor, cls).__new__(cls)
-        return cls._instance
-
     def __init__(self):
-        """Initialize the PDF processor with embedding service."""
-        if self._initialized:
-            return
-
-        self.embedding_config = get_embedding_config()
-        self.embeddings = None  # Initialize lazily when needed
-
-        # Initialize text splitter for chunking
-        self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=settings.CHUNK_SIZE,
-            chunk_overlap=settings.CHUNK_OVERLAP,
-            length_function=len,
-            separators=["\n\n", "\n", " ", ""]
-        )
-
-        PDFProcessor._initialized = True
-
-        logger.info(f"PDFProcessor initialized (embeddings will be loaded when needed)")
-
-    def reinitialize(self) -> None:
-        """Re-initialize the processor, picking up config changes.
-
-        Clears the cached embeddings model so the next call to
-        _generate_huggingface_embeddings reloads from the current config.
-        """
         self.embedding_config = get_embedding_config()
         self.embeddings = None
-        self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=settings.CHUNK_SIZE,
-            chunk_overlap=settings.CHUNK_OVERLAP,
-            length_function=len,
-            separators=["\n\n", "\n", " ", ""]
-        )
-        logger.info("PDFProcessor reinitialized with updated config")
-    
+        self._lock = threading.RLock()
+        self._tokenizer = None
+
+    @property
+    def processing_version(self):
+        spec = {**self.embedding_config, 'chunk_tokens': settings.CHUNK_TOKENS,
+                'overlap_tokens': settings.CHUNK_OVERLAP_TOKENS,
+                'normalization': 'l2', 'extraction': 'page-native-tesseract-v2',
+                'ocr_language': settings.OCR_LANGUAGE}
+        return 'v2-' + hashlib.sha256(json.dumps(spec, sort_keys=True).encode()).hexdigest()[:16]
+
+    def tokenizer(self):
+        with self._lock:
+            if self._tokenizer is None:
+                from transformers import AutoTokenizer
+                self._tokenizer = AutoTokenizer.from_pretrained(
+                    self.embedding_config['model'], revision=self.embedding_config['revision'],
+                    cache_dir=str(settings.path(settings.MODEL_CACHE_DIR)), use_fast=True,
+                    token=settings.HUGGINGFACE_API_KEY)
+            return self._tokenizer
+
     def _initialize_embeddings(self):
-        """Initialize HuggingFace embedding service."""
-        try:
-            # Use HuggingFace embeddings
-            self.embeddings = HuggingFaceEmbeddings(
-                model_name=self.embedding_config["model"]
-            )
-            logger.info("HuggingFace embeddings initialized")
-        except Exception as e:
-            logger.error(f"Failed to initialize embeddings: {e}")
-            raise
-    
-    async def extract_text_from_pdf(self, file_path: str) -> Dict[str, Any]:
-        """Extract text content from a PDF file.
-        
-        Args:
-            file_path: Path to the PDF file
-            
-        Returns:
-            dict: Extracted text and metadata
-        """
-        try:
-            logger.info(f"Extracting text from PDF: {file_path}")
-            
-            # Read PDF file
-            with open(file_path, 'rb') as file:
-                pdf_reader = PdfReader(file)
-                
-                # Extract metadata
-                metadata = {
-                    "file_path": file_path,
-                    "file_name": os.path.basename(file_path),
-                    "num_pages": len(pdf_reader.pages),
-                    "processed_at": datetime.utcnow().isoformat(),
-                    "file_size": os.path.getsize(file_path)
-                }
-                
-                # Extract PDF metadata if available
-                if pdf_reader.metadata:
-                    metadata.update({
-                        "title": pdf_reader.metadata.get("/Title", ""),
-                        "author": pdf_reader.metadata.get("/Author", ""),
-                        "subject": pdf_reader.metadata.get("/Subject", ""),
-                        "creator": pdf_reader.metadata.get("/Creator", "")
-                    })
-                
-                # Extract text from all pages
-                full_text = ""
-                page_texts = []
-                
-                for page_num, page in enumerate(pdf_reader.pages):
-                    try:
-                        page_text = page.extract_text()
-                        if page_text.strip():  # Only add non-empty pages
-                            page_texts.append({
-                                "page_number": page_num + 1,
-                                "text": page_text.strip()
-                            })
-                            full_text += f"\n\n--- Page {page_num + 1} ---\n\n{page_text}"
-                    except Exception as e:
-                        logger.warning(f"Failed to extract text from page {page_num + 1}: {e}")
-                        continue
-                
-                # Generate file hash for deduplication
-                file_hash = self._generate_file_hash(file_path)
-                metadata["file_hash"] = file_hash
-                
-                result = {
-                    "full_text": full_text.strip(),
-                    "page_texts": page_texts,
-                    "metadata": metadata
-                }
-                
-                logger.info(f"Successfully extracted {len(page_texts)} pages from PDF")
-                return result
-                
-        except Exception as e:
-            logger.error(f"Failed to extract text from PDF {file_path}: {e}")
-            raise
-    
-    async def chunk_text(self, text: str, metadata: Dict[str, Any]) -> List[Document]:
-        """Split text into chunks using LangChain text splitter.
-        
-        Args:
-            text: Full text content to chunk
-            metadata: Document metadata to attach to chunks
-            
-        Returns:
-            List[Document]: List of text chunks as LangChain documents
-        """
-        try:
-            logger.info(f"Chunking text of length {len(text)}")
-            
-            # Create LangChain document
-            document = Document(page_content=text, metadata=metadata)
-            
-            # Split into chunks
-            chunks = self.text_splitter.split_documents([document])
-            
-            # Add chunk-specific metadata
-            for i, chunk in enumerate(chunks):
-                chunk.metadata.update({
-                    "chunk_id": i,
-                    "chunk_size": len(chunk.page_content),
-                    "total_chunks": len(chunks)
-                })
-            
-            logger.info(f"Created {len(chunks)} chunks")
-            return chunks
-            
-        except Exception as e:
-            logger.error(f"Failed to chunk text: {e}")
-            raise
-    
-    async def generate_embeddings(self, chunks: List[Document]) -> List[Dict[str, Any]]:
-        """Generate embeddings for text chunks.
-        
-        Args:
-            chunks: List of text chunks as LangChain documents
-            
-        Returns:
-            List[Dict]: List of chunks with embeddings and metadata
-        """
-        try:
-            logger.info(f"Generating embeddings for {len(chunks)} chunks")
-            
-            # Extract texts for embedding
-            texts = [chunk.page_content for chunk in chunks]
-            
-            # Generate embeddings using HuggingFace
-            embeddings = await self._generate_huggingface_embeddings(texts)
-            
-            # Combine chunks with embeddings
-            embedded_chunks = []
-            for i, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
-                # Create unique ID using file hash, filename, timestamp, and chunk index
-                file_hash = chunk.metadata.get('file_hash', 'unknown')
-                file_name = chunk.metadata.get('file_name', 'unknown')
-                processed_at = chunk.metadata.get('processed_at', datetime.utcnow().isoformat())
-                
-                # Create a more unique ID to prevent overwrites
-                unique_id = f"{file_hash}_{file_name}_{processed_at}_{i}".replace(' ', '_').replace(':', '-')
-                
-                embedded_chunk = {
-                    "id": unique_id,
-                    "text": chunk.page_content,
-                    "embedding": embedding,
-                    "metadata": chunk.metadata
-                }
-                embedded_chunks.append(embedded_chunk)
-            
-            logger.info(f"Successfully generated embeddings for {len(embedded_chunks)} chunks")
-            return embedded_chunks
-            
-        except Exception as e:
-            logger.error(f"Failed to generate embeddings: {e}")
-            raise
-    
-    async def _generate_huggingface_embeddings(self, texts: List[str]) -> List[List[float]]:
-        """Generate embeddings using HuggingFace models."""
-        try:
-            # Initialize embeddings if not already done
+        with self._lock:
             if self.embeddings is None:
-                self._initialize_embeddings()
-            
-            # Use LangChain's HuggingFace embeddings
-            embeddings = await asyncio.to_thread(
-                self.embeddings.embed_documents, texts
-            )
-            return embeddings
-        except Exception as e:
-            logger.error(f"HuggingFace embedding generation failed: {e}")
-            raise
-    
-    async def process_pdf(self, file_path: str) -> Dict[str, Any]:
-        """Complete PDF processing pipeline: extract, chunk, and embed.
-        
-        Args:
-            file_path: Path to the PDF file
-            
-        Returns:
-            dict: Processing results with embedded chunks
-        """
+                import torch
+                from sentence_transformers import SentenceTransformer
+                torch.set_num_threads(settings.CPU_THREADS)
+                self.embeddings = SentenceTransformer(
+                    self.embedding_config['model'], revision=self.embedding_config['revision'],
+                    cache_folder=str(settings.path(settings.MODEL_CACHE_DIR)), device='cpu',
+                    token=settings.HUGGINGFACE_API_KEY)
+                if self.embeddings.get_sentence_embedding_dimension() != self.embedding_config['dimension']:
+                    raise ValueError('Configured embedding dimension does not match the model')
+
+    @staticmethod
+    def _generate_file_hash(file_path):
+        with open(file_path, 'rb') as handle:
+            return hashlib.file_digest(handle, 'sha256').hexdigest()
+
+    def _extract(self, file_path):
         try:
-            logger.info(f"Starting complete PDF processing for: {file_path}")
-            
-            # Step 1: Extract text from PDF
-            extraction_result = await self.extract_text_from_pdf(file_path)
-            
-            if not extraction_result["full_text"].strip():
-                raise ValueError("No text content found in PDF")
-            
-            # Step 2: Chunk the text
-            chunks = await self.chunk_text(
-                extraction_result["full_text"],
-                extraction_result["metadata"]
-            )
-            
-            # Step 3: Generate embeddings
-            embedded_chunks = await self.generate_embeddings(chunks)
-            
-            # Prepare final result
-            result = {
-                "success": True,
-                "file_metadata": extraction_result["metadata"],
-                "chunks_count": len(embedded_chunks),
-                "embedded_chunks": embedded_chunks,
-                "processing_time": datetime.utcnow().isoformat()
-            }
-            
-            logger.info(f"PDF processing completed successfully: {len(embedded_chunks)} chunks created")
-            return result
-            
-        except Exception as e:
-            logger.error(f"PDF processing failed for {file_path}: {e}")
-            return {
-                "success": False,
-                "error": str(e),
-                "file_path": file_path
-            }
-    
-    def _generate_file_hash(self, file_path: str) -> str:
-        """Generate SHA-256 hash of file for deduplication.
-        
-        Args:
-            file_path: Path to the file
-            
-        Returns:
-            str: SHA-256 hash of the file
-        """
-        hash_sha256 = hashlib.sha256()
-        with open(file_path, "rb") as f:
-            for chunk in iter(lambda: f.read(4096), b""):
-                hash_sha256.update(chunk)
-        return hash_sha256.hexdigest()
-    
-    async def embed_query(self, query: str) -> List[float]:
-        """Generate embedding for a search query.
-        
-        Args:
-            query: Search query text
-            
-        Returns:
-            List[float]: Query embedding vector
-        """
+            result = subprocess.run(
+                [sys.executable, '-m', 'services.extract_document', str(Path(file_path).resolve())],
+                cwd=Path(__file__).resolve().parents[1], capture_output=True, text=True,
+                timeout=settings.DOCUMENT_TIMEOUT_SECONDS, check=False)
+        except subprocess.TimeoutExpired:
+            raise ValueError('Document extraction exceeded the processing timeout') from None
         try:
-            # Initialize embeddings if not already done
-            if self.embeddings is None:
-                self._initialize_embeddings()
-            
-            # Generate embedding using HuggingFace
-            embedding = await asyncio.to_thread(
-                self.embeddings.embed_query, query
-            )
-            
-            return embedding
-            
-        except Exception as e:
-            logger.error(f"Failed to generate query embedding: {e}")
-            raise
+            payload = json.loads(result.stdout)
+        except json.JSONDecodeError:
+            raise ValueError('Document extraction failed') from None
+        if result.returncode or 'error' in payload:
+            raise ValueError(payload.get('error', 'Document extraction failed'))
+        payload['metadata'].update({
+            'file_hash': self._generate_file_hash(file_path),
+            'file_size': Path(file_path).stat().st_size,
+            'processing_version': self.processing_version,
+            'embedding_model': self.embedding_config['model'],
+            'embedding_revision': self.embedding_config['revision'],
+            'embedding_dimension': self.embedding_config['dimension']})
+        payload['full_text'] = '\n\n'.join(p['text'] for p in payload['page_texts'])
+        return payload
+
+    async def extract_text_from_pdf(self, file_path):
+        return await run_blocking(self._extract, file_path)
+
+    def split_text(self, text, metadata):
+        tokenizer = self.tokenizer()
+        offsets = tokenizer(text, add_special_tokens=False, return_offsets_mapping=True,
+                            truncation=False)['offset_mapping']
+        chunks, start = [], 0
+        while start < len(offsets):
+            end = min(start+settings.CHUNK_TOKENS, len(offsets))
+            left, right = offsets[start][0], offsets[end-1][1]
+            content = text[left:right]
+            # Retokenizing a substring at a wordpiece boundary can change token count.
+            while len(tokenizer.encode(content, add_special_tokens=False)) > settings.CHUNK_TOKENS:
+                end -= 1
+                right = offsets[end-1][1]
+                content = text[left:right]
+            if any(c.isalnum() for c in content):
+                location = f"{metadata.get('page_number', 0)}:{metadata.get('paragraph_id', '')}:{left}:{right}"
+                chunk_id = hashlib.sha256(
+                    f"{metadata.get('document_id', metadata.get('file_hash', ''))}:{self.processing_version}:{location}".encode()
+                ).hexdigest()
+                chunks.append(TextChunk(content, {
+                    **metadata, 'chunk_id': chunk_id, 'processing_version': self.processing_version,
+                    'page_start': metadata.get('page_number', 0), 'page_end': metadata.get('page_number', 0),
+                    'char_start': left, 'char_end': right,
+                    'token_start': start, 'token_end': end,
+                    'token_count': len(tokenizer.encode(content, add_special_tokens=False))}))
+            if end == len(offsets):
+                break
+            start = max(start+1, end-settings.CHUNK_OVERLAP_TOKENS)
+        return chunks
+
+    async def chunk_text(self, text, metadata):
+        return await run_blocking(self.split_text, text, metadata)
+
+    def encode(self, texts):
+        self._initialize_embeddings()
+        tokenizer = self.tokenizer()
+        maximum = self.embeddings.max_seq_length
+        for text in texts:
+            if len(tokenizer.encode(text, add_special_tokens=True, truncation=False)) > maximum:
+                raise ValueError(f'Input exceeds the embedding model limit ({maximum} tokens); shorten the query')
+        with self._lock:
+            vectors = self.embeddings.encode(texts, batch_size=settings.EMBEDDING_BATCH_SIZE,
+                normalize_embeddings=True, convert_to_numpy=True, show_progress_bar=False)
+        return normalized_matrix(vectors, self.embedding_config['dimension']).tolist()
+
+    async def generate_embeddings(self, chunks):
+        if not chunks:
+            return []
+        embeddings = await run_blocking(self.encode, [chunk.page_content for chunk in chunks])
+        return [{'id': chunk.metadata['chunk_id'], 'text': chunk.page_content,
+                 'embedding': embedding, 'metadata': chunk.metadata}
+                for chunk, embedding in zip(chunks, embeddings)]
+
+    async def process_pdf(self, file_path, document_id=None, filename=None):
+        start = time.perf_counter()
+        extracted = await self.extract_text_from_pdf(file_path)
+        extraction_ms = (time.perf_counter()-start)*1000
+        metadata = {**extracted['metadata'], 'document_id': document_id or extracted['metadata']['file_hash'],
+                    'file_name': filename or Path(file_path).name}
+        clock = time.perf_counter()
+        chunks = []
+        for page in extracted['page_texts']:
+            chunks.extend(await self.chunk_text(page['text'], {
+                **metadata, **{key: value for key, value in page.items() if key != 'text'}}))
+        chunking_ms = (time.perf_counter()-clock)*1000
+        clock = time.perf_counter()
+        embedded = await self.generate_embeddings(chunks)
+        return {'success': True, 'file_metadata': metadata, 'chunks_count': len(chunks),
+                'embedded_chunks': embedded, 'processing_time_ms': (time.perf_counter()-start)*1000,
+                'timings_ms': {'extraction': extraction_ms, 'chunking': chunking_ms,
+                               'embedding': (time.perf_counter()-clock)*1000}}
+
+    async def embed_query(self, query):
+        if not query.strip():
+            raise ValueError('Query cannot be blank')
+        return (await run_blocking(self.encode, [query]))[0]

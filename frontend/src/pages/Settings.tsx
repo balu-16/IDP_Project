@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, User, Mail, Phone, Calendar, Trash2, Edit2, Save, X, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, User, Mail, Phone, Calendar, Edit2, Save, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/components/auth/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { showToast } from '@/components/Toast';
 import CoffeeBackground from '@/components/CoffeeBackground';
-import { apiUrl } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
+import { profileSchema } from '@/lib/contracts';
 import { cn } from '@/lib/utils';
 
 const Settings: React.FC = () => {
   const navigate = useNavigate();
-  const { user, logout, updateUser, token } = useAuth();
+  const { user, updateUser, token } = useAuth();
   
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const [deleteConfirmationText, setDeleteConfirmationText] = useState('');
   
   const [formData, setFormData] = useState({
     full_name: '',
@@ -36,13 +35,6 @@ const Settings: React.FC = () => {
     }
   }, [user]);
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!user) {
-      navigate('/login');
-    }
-  }, [user, navigate]);
-
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
@@ -55,22 +47,22 @@ const Settings: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch(apiUrl(`/api/auth/user/${user.id}`), {
+      const response = await apiFetch(`/api/auth/user/${user.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ full_name: formData.full_name, phone_number: formData.phone_number || null })
       });
 
       const data = await response.json();
 
       if (response.ok && data.success) {
-        showToast('success', 'Profile Updated', 'Your profile has been updated successfully.');
+        showToast('success', 'Profile Updated', 'Your profile has been updated.');
         setIsEditing(false);
         // Refresh user data in AuthContext so the UI reflects the changes
-        updateUser(data.user);
+        updateUser(profileSchema.parse(data.user));
       } else {
         showToast('error', 'Update Failed', data.detail || 'Failed to update profile.');
       }
@@ -79,42 +71,6 @@ const Settings: React.FC = () => {
       showToast('error', 'Network Error', 'Failed to update profile. Please try again.');
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleDeleteAccount = async () => {
-    if (!user || !token) return;
-    
-    if (deleteConfirmationText !== 'Confirm to delete My account') {
-      showToast('error', 'Invalid Confirmation', 'Please type the exact confirmation text.');
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const response = await fetch(apiUrl(`/api/auth/user/${user.id}`), {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        showToast('success', 'Account Deleted', 'Your account has been deleted successfully.');
-        logout();
-        navigate('/');
-      } else {
-        showToast('error', 'Deletion Failed', data.detail || 'Failed to delete account.');
-      }
-    } catch (error) {
-      console.error('Error deleting account:', error);
-      showToast('error', 'Network Error', 'Failed to delete account. Please try again.');
-    } finally {
-      setIsLoading(false);
-      setShowDeleteConfirmation(false);
-      setDeleteConfirmationText('');
     }
   };
 
@@ -127,7 +83,7 @@ const Settings: React.FC = () => {
   };
 
   if (!user) {
-    return null; // Will redirect via useEffect
+    return null;
   }
 
   return (
@@ -200,25 +156,15 @@ const Settings: React.FC = () => {
                   )}
                 </div>
 
-                {/* Email */}
+                {/* Email (read-only; contact support to change) */}
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-text-secondary flex items-center gap-2">
                     <Mail size={16} />
                     Email Address
                   </label>
-                  {isEditing ? (
-                    <Input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="glass-input"
-                      placeholder="Enter your email"
-                    />
-                  ) : (
-                    <p className="text-text-primary bg-surface/50 dark:bg-glass-bg p-3 rounded-lg border border-border">
-                      {user.email}
-                    </p>
-                  )}
+                  <p className="text-text-primary bg-surface/50 dark:bg-glass-bg p-3 rounded-lg border border-border">
+                    {user.email}
+                  </p>
                 </div>
 
                 {/* Phone Number */}
@@ -280,69 +226,6 @@ const Settings: React.FC = () => {
                     <X size={16} className="mr-2" />
                     Cancel
                   </Button>
-                </div>
-              )}
-            </motion.div>
-
-            {/* Danger Zone */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="glass-panel p-6 space-y-4 border-red-500/20"
-            >
-              <h2 className="text-xl font-semibold text-red-400 flex items-center gap-2">
-                <AlertTriangle size={20} />
-                Danger Zone
-              </h2>
-              <p className="text-text-secondary">
-                Once you delete your account, there is no going back. Please be certain.
-              </p>
-              
-              {!showDeleteConfirmation ? (
-                <Button
-                  variant="destructive"
-                  onClick={() => setShowDeleteConfirmation(true)}
-                  className="bg-red-600 hover:bg-red-700 text-white"
-                >
-                  <Trash2 size={16} className="mr-2" />
-                  Delete Account
-                </Button>
-              ) : (
-                <div className="space-y-4 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-                  <p className="text-red-400 font-medium">
-                    Are you absolutely sure? This action cannot be undone.
-                  </p>
-                  <p className="text-text-secondary text-sm">
-                    Type <span className="font-mono bg-surface/80 px-2 py-1 rounded">Confirm to delete My account</span> to confirm:
-                  </p>
-                  <Input
-                    value={deleteConfirmationText}
-                    onChange={(e) => setDeleteConfirmationText(e.target.value)}
-                    className="glass-input border-red-500/30"
-                    placeholder="Type the confirmation text"
-                  />
-                  <div className="flex gap-3">
-                    <Button
-                      variant="destructive"
-                      onClick={handleDeleteAccount}
-                      disabled={isLoading || deleteConfirmationText !== 'Confirm to delete My account'}
-                      className="bg-red-600 hover:bg-red-700 text-white"
-                    >
-                      <Trash2 size={16} className="mr-2" />
-                      {isLoading ? 'Deleting...' : 'Delete Account'}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setShowDeleteConfirmation(false);
-                        setDeleteConfirmationText('');
-                      }}
-                      className="text-text-secondary hover:text-text-primary"
-                    >
-                      Cancel
-                    </Button>
-                  </div>
                 </div>
               )}
             </motion.div>

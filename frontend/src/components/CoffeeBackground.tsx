@@ -1,20 +1,39 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 interface CoffeeBackgroundProps {
   variant?: 'full' | 'muted';
   className?: string;
 }
 
-const CoffeeBackground: React.FC<CoffeeBackgroundProps> = ({ 
-  variant = 'full', 
-  className = '' 
+// Deterministic PRNG so the geometry is stable across renders
+// (previously Math.random() regenerated shapes on every render,
+// including chat input updates).
+function mulberry32(seed: number) {
+  return () => {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+const CoffeeBackground: React.FC<CoffeeBackgroundProps> = ({
+  variant = 'full',
+  className = ''
 }) => {
-  const shapes = Array.from({ length: 8 }, (_, i) => ({
-    id: i,
-    size: Math.random() * 200 + 100,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-  }));
+  const shapes = useMemo(
+    () => {
+      const rand = mulberry32(20260911);
+      return Array.from({ length: 8 }, (_, i) => ({
+        id: i,
+        size: rand() * 200 + 100,
+        x: rand() * 100,
+        y: rand() * 100,
+      }));
+    },
+    []
+  );
 
   const opacity = variant === 'full' ? 0.4 : 0.2;
 

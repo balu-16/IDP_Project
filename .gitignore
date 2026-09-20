@@ -56,4 +56,18 @@ tmp/
 chroma_db/
 backend/chroma_db/
 backend/uploads/
+backend/documents/
+backend/model_cache/
+backend/.venv-*/
+research/data/
+research/runs/
+research/cache/
+*.sqlite3
+*.tsbuildinfo
 
+# Local-only reference, review, and deployment files
+/IDP.pdf
+/corrections.md
+/paper_corrections.md
+/plan.md
+/docker-compose.deploy.local.yml

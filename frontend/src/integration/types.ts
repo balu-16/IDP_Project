@@ -43,6 +43,8 @@ export type Database = {
         id: number
         chat_id: number
         user_id: number
+        provenance: Json
+        run_id: string | null
         input_data: string
         output_data: string
         created_at: string
@@ -51,6 +53,8 @@ export type Database = {
         title: string | null
       }
       Insert: {
+        provenance?: Json
+        run_id?: string | null
         id?: number
         chat_id: number
         user_id: number
@@ -62,6 +66,8 @@ export type Database = {
         title?: string | null
       }
       Update: {
+        provenance?: Json
+        run_id?: string | null
         id?: number
         chat_id?: number
         user_id?: number
@@ -95,7 +101,7 @@ export type Database = {
           full_name: string
           email: string
           phone_number: string | null
-          password: string
+          auth_user_id: string
           created_at: string | null
         }
         Insert: {
@@ -103,7 +109,7 @@ export type Database = {
           full_name: string
           email: string
           phone_number?: string | null
-          password: string
+          auth_user_id: string
           created_at?: string | null
         }
         Update: {
@@ -111,7 +117,7 @@ export type Database = {
           full_name?: string
           email?: string
           phone_number?: string | null
-          password?: string
+          auth_user_id?: string
           created_at?: string | null
         }
         Relationships: []

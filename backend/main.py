@@ -125,7 +125,7 @@ async def global_exception_handler(request: Request, exc: Exception):
     logger.exception("Unhandled exception on %s %s", request.method, request.url.path)
     return JSONResponse(
         status_code=500,
-        content={"error": str(exc)}
+        content={"detail": "An internal operation failed; no successful result was produced"}
     )
 
 # Root endpoint

@@ -1,0 +1,18 @@
+\begin{tabular}{llrr}
+\toprule
+Dataset & Method & Median ms & P95 ms\\
+\midrule
+scifact & BM25 & 39.5 & 78.9\\
+scifact & Exact cosine & 19.7 & 27.9\\
+scifact & HNSW & 2.3 & 4.5\\
+scifact & Analytical & 19.2 & 27.1\\
+scifact & Sampling & 19.5 & 27.3\\
+scifact & Grover & 21.5 & 450.3\\
+nfcorpus & BM25 & 8.5 & 24.5\\
+nfcorpus & Exact cosine & 15.4 & 25.1\\
+nfcorpus & HNSW & 2.5 & 4.5\\
+nfcorpus & Analytical & 15.2 & 25.7\\
+nfcorpus & Sampling & 15.4 & 25.9\\
+nfcorpus & Grover & 16.0 & 550.8\\
+\bottomrule
+\end{tabular}

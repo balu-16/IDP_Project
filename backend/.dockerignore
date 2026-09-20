@@ -11,9 +11,13 @@ __pycache__/
 venv/
 
 chroma_db/
+uploads/
+documents/
+model_cache/
 logs/
 
 .env
+.env.*
 
 .git
 .gitignore

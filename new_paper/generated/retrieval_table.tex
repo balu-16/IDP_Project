@@ -1,0 +1,18 @@
+\begin{tabular}{llrrrrrr}
+\toprule
+Dataset & Method & $n$ & nDCG@10 & Recall@10 & Recall@64 & MRR@10 & P@5\\
+\midrule
+scifact & BM25 & 300 & 0.661 & 0.778 & 0.874 & 0.630 & 0.154\\
+scifact & Exact cosine & 300 & 0.662 & 0.817 & 0.924 & 0.617 & 0.163\\
+scifact & HNSW & 300 & 0.662 & 0.817 & 0.924 & 0.617 & 0.163\\
+scifact & Analytical policy & 300 & 0.662 & 0.817 & 0.924 & 0.617 & 0.163\\
+scifact & Classical-sampling policy & 300 & 0.661 & 0.817 & 0.924 & 0.616 & 0.163\\
+scifact & Grover policy & 300 & 0.662 & 0.817 & 0.924 & 0.616 & 0.163\\
+nfcorpus & BM25 & 323 & 0.305 & 0.146 & 0.217 & 0.507 & 0.277\\
+nfcorpus & Exact cosine & 323 & 0.295 & 0.143 & 0.267 & 0.477 & 0.281\\
+nfcorpus & HNSW & 323 & 0.291 & 0.140 & 0.263 & 0.473 & 0.280\\
+nfcorpus & Analytical policy & 323 & 0.295 & 0.143 & 0.267 & 0.477 & 0.281\\
+nfcorpus & Classical-sampling policy & 323 & 0.295 & 0.143 & 0.267 & 0.478 & 0.281\\
+nfcorpus & Grover policy & 323 & 0.295 & 0.143 & 0.267 & 0.476 & 0.281\\
+\bottomrule
+\end{tabular}

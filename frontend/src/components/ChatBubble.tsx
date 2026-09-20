@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Bot, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import type { Source } from '@/lib/contracts';
+import SourceCitation from './SourceCitation';
 
 interface ChatBubbleProps {
   message: string;
@@ -9,6 +11,9 @@ interface ChatBubbleProps {
   timestamp: Date;
   isTyping?: boolean;
   retrievalTimeMs?: number;
+  contextSources?: Source[];
+  retrievalMethod?: string;
+  sessionId?: string;
 }
 
 const TypingDots: React.FC = () => (
@@ -37,7 +42,10 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
   isBot, 
   timestamp, 
   isTyping = false,
-  retrievalTimeMs 
+  retrievalTimeMs,
+  contextSources,
+  retrievalMethod,
+  sessionId,
 }) => {
   return (
     <motion.div
@@ -88,6 +96,11 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
           )}
         </div>
 
+        {isBot && sessionId && contextSources?.map((source, index) =>
+          <SourceCitation key={source.id} source={source} index={index} sessionId={sessionId} />)}
+        {isBot && retrievalMethod && <p className="px-2 text-xs text-text-secondary">
+          {retrievalMethod === 'grover' ? 'Grover simulation' : retrievalMethod.replace(/_/g, ' ')}
+        </p>}
         {/* Timestamp and Retrieval Time */}
         {!isTyping && (
           <div className={cn(

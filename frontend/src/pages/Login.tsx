@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Coffee, Mail } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -11,19 +11,12 @@ import { showToast } from '@/components/Toast';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { login, user, loading } = useAuth();
+  const { login, error: authError } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-
-  // Redirect authenticated users to chat
-  useEffect(() => {
-    if (!loading && user) {
-      navigate('/chat', { replace: true });
-    }
-  }, [user, loading, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,9 +108,9 @@ const Login: React.FC = () => {
               />
             </div>
 
-            {error && (
+            {(error || authError) && (
               <div className="text-sm text-error-text bg-error-background border border-error-border rounded-lg p-3">
-                {error}
+                {error || authError}
               </div>
             )}
 
