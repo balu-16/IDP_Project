@@ -11,12 +11,13 @@ import { showToast } from '@/components/Toast';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { login, error: authError } = useAuth();
+  const { login, resendConfirmation, error: authError } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isResending, setIsResending] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,6 +46,22 @@ const Login: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleResendConfirmation = async () => {
+    if (!email.trim()) {
+      setError('Enter your email address first.');
+      return;
+    }
+    setIsResending(true);
+    const result = await resendConfirmation(email.trim());
+    if (result.success) {
+      setError('Confirmation email sent. Check your inbox and spam folder.');
+      showToast('success', 'Confirmation email sent.');
+    } else {
+      setError(result.error || 'Could not resend the confirmation email.');
+    }
+    setIsResending(false);
   };
 
   return (
@@ -89,6 +106,7 @@ const Login: React.FC = () => {
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary z-10" size={18} />
                 <Input
                   type="email"
+                  autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
@@ -105,6 +123,7 @@ const Login: React.FC = () => {
                 onChange={(value) => setPassword(value)}
                 placeholder="Your password"
                 showIcon={true}
+                autoComplete="current-password"
               />
             </div>
 
@@ -112,6 +131,12 @@ const Login: React.FC = () => {
               <div className="text-sm text-error-text bg-error-background border border-error-border rounded-lg p-3">
                 {error || authError}
               </div>
+            )}
+
+            {(error || authError || '').toLowerCase().includes('email not confirmed') && (
+              <Button type="button" variant="outline" className="w-full" disabled={isResending || isLoading} onClick={handleResendConfirmation}>
+                {isResending ? 'Sending confirmation email…' : 'Resend confirmation email'}
+              </Button>
             )}
 
             <Button

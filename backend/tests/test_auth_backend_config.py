@@ -1,5 +1,6 @@
 """Protocol fault injection is isolated from the real-data experiment runner."""
 import unittest
+import logging
 import httpx
 from fastapi import HTTPException
 from main import app, global_exception_handler
@@ -68,6 +69,29 @@ class AuthenticationTests(unittest.IsolatedAsyncioTestCase):
                 await DatabaseService(client).uploaded_files(Identity(1, AUTH_ID, {}))
             self.assertEqual(ctx.exception.status_code, 503)
             self.assertNotIn('secret', ctx.exception.detail)
+
+    async def test_postgrest_error_code_is_logged_without_response_details(self):
+        def transport(request):
+            if request.url.path == '/auth/v1/user':
+                return httpx.Response(200, json={
+                    'id': AUTH_ID,
+                    'email_confirmed_at': '2026-09-10T00:00:00Z',
+                })
+            return httpx.Response(400, json={
+                'code': '42703',
+                'message': 'column signup_users.auth_user_id does not exist',
+            })
+
+        async with httpx.AsyncClient(transport=httpx.MockTransport(transport),
+                                     base_url='https://database.invalid') as client:
+            with self.assertLogs('services.database', level=logging.WARNING) as captured:
+                with self.assertRaises(HTTPException) as ctx:
+                    await DatabaseService(client).verify_identity()
+
+        self.assertEqual(ctx.exception.status_code, 503)
+        self.assertIn('code=42703', captured.output[0])
+        self.assertIn('path=/rest/v1/signup_users', captured.output[0])
+        self.assertNotIn('column signup_users.auth_user_id', captured.output[0])
 
     async def test_profile_update_contract_accepts_json_and_forbids_identity_fields(self):
         from routes.auth_routes import ProfileUpdate

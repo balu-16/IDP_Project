@@ -4,12 +4,14 @@ No service-role key, shared mutable session, local password hash or anonymous
 fallback is used. Database failures are errors, never empty successful results.
 """
 from dataclasses import dataclass
+import logging
 from typing import Any
 import httpx
 from fastapi import Depends, HTTPException, Request
 from config import settings
 
 PROFILE_COLUMNS = 'id,auth_user_id,full_name,email,phone_number,created_at'
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -28,6 +30,19 @@ class DatabaseService:
             response = await self.client.request(method, path, params=params, json=json, headers=headers)
         except httpx.RequestError:
             raise HTTPException(503, 'Database service unavailable') from None
+        if response.status_code >= 400:
+            code = 'unknown'
+            try:
+                payload = response.json()
+                candidate = payload.get('code') if isinstance(payload, dict) else None
+                if isinstance(candidate, str) and candidate.isascii() and candidate.isalnum():
+                    code = candidate[:32]
+            except ValueError:
+                pass
+            # Log the stable PostgREST/Postgres code only. Response bodies can
+            # contain data or request details and are never sent to the log.
+            logger.warning('Supabase request failed method=%s path=%s status=%s code=%s',
+                           method, path, response.status_code, code)
         if response.status_code in (401, 403):
             raise HTTPException(response.status_code, 'Access denied')
         if response.status_code >= 400:

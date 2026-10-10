@@ -11,6 +11,7 @@ interface PasswordFieldProps {
   className?: string;
   error?: string;
   showIcon?: boolean;
+  autoComplete?: string;
 }
 
 const getPasswordStrength = (password: string): { score: number; label: string; className: string } => {
@@ -34,7 +35,8 @@ const PasswordField: React.FC<PasswordFieldProps> = ({
   showStrength = false,
   className = '',
   error,
-  showIcon = false
+  showIcon = false,
+  autoComplete,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const strength = getPasswordStrength(value);
@@ -50,6 +52,7 @@ const PasswordField: React.FC<PasswordFieldProps> = ({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
+          autoComplete={autoComplete}
           className={cn(
             'glass-panel pr-10 border-white/15 focus:border-primary/50 focus:ring-primary/20',
             showIcon && 'pl-10',

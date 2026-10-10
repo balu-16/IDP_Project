@@ -13,6 +13,7 @@ interface AuthContextType {
   error: string | null;
   token: string | null;
   login: (email: string, password: string) => Promise<AuthResult>;
+  resendConfirmation: (email: string) => Promise<AuthResult>;
   register: (data: { full_name: string; email: string; password: string; phone_number?: string }) => Promise<AuthResult>;
   logout: () => Promise<void>;
   updateUser: (data: Partial<Profile>) => void;
@@ -96,6 +97,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: true, confirmationRequired: !data.session };
     } catch (cause) { return { success: false, error: errorMessage(cause) }; }
   };
+  const resendConfirmation: AuthContextType['resendConfirmation'] = async (email) => {
+    try {
+      const { error: failure } = await getSupabase().auth.resend({
+        type: 'signup', email, options: { emailRedirectTo: window.location.origin + '/login' },
+      });
+      if (failure) throw failure;
+      return { success: true };
+    } catch (cause) { return { success: false, error: errorMessage(cause) }; }
+  };
   const logout = async () => {
     generation.current++; cache.clear();
     setUser(null); setToken(null); chatService.setUserId(null);
@@ -103,7 +113,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (failure) throw failure;
   };
   const updateUser = (data: Partial<Profile>) => setUser(previous => previous ? profileSchema.parse({ ...previous, ...data }) : null);
-  return <AuthContext.Provider value={{ user, token, loading, error, login, register, logout, updateUser }}>
+  return <AuthContext.Provider value={{ user, token, loading, error, login, register, resendConfirmation, logout, updateUser }}>
     {children}
   </AuthContext.Provider>;
 };
