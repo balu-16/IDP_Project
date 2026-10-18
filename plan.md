@@ -2,9 +2,324 @@
 
 ## Current status — 18 October 2026 (Asia/Kolkata)
 
-**FiQA, the queued application checks, and the independent resource study
-have finished. No dataset or resource collection remains running.** Older
-launch instructions below are historical records; do not restart either batch.
+**FiQA, the queued application checks, and the independent resource study have
+finished. TREC-COVID stays deferred. SCIDOCS stopped at its completed 100-query
+checkpoint because the predeclared recall gate failed. No dataset job is running.**
+Older three-dataset and resource-study launch instructions below are historical;
+do not restart those batches.
+
+### SCIDOCS-100 checkpoint — stopped after failed recall gate
+
+Implementation: `research/scidocs_500_v1/`. Study:
+`research/runs/scidocs_500_v1/`. Separate cache:
+`research/cache/scidocs_500_v1/scidocs/`.
+
+**Current outcome: checkpoint complete and verified; remaining 400 NOT run.**
+The supervisor stopped normally at **13:48:54 IST on 18 October 2026**, with
+status `checkpoint_gate_failed`. All **51,250 corpus chunks** were encoded;
+**100 frozen test queries, 27 methods and required seed coverage** are sealed.
+The supervisor has exited. This is **SCIDOCS-100 checkpoint**, not a 500-query
+result. No restart or test-based retuning is authorized by the existing protocol.
+
+| Metric | Matched baseline GAS | Protected-prefix GAS | Outcome |
+|---|---:|---:|---|
+| nDCG@5 | 0.153715 | 0.153715 | Unchanged; PASS |
+| Recall@8 | 0.184600 | 0.178600 | −3.2503% relative; FAIL (maximum loss 2%) |
+| Redundancy ↓ | 0.519643 | 0.506595 | −2.5109%; PASS |
+| nDCG@8 | 0.180853 | 0.177445 | Decreased |
+| Pipeline median ms | 648.57 | 892.04 | Increased |
+| Pipeline P95 ms | 879.29 | 1263.15 | Increased |
+
+Sealed artifact/source/model/configuration identities and the frozen checkpoint
+outcome were reverified. Independent `trec_eval` evidence covers **7,500 method/
+seed rankings**, with **4,824 metric checks** over 1,206 unique ranking/judgment
+pairs. Recall fell on 4 queries and increased on 1; redundancy fell on 52 and did
+not increase on any query (seeds averaged within each query). Matched greedy,
+exact-float and exact-quantized refiners achieved the same measured effectiveness;
+GAS reached the float redundancy optimum on all 500 query/seed requests. Cosine
+ranking achieved nDCG@5=0.175390 and Recall@8=0.221000, higher than the L6-guided
+pipeline on this checkpoint. No overall accuracy or Grover superiority claim
+is supported. Preserve all outcomes; no manuscript update is included.
+
+Report: `research/runs/scidocs_500_v1/checkpoint/REPORT.md`.
+Details and intervals: `checkpoint/evaluation.json`; frozen stop decision:
+`checkpoint_outcome.json`. The continuation and aggregate directories contain
+no collected results. Retain complete embeddings for any separately authorized
+future study. Commands and launch/ETA records below describe the frozen protocol
+and historical launch; a resume must not bypass this failed scientific gate.
+
+**Historical launch and preparation evidence:**
+
+**Launched on 18 October 2026 at 13:18:27 IST; verified at 13:20:05 IST.**
+Supervisor session began `2026-10-18T07:48:27.295077+00:00`; encoding stage began
+`2026-10-18T07:48:31.011250+00:00`. Supervisor PID
+**132495**, encoding worker **132567**;
+exclusive lock held, both processes alive, and **3,584/51,250 chunks**
+committed at verification, including fresh shards beyond the reusable pilot.
+**Zero query rankings collected at handover**; encoding precedes the 100-query
+stopping checkpoint. At launch the job continued detached without continuous assistant
+monitoring; it has now stopped at the failed checkpoint as described above. Launch evidence: `research/runs/scidocs_500_v1/verified_launch.json`.
+
+**55 verification tests passed**, including artificial selector parity, protected
+prefix/phase/budget checks, graded metrics verified with `trec_eval`, sampling,
+self-exclusion, interruption/recovery, gate-controlled continuation, aggregate
+coverage/weighting, supervisor cleanup/resume and local pinned L6/L2 inference.
+The official MD5, SHA-256 inventory, all 25,657 document and 1,000 query references,
+model pins, source/dependency identities, memory/storage and token limits passed
+preflight. Maximum query 58 content tokens, chunk 190, pair bound 251≤512; no
+empty documents. Protocol and ordered 500 IDs froze at 07:47:20 UTC before encoding.
+Earlier research sources/dependencies match their saved fingerprints.
+
+The reusable **1,024-chunk pilot measured 48.83 chunks/second**
+(two CPU threads; one inter-op; batch eight). Both pilot shards and all shards
+present at launch verification passed SHA-256, finite-value and unit-norm checks.
+Estimated remaining encoding approximately **16 minutes**, plus query collection
+and evaluation. Retain **1.5–2.5 hours after launch if 100 passes** as a
+provisional overall budget, rather than an exact finish time.
+
+- Complete corpus: 25,657 documents; official test pool: 1,000 queries. Verify
+  official archive MD5 `38121350fc3a4d2f48850f6aff52e4a9`, plus file SHA-256,
+  IDs, judgment references and grades. Freeze all identities before encoding.
+- Sample **500 IDs only**, using `deterministic_query_subset` with dataset
+  `scidocs` and namespace `scidocs-500-transfer-v1`. Preserve hash order in
+  `selected_queries.json`. First 100 = checkpoint; remaining 400 = continuation.
+  No BEIR development split, tuning, resampling or 100-query confirmation.
+- Frozen transfer profile: lexical .25, baseline diversity .05, coefficient
+  bits 8/16; 64 phase calls / 32 trials / growth 1.2 / 15 seconds / 200,000 states per stage;
+  seeds 0–4. All27 comparisons retained, with stochastic methods run on five
+  seeds and deterministic controls once/query. Original shortlist logits
+  preserved. Dense top64 excludes qid==did before every control/candidate list;
+  raw official qrels remain unchanged. Two CPU threads, one inter-op, batch eight.
+- Separate sealed 100/400 stages. The independent 100-query evaluation must
+  satisfy **nDCG@5 unchanged within 1e-12; Recall@8 retention ≥98%; strictly lower
+  mean redundancy** (differences within1e-12 treated as ties). Freeze either
+  outcome in `checkpoint_outcome.json`. Failure is terminal and produces only
+  **SCIDOCS-100 checkpoint**, clearly labelled a partial result. Both manual
+  and supervised continuation are blocked without a verified passing artifact.
+- If100 passes, collect400 without recomputing100; recompute final means and
+  paired comparisons from all 500 query records with equal per-query weights.
+  Report **SCIDOCS-500: fixed test subset**. Retain final failures without tuning.
+  Include all 27 comparisons, nDCG5/8, Recall8, Precision8, judged coverage,
+  redundancy, median/P95 full-pipeline time, oracle work, optimization gaps,
+  termination/fallback counts, paired CIs/Holm decisions and query recall losses.
+- The early-stop rule uses test judgments; findings are exploratory/conditional.
+  The dense encoder's model card lists S2ORC/SPECTER training. Exact training/test
+  disjointness is **unverified**: assert neither confirmed leakage nor clean
+  zero-shot evaluation. No Grover speed/cost/superiority claim.
+
+Commands (repo root; prefix each with
+`backend/.venv/bin/python -m research.scidocs_500_v1`):
+
+```text
+download
+preflight
+smoke
+freeze
+encode --pilot-shards 2
+launch
+status
+```
+
+Detached stages: encode → checkpoint run/evaluate/report/freeze → stop on any
+failed checkpoint gate; otherwise continuation run/evaluate/report → aggregate
+evaluate/report. No continuous assistant monitoring after verified launch.
+Estimated duration provisionally **1.5–2.5 hours after launch if 100 passes**,
+excluding implementation/preparation; refresh using pilot throughput.
+
+Monitor `execution.json`, `supervisor.pid`, `supervisor.log`, `logs/*.log`,
+`encoding_progress.json`, `checkpoint_progress.json`, `continuation_progress.json`
+inside the SCIDOCS study. Reports: `checkpoint/REPORT.md`,
+`continuation/REPORT.md`, then `aggregate/REPORT.md` only if all 500 complete.
+Atomic per-query commits include every required method/seed; source snapshots,
+config/model/data/dependency fingerprints, raw features, logits and recorded
+stage timings are preserved. Loading/encoding/warm-up are separate from online
+latency. Technical errors stop the supervisor and its child.
+
+Stop gracefully: send SIGTERM to the PID in **this study's** `supervisor.pid`.
+Resume: `launch --resume`. Do not run manual collection/encoding concurrently.
+Manual stages: `encode`; `run --stage checkpoint --resume`;
+`evaluate --stage checkpoint`; `report --stage checkpoint`; `freeze-checkpoint`;
+`run --stage continuation --resume`; `evaluate --stage continuation`;
+`report --stage continuation`; `evaluate --stage aggregate`;
+`report --stage aggregate`. Omit `--resume` for a new stage. Do not delete,
+replace or reinterpret corrupt/incompatible checkpoints; restore the recorded
+sources/dependencies or diagnose the error. Scientific checkpoint failure must
+not be bypassed by a resume command.
+
+No manuscript, frontend/backend, earlier research-source, dependency, sealed
+result or TREC-COVID cache modifications are part of this work. TREC-COVID's
+pause remains in force; earlier instructions below are historical.
+
+### Fourth dataset deferred — current decision
+
+At **07:22:20 UTC (12:52:20 IST)** the user chose to leave the fourth dataset
+for later. The CPU-profile supervisor **117447** and encoder **117590** were
+stopped and verified exited; their exclusive lock is released. The original
+fourth-dataset supervisor/worker were already stopped. No automatic restart is
+scheduled; resume only after a new explicit user instruction.
+
+Preserved **26,624/365,724 encoded chunks in 52 verified shards** in both the
+original and separate imported cache. **Zero of 50 benchmark queries** were
+collected, so there are no TREC-COVID accuracy results to use in the paper.
+Saved source snapshots, CPU pilot results, checksums and recovery code remain
+available. Deferral evidence:
+`research/runs/fourth_dataset_cpu_v1_trec_covid/user_deferral.json`.
+
+The three existing datasets and manuscript remain unchanged. Retain all existing
+scientific outcomes, including FiQA's failed refinement gate. No fourth-dataset
+manuscript integration is planned while this work is deferred.
+
+### Encoding-only CPU restart — historical preparation
+
+The user requested more CPU for offline corpus encoding while retaining two
+threads for all online retrieval, L6/L2 inference, selection and comparisons.
+The original TREC-COVID supervisor **105716** and encoder **105858** were stopped
+and verified exited at **07:10:16 UTC (12:40:16 IST)**. All **26,624 completed
+chunks in 52 committed shards** passed checksum/coverage verification; no query
+rankings had been collected. The original study and cache are preserved.
+
+- New adapter: `research/fourth_dataset_cpu_v1/`; old frozen sources and
+  dependencies remain unchanged.
+- New study: `research/runs/fourth_dataset_cpu_v1_trec_covid/`.
+- New cache: `research/cache/fourth_dataset_cpu_v1/trec-covid/`. Imported arrays
+  are separate verified copies; their original scores, bytes, timings and
+  two-thread provenance remain intact. No completed batch is re-encoded.
+- **54 verification tests passed**, including adapter thread isolation,
+  imported-prefix recovery, immutable completed results/timings, source-profile
+  mismatch rejection, supervisor error cleanup, and inherited selector checks.
+- The label-free 2/4/6-thread pilot completed: 256 deterministic corpus chunks,
+  batch eight, two warm-up batches and three measured repetitions per separate
+  process. Choose median throughput; require at least 10% gain versus two threads
+  and prefer fewer threads within 5% of the fastest qualifying profile. Otherwise
+  retain two threads. All profiles passed rtol=1e-5/atol=1e-6 agreement, with a
+  maximum absolute embedding difference of **9.69e-8**.
+
+| Encoding threads | Median chunks/second | Relative to two threads |
+|---|---:|---:|
+| 2 | **51.6149** | **1.000x** |
+| 4 | 33.3650 | 0.646x |
+| 6 | 46.0286 | 0.892x |
+
+**Selected encoding profile: two threads**, following the predeclared fallback
+rule. More threads did not improve this model/batch/CPU pilot; no acceleration
+claim is supported. The new preparation profile was frozen and its detached
+supervisor **117447** started encoder **117590**. Both were subsequently stopped
+at the user's request before any new batch or query was committed. Initial
+fresh-checkpoint launch verification was cancelled by this deferral.
+All 50 queries, 27 methods, seeds and scientific gates remain as previously
+declared. Actual encoding profiles are recorded by shard; benchmark timings
+would remain two-thread measurements if resumed. Previous ETA estimates are
+historical; refresh them only after a future authorized restart.
+
+Commands use `backend/.venv/bin/python -m research.fourth_dataset_cpu_v1` with
+`prepare`, `check`, `benchmark`, `freeze`, `launch`, `status`; recovery is
+`launch --resume`. Manual `encode`, `run --resume`, `evaluate` and `report` are
+available. Do not start the old supervisor or manual stages alongside the new
+supervisor. All launch/resume commands are deferred until explicitly requested.
+Monitoring files retain the familiar names inside the **new** study
+root: `execution.json`, `supervisor.pid`, `supervisor.log`, `logs/encode.log`,
+`encoding_progress.json`, then `collection_progress.json` and `test/REPORT.md`.
+No manuscript, backend or frontend changes are included.
+
+### Fourth dataset — TREC-COVID transfer evaluation
+
+The original launch details in this section are historical following the
+encoding-only CPU switch above. Do not resume this old supervisor concurrently.
+
+The isolated implementation is `research/fourth_dataset_v1/`. It reuses the
+unchanged v2/v3 kernels; their historical source/dependency fingerprints still
+match. No manuscript, application, old cache, or sealed result is changed.
+
+- Official BEIR archive MD5 verified: `ce62140cb23feb9becf6270d0d1fe6d1`.
+- Exactly **171,332 documents and all 50 test queries**. There is no development
+  split, tuning, or 100-query confirmation. Preserve the two explicit grade -1
+  (unjudged) entries, grades 0/1/2, original query IDs, and corpus IDs.
+- Transfer baseline: lexical weight 0.25, penalty 0.05, 15 candidates/eight
+  outputs, eight-bit coefficients. Protected-five refinement uses 16 bits.
+  Both stages retain 64 phase calls, 32 trials, growth 1.2, 15 seconds,
+  200,000-state cap, and seeds 0–4. All **27 methods** are required.
+- Common prior development-frozen controls: both MMR weights zero;
+  cosine-GAS penalty 0.1, six bits; legacy threshold 0.7.
+- **44 verification tests passed**, including artificial end-to-end reporting,
+  graded/zero/unjudged metrics against independent `trec_eval`, selector
+  parity/prefix checks, feature/result interruption recovery, embedding-shard
+  recovery, corruption/incompatible-resume rejection, supervisor error stop,
+  stage recovery, active-worker cleanup on a corrupt supervisor heartbeat,
+  rejection of corrupt intermediate artifacts before sealing, and retention
+  of failed scientific gates. Artificial local
+  inference checks passed for both pinned L6 and L2 models.
+- All-document token/memory/storage preflight **passed**: 365,724 chunks,
+  maximum 190 content tokens, maximum query 34 tokens, cross-encoder pair
+  bound 227/512; approximately 3.0 GB additional storage and 3.45 GB estimated
+  memory, within the recorded available capacity. A supervisor cleanup fix was
+  made before encoding or collection; the original preparation is preserved in
+  `research/runs/fourth_dataset_v1_trec_covid_preparation_1/`. The corrected full
+  preflight passed and the final protocol was frozen at
+  **2026-10-18 06:53:04 UTC (12:23:04 IST)**. The pilot completed **1,024
+  reusable chunks in 23.36 encoding seconds** (43.84 chunks/second). Remaining
+  encoding estimate: **2.31 hours**, plus preparation, all 50 query rankings,
+  independent evaluation and reporting. Provisional complete-run estimate:
+  **2.5–3.5 hours after launch**, subject to CPU and corpus-length variation.
+  Dedicated detached supervisor PID: **105716**; encoding worker **105858**.
+  **Launch verified at 07:00:34 UTC (12:30:34 IST)**: **1,536/365,724 chunks
+  committed**, including a new batch after detachment. PID ownership, exclusive
+  lock, shard checksums, and frozen source/dependency fingerprints passed.
+  Evidence: `launch_verification.json` in the study root. Accuracy collection
+  remained **0/50**. The previously queued collection, independent evaluation,
+  scientific gates and final report are now deferred; no supervisor or
+  continuous assistant monitoring is running.
+  Protocol SHA-256:
+  `798e9e3b452139da9e5ba45dd2a361494609eca290ff67ff17dc9d756abe0eba`.
+
+Study root: `research/runs/fourth_dataset_v1_trec_covid/`.
+Separate cache: `research/cache/fourth_dataset_v1/trec-covid/`.
+Source/config/model/data provenance: `frozen.json`, `dataset_inventory.json`,
+`source_snapshot/`, `preflight.json`, and `smoke.json` inside the study root.
+
+Preparation and execution (do not repeat finished preparation stages):
+
+```bash
+backend/.venv/bin/python -m research.fourth_dataset_v1 download
+backend/.venv/bin/python -m research.fourth_dataset_v1 preflight
+backend/.venv/bin/python -m research.fourth_dataset_v1 smoke
+backend/.venv/bin/python -m research.fourth_dataset_v1 freeze
+backend/.venv/bin/python -m research.fourth_dataset_v1 encode --pilot-shards 2
+backend/.venv/bin/python -m research.fourth_dataset_v1 launch
+```
+
+The dedicated detached supervisor completes encoding, all 50 queries,
+independent evaluation, and the standalone report. It stops on execution or
+integrity failures. Scientific gates are evaluated **after all 50 queries**:
+nDCG@5 unchanged within 1e-12, Recall@8 retention at least 98%, and strictly
+lower mean redundancy against matched baseline GAS. Keep failed outcomes
+without retuning. FiQA's failed outcome below remains unchanged.
+
+Monitoring: `supervisor.pid`, `supervisor.log`, `execution.json`,
+`logs/{encode,run,evaluate,report}.log`, `encoding_progress.json`, and
+`collection_progress.json`. JSON artifacts use a checksummed `payload` wrapper.
+The pilot saves reusable 512-row shards and estimates remaining encoding time;
+committed query throughput subsequently refines collection ETA automatically.
+No continuous assistant monitoring is needed after launch verification.
+
+```bash
+backend/.venv/bin/python -m research.fourth_dataset_v1 status
+# Verify the PID belongs to this supervisor before stopping it:
+kill -TERM "$(cat research/runs/fourth_dataset_v1_trec_covid/supervisor.pid)"
+backend/.venv/bin/python -m research.fourth_dataset_v1 launch --resume
+```
+
+Manual stage recovery is available through `encode`, `run --resume`,
+`evaluate`, and `report`; do not run these concurrently with the supervisor.
+Restore the recorded code/dependencies on a fingerprint mismatch. Do not
+delete corrupt or failed records to hide the error or rerun favorable settings.
+
+Final report: `test/REPORT.md`; full results/statistics: `test/evaluation.json`.
+Require all query/method/seed coverage, sealed checksums, and independent
+nDCG@5/@8, Recall@8, Precision@8 agreement. Report judged-document coverage,
+per-query recall losses, paired query confidence intervals, optimization/fallback
+outcomes and complete pipeline median/P95 latency. Larger classical corpus
+coverage does not establish quantum corpus-search scaling or Grover superiority.
+Manuscript integration remains a separate revision within the eight-page limit.
 
 ### FiQA full-test outcome
 
