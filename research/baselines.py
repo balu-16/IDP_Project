@@ -144,7 +144,7 @@ class DenseVectorSpace:
     CONTENT_TOKENS = 190
     STEP = 158
 
-    def __init__(self, corpus: dict[str, str], model: str, revision: str):
+    def __init__(self, corpus: dict[str, str], model: str, revision: str, cache_dir=None):
         import numpy as _np
 
         try:
@@ -174,9 +174,15 @@ class DenseVectorSpace:
         chunk_texts: list[str] = []
         self.chunk_parents: list[str] = []
         self.chunk_stats = {"n_chunks": 0, "truncation_events": 0, "tokenizer": self.tokenizer_name}
+        backend = getattr(self.tokenizer, "backend_tokenizer", None)
+        if backend is not None:
+            # The pinned tokenizer.json enables fixed padding/truncation at
+            # 128. Raw backend.encode bypasses Transformers' usual reset.
+            # Disable both before inspecting even the first document.
+            backend.no_padding()
+            backend.no_truncation()
         for did in self.doc_ids:
             text = corpus[did]
-            backend = getattr(self.tokenizer, "backend_tokenizer", None)
             if backend is not None:
                 backend_encoding = backend.encode(text, add_special_tokens=False)
                 offsets = backend_encoding.offsets
@@ -186,11 +192,12 @@ class DenseVectorSpace:
                 # whole document for offsets, not about a model input; actual
                 # chunks are validated below before encoding.
                 encoded = self.tokenizer(text, add_special_tokens=False,
-                                         return_offsets_mapping=True, truncation=False)
+                                         return_offsets_mapping=True, truncation=False, padding=False)
                 offsets = encoded.get("offset_mapping", [])
             if not offsets:
                 chunk_texts.append("")
                 self.chunk_parents.append(did)
+                self.chunk_stats.setdefault("token_counts", []).append(0)
                 continue
             for start in range(0, len(offsets), self.STEP):
                 end = min(start + self.CONTENT_TOKENS, len(offsets))
@@ -198,7 +205,7 @@ class DenseVectorSpace:
                     left, right = offsets[start][0], offsets[end - 1][1]
                     candidate = text[left:right]
                     actual = len(self.tokenizer.encode(candidate, add_special_tokens=False,
-                                                       truncation=False))
+                                                       truncation=False, padding=False))
                     if actual <= self.CONTENT_TOKENS:
                         break
                     end -= 1
@@ -212,10 +219,9 @@ class DenseVectorSpace:
         self.chunk_stats["min_tokens"] = min(counts) if counts else 0
         self.chunk_stats["max_tokens"] = max(counts) if counts else 0
         self.chunk_stats["mean_tokens"] = (sum(counts) / len(counts)) if counts else 0.0
-        mat = self.model.encode(chunk_texts, batch_size=8, normalize_embeddings=True,
-                                show_progress_bar=False)
-        self.chunk_matrix = _np.asarray(mat, dtype=float)
+        self.chunk_texts = chunk_texts
         self.model_name, self.revision = model, revision
+        self.chunk_matrix, self.embedding_cache = self._encode_chunks(chunk_texts, cache_dir)
         self.is_chunked = True
         self.meta = {"embedding_space": f"dense:{model}@{revision}",
                      "dimension": int(self.chunk_matrix.shape[1]),
@@ -226,13 +232,78 @@ class DenseVectorSpace:
                      "chunk_min_tokens": self.chunk_stats["min_tokens"],
                      "chunk_max_tokens": self.chunk_stats["max_tokens"],
                      "chunk_mean_tokens": self.chunk_stats["mean_tokens"]}
+        self.meta["tokenizer_full_text_offsets"] = True
+        self.meta["embedding_cache"] = self.embedding_cache
+
+    def _encode_chunks(self, texts, cache_dir):
+        """Persist only embeddings bound to exact inputs, code, and versions."""
+        import hashlib
+        import importlib.metadata
+        import inspect
+        import json
+        import os
+        from pathlib import Path
+        import tempfile
+
+        from .datasets import sha256_file
+
+        start = time.perf_counter()
+        record = {"enabled": cache_dir is not None, "hit": False}
+        matrix_path = metadata_path = None
+        if cache_dir is not None:
+            versions = {p: importlib.metadata.version(p) for p in
+                        ("numpy", "torch", "transformers", "sentence-transformers")}
+            digest = hashlib.sha256(json.dumps([self.model_name, self.revision, versions,
+                getattr(self.model, "max_seq_length", None), self.CONTENT_TOKENS, self.STEP,
+                hashlib.sha256(inspect.getsource(DenseVectorSpace).encode()).hexdigest()], sort_keys=True).encode())
+            for text in texts:
+                digest.update(json.dumps(text, ensure_ascii=False).encode())
+                digest.update(b"\n")
+            key = digest.hexdigest()
+            directory = Path(cache_dir)
+            directory.mkdir(parents=True, exist_ok=True)
+            matrix_path, metadata_path = directory / f"{key}.npy", directory / f"{key}.json"
+            record["key"] = key
+            if matrix_path.exists() and metadata_path.exists():
+                metadata = json.loads(metadata_path.read_text())
+                if sha256_file(matrix_path) != metadata["sha256"]:
+                    raise ValueError("Corpus embedding cache checksum mismatch")
+                matrix = np.load(matrix_path, mmap_mode="r", allow_pickle=False)
+                if (matrix.ndim != 2 or matrix.shape[0] != len(texts) or matrix.shape[1] < 1 or
+                        list(matrix.shape) != metadata["shape"] or not np.isfinite(matrix).all() or
+                        np.any(np.linalg.norm(matrix, axis=1) <= 1e-12)):
+                    raise ValueError("Invalid corpus embedding cache shape or values")
+                record.update(hit=True, cold_model_encode_ms=metadata["cold_model_encode_ms"],
+                              restore_ms=(time.perf_counter() - start) * 1000)
+                print(f"Dense embedding cache hit: {len(texts)} chunks", flush=True)
+                return matrix, record
+        print(f"Encoding {len(texts)} validated document chunks", flush=True)
+        encode_start = time.perf_counter()
+        matrix = np.asarray(self.model.encode(texts, batch_size=8, normalize_embeddings=True,
+                                             show_progress_bar=cache_dir is not None), dtype=float)
+        record["cold_model_encode_ms"] = (time.perf_counter() - encode_start) * 1000
+        if (matrix.ndim != 2 or matrix.shape[0] != len(texts) or matrix.shape[1] < 1 or
+                not np.isfinite(matrix).all() or np.any(np.linalg.norm(matrix, axis=1) <= 1e-12)):
+            raise ValueError("Encoder returned invalid corpus embeddings")
+        if matrix_path is not None:
+            with tempfile.NamedTemporaryFile(dir=matrix_path.parent, suffix=".npy", delete=False) as handle:
+                temporary = Path(handle.name)
+                np.save(handle, matrix, allow_pickle=False)
+            os.replace(temporary, matrix_path)
+            metadata = {"sha256": sha256_file(matrix_path), "shape": list(matrix.shape),
+                        "cold_model_encode_ms": record["cold_model_encode_ms"]}
+            with tempfile.NamedTemporaryFile(dir=matrix_path.parent, mode="w", suffix=".json", delete=False) as handle:
+                temporary = Path(handle.name)
+                json.dump(metadata, handle)
+            os.replace(temporary, metadata_path)
+        return matrix, record
 
     def query_vec(self, query: str):
         import numpy as _np
 
         if query in self._query_cache:
             return self._query_cache[query].copy()
-        ids = self.tokenizer.encode(query, add_special_tokens=False)
+        ids = self.tokenizer.encode(query, add_special_tokens=False, truncation=False, padding=False)
         if len(ids) > self.CONTENT_TOKENS:
             raise ValueError(f"Query exceeds 190 content tokens ({len(ids)}); shorten query")
         vector = _np.asarray(self.model.encode([query], normalize_embeddings=True,
@@ -272,7 +343,7 @@ def build_vector_space(corpus: dict[str, str], prefer: str = "dense", dataset: s
     raises, never falls back. Synthetic smoke may use prefer='tfidf'
     explicitly, stamped NOT PUBLISHABLE.
     """
-    official = dataset.strip().lower() in {"scifact", "nfcorpus", "nqcorpus"}
+    official = dataset.strip().lower() in {"scifact", "nfcorpus", "nqcorpus", "fiqa"}
     if official:
         if prefer != "dense":
             raise ValueError(f"Official dataset {dataset!r} requires --encoder dense (got {prefer!r})")

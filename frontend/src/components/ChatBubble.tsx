@@ -99,7 +99,8 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
         {isBot && sessionId && contextSources?.map((source, index) =>
           <SourceCitation key={source.id} source={source} index={index} sessionId={sessionId} />)}
         {isBot && retrievalMethod && <p className="px-2 text-xs text-text-secondary">
-          {retrievalMethod === 'grover' ? 'Grover simulation' : retrievalMethod.replace(/_/g, ' ')}
+          {retrievalMethod === 'l6_gas' ? 'L6-guided GAS'
+            : retrievalMethod === 'grover' ? 'Grover simulation' : retrievalMethod.replace(/_/g, ' ')}
         </p>}
         {/* Timestamp and Retrieval Time */}
         {!isTyping && (

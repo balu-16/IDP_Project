@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { useAuth } from '@/components/auth/AuthContext';
 import { apiFetch, errorMessage } from '@/lib/api';
 import { chatResponseSchema, type RetrievalStrategy } from '@/lib/contracts';
+import { DEFAULT_RETRIEVAL, retrievalSettings, chatRequest, type SubmittedMessage } from '@/lib/retrieval';
 import chatService, { type ChatSession } from '@/services/chatService';
 import { cn } from '@/lib/utils';
 import { showToast } from '@/components/Toast';
@@ -25,7 +26,7 @@ const Chat: React.FC = () => {
   const cache = useQueryClient();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [input, setInput] = useState('');
-  const [strategy, setStrategy] = useState<RetrievalStrategy>('cosine');
+  const [strategy, setStrategy] = useState<RetrievalStrategy>(DEFAULT_RETRIEVAL);
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 1024);
   const [collapsed, setCollapsed] = useState(localStorage.getItem('sidebar-collapsed') === 'true');
   const [uploadOpen, setUploadOpen] = useState(false);
@@ -78,11 +79,10 @@ const Chat: React.FC = () => {
     onError: cause => showToast('error', 'Could not create chat', errorMessage(cause)),
   });
   const send = useMutation({
-    mutationFn: async ({ id, text, runId }: { id: string; text: string; runId: string }) => {
+    mutationFn: async (variables: SubmittedMessage) => {
       const response = await apiFetch('/api/chat', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ session_id: id, message: text, run_id: runId,
-          temperature: 0, retrieval: { strategy, top_k: 5, candidate_limit: 64, threshold: 0.5, shots: 1024, seed: 0 } }),
+        body: JSON.stringify(chatRequest(variables)),
       });
       return chatResponseSchema.parse(await response.json());
     },
@@ -156,7 +156,7 @@ const Chat: React.FC = () => {
     event?.preventDefault();
     if (!sessionId || !input.trim() || send.isPending) return;
     const text = input.trim(); setInput('');
-    send.mutate({ id: sessionId, text, runId: crypto.randomUUID() });
+    send.mutate({ id: sessionId, text, runId: crypto.randomUUID(), retrieval: retrievalSettings(strategy) });
   };
 
   return <div className="relative flex h-screen overflow-hidden">
@@ -179,6 +179,7 @@ const Chat: React.FC = () => {
           Retrieval
           <select aria-label="Retrieval method" value={strategy} onChange={e => setStrategy(e.target.value as RetrievalStrategy)}
             className="rounded border border-border bg-surface p-2">
+            <option value="l6_gas">L6-guided GAS</option>
             <option value="cosine">Cosine</option>
             <option value="grover">Grover simulation</option>
             <option value="closed_form">Analytical control</option>

@@ -49,6 +49,14 @@ venv/
 
 # Build outputs / package artifacts
 build/
+!/build/
+/build/*
+!/build/accuracy_v3/
+/build/accuracy_v3/*
+!/build/accuracy_v3/launch_fiqa_full_test.py
+!/build/application_gas/
+/build/application_gas/*
+!/build/application_gas/verify_after_fiqa.py
 tmp/
 *.pid
 
@@ -62,6 +70,7 @@ backend/.venv-*/
 research/data/
 research/runs/
 research/cache/
+research/downloads/
 *.sqlite3
 *.tsbuildinfo
 
@@ -69,5 +78,4 @@ research/cache/
 /IDP.pdf
 /corrections.md
 /paper_corrections.md
-/plan.md
 /docker-compose.deploy.local.yml

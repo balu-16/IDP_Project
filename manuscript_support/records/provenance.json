@@ -1,0 +1,43 @@
+{
+  "sources_sha256": "7fa89201d1a32adf7139a88e2ef95750f0c6579bf06b66c656f05b7c0aa495c3",
+  "exporter_sha256": "d4ff48f4876d69957bd864e4bccf6fa1a6b59c5d01dc4ec4ac1f1148e805af5e",
+  "inputs": {
+    "research/runs/accuracy_v3_redundancy_scifact_test": {
+      "manifest_sha256": "6d5e329be4337d26ebe8b174941d66414ea894bba90bc849bb09a344d397da42",
+      "evaluation_sha256": "e135c9b4aecd01d08f55dba9c370bdda8264ba16640c8d4a979636ba9f3c03ac"
+    },
+    "research/runs/accuracy_v3_redundancy_nfcorpus_test": {
+      "manifest_sha256": "7223d00cbdc229eb993a22e14c24a44b798b6958911f3ba37f6188e08eca6228",
+      "evaluation_sha256": "167c2b4ee00f2dc8b9f2c5fd268c5b2cd56d5ad3116d45d5f117e7c78657bb84"
+    },
+    "research/runs/accuracy_v2_fiqa_test": {
+      "manifest_sha256": "607d2bfafc252192fc9afca5a9d2a379d910a7caa80fea60e0d611defc5f3bb1",
+      "evaluation_sha256": "48edfaad8557d45a390baec598920898b02882d8680ee408f70e3350ef517845"
+    }
+  },
+  "generated": {
+    "new_paper/includes/configuration_note.tex": "c002b5a362db24ff5d36ebcf378199bae03067e2d82facf7b24063ac848b090d",
+    "new_paper/includes/abstract_scope.tex": "7eb4deaf1513ec7aff2f15a7938822ddd739e8d616f899f7431d16cf6ce46dfd",
+    "new_paper/includes/datasets.tex": "2f9ab15d47e9498373bfc281da693e25c50134d4cfede898e4eba24b7195ffa9",
+    "new_paper/includes/headline.tex": "0c5e855d474ad92364501a88f66eb586651137d411ab0c27de31273de3ebd9f1",
+    "new_paper/includes/comparators.tex": "c4444e0087c868cdcb6b2f551b25ef3f4b5d0c4231a999f0b14bf6e5fb03c115",
+    "new_paper/includes/latency.tex": "164dccd707b07e643c984872c6f7c72eed30c04ff1efd5d5b611f2b8d00d1a2e",
+    "new_paper/includes/findings.tex": "99c0781a38caa64aeaa2d982a04b089b5eb2daa4340bea1b8014812f5616a062",
+    "new_paper/includes/statistics.tex": "97e7c2404cb6353233f607aeec6224833f2afc84c82436e02e41ecb6efca91f1",
+    "new_paper/includes/execution.tex": "04623ed6bece21c43471adfef056a1e62c0e1df96f70c0d52f9f0aedc116a0ea",
+    "new_paper/includes/thresholds.tex": "08b3291c21a15cc641713d04de6ad6a816702a920e132912bbfd5325b6a2c569",
+    "new_paper/includes/resources_observed.tex": "a4c59a7155dddf56a5d5928f64ddae1cc0dd58345aec275ee3b3b85bdbb39d41",
+    "new_paper/includes/resources_analytic.tex": "2a91c8a701ce661abcdfb26f1e47b385ff3c85dd06781df852ea3ebb361facf7",
+    "new_paper/includes/abstract_findings.tex": "78f016fd3519e429db05e6391741462aa4e6b2791d67cbd7f7e04bd74e1401de",
+    "new_paper/includes/protocol_exception.tex": "45c7842a768c18ee3684cd77bf429ba381ac5991f49b884c73c54f17c7dc52f3",
+    "new_paper/includes/conclusion.tex": "965a3331f6fd17df0b3a18bf20d5004b7654ea41e8154c1f2e4ad065d0d9cd55",
+    "manuscript_support/records/all_methods.csv": "a36556de8281013bea4413985103e03502d6d09f040e93aa94375895867819a2",
+    "manuscript_support/records/evidence.json": "027b6b6c497e45d20a9a0213aff63885a2e982a0e9adde061d8f81b8ef4bfcc5"
+  },
+  "schema": "qubitchat-manuscript-provenance-v2",
+  "relocation": {
+    "original_provenance_record": "manuscript_support/records/before_cleanup.json",
+    "original_exporter_sha256": "0c3be618ab83fb6498da5b5d6e757e29d9533d91cf321e4b096804eda9c373bc",
+    "policy": "Only output locations and tool paths changed; every generated file retains its original hash."
+  }
+}

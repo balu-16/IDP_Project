@@ -24,7 +24,7 @@ from pathlib import Path
 DATA_ROOT = Path(__file__).resolve().parent / "data"
 
 # Canonical BEIR ids. `nqcorpus` retained as deprecated alias for `nfcorpus`.
-DATASET_ALIASES = {"nqcorpus": "nfcorpus", "nfcorpus": "nfcorpus", "scifact": "scifact"}
+DATASET_ALIASES = {"nqcorpus": "nfcorpus", "nfcorpus": "nfcorpus", "scifact": "scifact", "fiqa": "fiqa"}
 
 
 def normalize_text(text: str) -> str:
@@ -162,6 +162,9 @@ def _filter_to_qrels(queries: dict[str, str], qrels: dict[str, dict[str, int]]):
     them as zero corrupts averages. Returns filtered (queries, qrels) with
     qrels restricted to surviving queries.
     """
+    missing = set(qrels) - set(queries)
+    if missing:
+        raise ValueError(f"Judgments have no query text for {len(missing)} query IDs")
     kept = {qid: queries[qid] for qid in queries if qid in qrels and qrels[qid]}
     return kept, {qid: qrels[qid] for qid in kept}
 
@@ -206,7 +209,7 @@ def load_splits(name: str):
     canonical = canonical_dataset(name)
     base = DATA_ROOT / canonical
     corpus = _load_corpus(base)
-    dev_split = "dev" if canonical == "nfcorpus" else "train"
+    dev_split = _D[canonical]["dev_split"]
     try:
         dev_queries_raw = _load_queries(base, dev_split)
         dev_qrels_raw = _load_qrels(base, dev_split)
@@ -226,6 +229,10 @@ def load_splits(name: str):
     if not dev_queries or not dev_qrels:
         raise ValueError(f"{canonical} development data empty after qrels filtering; "
                          "refusing to tune without judgments")
+    if set(dev_queries) & set(test_queries):
+        raise ValueError(f"{canonical}: development and test query IDs overlap")
+    if any(d not in corpus for rows in (dev_qrels, test_qrels) for rel in rows.values() for d in rel):
+        raise ValueError(f"{canonical}: judgments reference missing corpus documents")
     expected = _D[canonical]["test_queries"]
     if len(test_queries) != expected:
         raise ValueError(f"{canonical} test queries: expected {expected}, got {len(test_queries)} "
@@ -297,6 +304,9 @@ def freeze_record(name: str) -> dict:
     candidates = ["corpus.jsonl", "queries.jsonl", "queries.test.jsonl", "queries.json",
                   "queries/test.tsv", "qrels/test.tsv", "qrels/dev.tsv", "qrels/train.tsv",
                   "qrels.test.tsv"]
+    candidates += [f"queries.{split}.jsonl" for split in ("train", "dev")]
+    candidates += [f"queries/{split}.tsv" for split in ("train", "dev")]
+    candidates += [f"qrels.{split}.tsv" for split in ("train", "dev")]
     for fname in candidates:
         p = base / fname
         if p.exists():

@@ -22,6 +22,14 @@ FROZEN = {
 # Canonical BEIR ids: scifact (300 test), nfcorpus (323 test). `nqcorpus`
 # is a deprecated alias accepted by the loader/CLI for backwards compat.
 DATASETS = {
+    "fiqa": {
+        "test_queries": 648,
+        "beir_id": "fiqa",
+        "dev_split": "dev",
+        "source_url": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/fiqa.zip",
+        "license": "Consult the upstream FiQA-2018 dataset license",
+        "sha256": None,
+    },
     "scifact": {
         "test_queries": 300,
         "beir_id": "scifact",

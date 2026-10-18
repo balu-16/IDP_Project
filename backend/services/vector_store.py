@@ -40,7 +40,7 @@ class VectorStore:
         await run_blocking(self._initialize)
 
     @staticmethod
-    def _build_chroma_where(metadata=None, session_id=None, user_id=None):
+    def _build_chroma_where(metadata=None, session_id=None, user_id=None, allowed_document_ids=None):
         clauses = []
         for key, value in (metadata or {}).items():
             if key.startswith('$') or key in {'user_id', 'session_id'}:
@@ -51,6 +51,8 @@ class VectorStore:
             clauses.append({'session_id': str(session_id)})
         if user_id is not None:
             clauses.append({'user_id': str(user_id)})
+        if allowed_document_ids is not None:
+            clauses.append({'document_id': {'$in': sorted(str(v) for v in allowed_document_ids if v is not None)}})
         return None if not clauses else clauses[0] if len(clauses) == 1 else {'$and': clauses}
 
     @staticmethod
@@ -89,10 +91,12 @@ class VectorStore:
                  'embedding': result['embeddings'][i], 'metadata': result['metadatas'][i] or {}}
                 for i, identifier in enumerate(result['ids'])]
 
-    async def get_all_embeddings(self, session_id=None, user_id=None, metadata=None):
+    async def get_all_embeddings(self, session_id=None, user_id=None, metadata=None, allowed_document_ids=None):
         self._owner(user_id)
+        if allowed_document_ids is not None and not any(v is not None for v in allowed_document_ids):
+            return []
         await self.initialize()
-        where = self._build_chroma_where(metadata, session_id, user_id)
+        where = self._build_chroma_where(metadata, session_id, user_id, allowed_document_ids)
         def read():
             rows, offset = [], 0
             while True:
@@ -104,13 +108,15 @@ class VectorStore:
                 offset += 500
         return await run_blocking(read)
 
-    async def candidates(self, query_embedding, *, user_id, session_id, limit=64, metadata=None):
+    async def candidates(self, query_embedding, *, user_id, session_id, limit=64, metadata=None, allowed_document_ids=None):
         self._owner(user_id)
         if not session_id:
             raise ValueError('Session scope is required')
+        if allowed_document_ids is not None and not any(v is not None for v in allowed_document_ids):
+            return []
         await self.initialize()
         query = normalized_matrix([query_embedding], settings.EMBEDDING_DIMENSION)[0].tolist()
-        where = self._build_chroma_where(metadata, session_id, user_id)
+        where = self._build_chroma_where(metadata, session_id, user_id, allowed_document_ids)
         def read():
             total = self.collection.count()
             if not total:

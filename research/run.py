@@ -61,6 +61,9 @@ def retrieve_full(query_text, method, vecs, bm25, hnsw_index, k):
 
 
 def cmd_run(args) -> Path:
+    if getattr(args, "profile", "legacy") == "gas":
+        from .selection_experiment import cmd_run as run_gas
+        return run_gas(args)
     corpus, dev_q, dev_qrels, test_q, test_qrels, freeze = load_dataset(args.dataset)
     # Hard-require dense for official datasets (no TF-IDF fallback).
     vecs, vec_meta = baselines.build_vector_space(corpus, prefer=args.encoder, dataset=args.dataset)
@@ -227,6 +230,9 @@ def _primary_per_query(method: str, qid: str, trace: dict, ensemble_ranking: lis
 
 def cmd_evaluate(args) -> Path:
     run_dir = Path(args.run)
+    if json.loads((run_dir / "manifest.json").read_text()).get("profile") == "gas":
+        from .selection_experiment import cmd_evaluate as evaluate_gas
+        return evaluate_gas(args)
     artifacts.verify_manifest(run_dir)
     rankings = json.loads((run_dir / "rankings.json").read_text())
     manifest = json.loads((run_dir / "manifest.json").read_text())
@@ -270,6 +276,9 @@ def cmd_evaluate(args) -> Path:
 
 def cmd_report(args) -> Path:
     run_dir = Path(args.run)
+    if json.loads((run_dir / "manifest.json").read_text()).get("profile") == "gas":
+        from .selection_experiment import cmd_report as report_gas
+        return report_gas(args)
     # Reports must come from verified artifacts, not a lone scores.json.
     manifest = artifacts.verify_manifest(run_dir)
     rankings = json.loads((run_dir / "rankings.json").read_text())
@@ -319,9 +328,12 @@ def main():
     sub = parser.add_subparsers(dest="cmd", required=True)
     p_run = sub.add_parser("run")
     p_run.add_argument("--dataset", default="synthetic",
-                       choices=["synthetic", "scifact", "nfcorpus", "nqcorpus"],
+                       choices=["synthetic", "scifact", "nfcorpus", "nqcorpus", "fiqa"],
                        help="nfcorpus canonical; nqcorpus deprecated alias")
     p_run.add_argument("--tag", default="smoke")
+    p_run.add_argument("--profile", choices=["legacy", "gas"], default="legacy")
+    from .selection_experiment import add_gas_arguments
+    add_gas_arguments(p_run)
     p_run.add_argument("--encoder", default="dense", choices=["tfidf", "dense"],
                        help="dense pinned MiniLM (required for official datasets); "
                             "tfidf stand-in allowed only for synthetic smoke")

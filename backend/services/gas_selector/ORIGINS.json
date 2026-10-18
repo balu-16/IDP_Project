@@ -1,0 +1,26 @@
+{
+  "policy": "Frozen kernel copies; only package imports are rewritten. Research originals remain unchanged.",
+  "sources": {
+    "primitives.py": {
+      "origin": "research/selection.py",
+      "origin_sha256": "750932ea51f40c6036a8a8f20343dcb025563b539391783d8a0d860719e057a1",
+      "sha256": "750932ea51f40c6036a8a8f20343dcb025563b539391783d8a0d860719e057a1"
+    },
+    "baseline.py": {
+      "origin": "research/accuracy_v2/core.py",
+      "origin_sha256": "f0f478f9561374a7675bb0c2114cafa22a8cc84914adcdae19b6c96b8153fbb0",
+      "sha256": "e0dc9a08f4d8387c61cc7f0bbabfe366636070253bdec9219ef39fd2b4b0ae03"
+    },
+    "refinement.py": {
+      "origin": "research/accuracy_v3/core.py",
+      "origin_sha256": "6d7949a7d215610cf951eeace6c30e6d7e8bcd785d896467377f76b9b7a82aa2",
+      "sha256": "a953502395aa00508e6412b0ed6f1ee7354f6c1452041c8ba7b0aa56e7e41bb3"
+    },
+    "lexical.py": {
+      "origin": "research/baselines.py",
+      "origin_sha256": "ab41cc589e9b397e5bbd80f96d8f0d1d1c1a5bacfb38aa1d522fe630f0df7ba5",
+      "sha256": "27534eb39cbc3394b5b0d60df473a906209f42eea3e679645d4742094a67f37a",
+      "extraction": "TOKEN_RE, tokenize, and BM25 only; standalone standard-library and NumPy imports"
+    }
+  }
+}

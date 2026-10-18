@@ -1,0 +1,52 @@
+{
+  "schema": "manuscript-standalone-cleanup-check-v1",
+  "standalone_input": "build/manuscript_cleanup/standalone",
+  "standalone_compile_passed": true,
+  "standalone_contains_no_python_or_json": true,
+  "visible_text_identical_before_after_and_standalone": true,
+  "pages": [
+    {
+      "page": 1,
+      "image_sha256": "7039758234c2dbaa772f7bc6d841a32f7477b381aacfc4230e6b26da3fe38fad",
+      "matches_pre_cleanup_page": true
+    },
+    {
+      "page": 2,
+      "image_sha256": "84ccab881431dfb608688183f8ed147cdc2c0e576c7c6ea34c3a109f710bd850",
+      "matches_pre_cleanup_page": true
+    },
+    {
+      "page": 3,
+      "image_sha256": "9c307de8481f522b7b2c3f98bfa5fec606d596d2ec7471f121a99eefdbb53041",
+      "matches_pre_cleanup_page": true
+    },
+    {
+      "page": 4,
+      "image_sha256": "2f53a44787236cb40a542e942afdcc383b77de3483a2b32a01e49acda60bab9a",
+      "matches_pre_cleanup_page": true
+    },
+    {
+      "page": 5,
+      "image_sha256": "f8961285a73f9eeb347adfe733bba169895ba77804d74fbbe8e739ec8f38ff4d",
+      "matches_pre_cleanup_page": true
+    },
+    {
+      "page": 6,
+      "image_sha256": "3a9e60c10d7ee2d1a8e58cc3dd384cdf7f0a447c672f814f47e5dcc21f511f3c",
+      "matches_pre_cleanup_page": true
+    },
+    {
+      "page": 7,
+      "image_sha256": "7714c43d0c3b58792af616b63a40c9a6fd14de603e59b0eed3a4db95ce665bf7",
+      "matches_pre_cleanup_page": true
+    },
+    {
+      "page": 8,
+      "image_sha256": "a49bf5b676d97c38696fca2742cf0a2392eb39367bb225d87a5430acbcf21cea",
+      "matches_pre_cleanup_page": true
+    }
+  ],
+  "all_eight_pages_pixel_identical": true,
+  "current_pdf_sha256": "3c8001f0a92f31193d05b70bf3fcbaba0df4be6d946ca4bcf12b4407118e5f02",
+  "new_rankings_or_model_inference": false
+}

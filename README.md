@@ -55,4 +55,4 @@ The frontend is served at `http://localhost:8080` and the API at `http://localho
 (cd backend && python -m pip install pytest && python -m pytest)
 ```
 
-The research verification suite is in `research/test_research.py` and requires the research dependencies plus locally downloaded BEIR data. The manuscript source, figures, generated tables, and verified PDF are in `new_paper/`. Raw datasets and sealed run directories are intentionally not stored in this repository; the manuscript README describes the inputs needed to regenerate its tables.
+The research verification suite is in `research/test_research.py` and requires the research dependencies plus locally downloaded BEIR data. `new_paper/` is a standalone LaTeX upload folder containing the source, required fragments, conference class, and verified PDF. Manuscript tools, supporting evidence, reviewer responses, and result-update instructions are in [manuscript_support/README.md](manuscript_support/README.md). Raw datasets and sealed run directories are intentionally not stored in this repository.

@@ -1,358 +1,291 @@
 \documentclass[conference]{IEEEtran}
+% Class copied unchanged from the supplied conference template.
+\usepackage[T1]{fontenc}
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{array}
 \usepackage{textcomp}
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
-\usepackage{cuted}
-\usepackage{capt-of}
-\hypersetup{
-    pdftitle={QubitChat: A Controlled Evaluation of Grover-Inspired Reranking for Document Retrieval},
-    pdfauthor={Anishitha Kovvuri; Bala Rakesh Gundapaneni; Abdul Basith Syed; Jagadeeshbabu Borru; Naga Sravanthi Puppala}
-}
+\hypersetup{pdftitle={Qubit Chat: A Controlled Evaluation of Grover-Inspired Reranking for Document Retrieval},
+pdfauthor={Anishitha Kovvuri; Bala Rakesh Gundapaneni; Abdul Basith Syed; Jagadeeshbabu Borru; Naga Sravanthi Puppala}}
+\newcommand{\resultinput}[1]{\input{includes/#1}}
+\newcommand{\red}{\mathcal{R}}
+\title{Qubit Chat: A Controlled Evaluation of Grover-Inspired Reranking for Document Retrieval}
 \author{
-\IEEEauthorblockN{Anishitha Kovvuri,\\
-Bala Rakesh Gundapaneni, Abdul Basith Syed,\\
+\IEEEauthorblockN{Anishitha Kovvuri, Bala Rakesh Gundapaneni, Abdul Basith Syed,\\
 Jagadeeshbabu Borru, Naga Sravanthi Puppala}
-\IEEEauthorblockA{Computer Science and Engineering, SRM University AP, 522502, Andhra Pradesh, India\\
-Contributing authors: \url{anishitha\_kovvuri@srmap.edu.in};\\
-\url{balarakesh\_gundapaneni@srmap.edu.in}; \url{abdulbasith\_syed@srmap.edu.in};\\
-\url{jagadeeshbabu\_borru@srmap.edu.in};\\
-* Corresponding author(s). E-mail(s): \url{nagasravanthi.p@srmap.edu.in}}
+\IEEEauthorblockA{Department of Computer Science and Engineering\\
+SRM University AP, Andhra Pradesh 522502, India\\
+\url{anishitha\_kovvuri@srmap.edu.in}, \url{balarakesh\_gundapaneni@srmap.edu.in}\\
+\url{abdulbasith\_syed@srmap.edu.in}, \url{jagadeeshbabu\_borru@srmap.edu.in}\\
+Corresponding author: \url{nagasravanthi.p@srmap.edu.in}}
 }
-
-\title{QubitChat: A Controlled Evaluation of Grover-Inspired Reranking for Document Retrieval}
-
 \begin{document}
 \maketitle
-
 \begin{abstract}
-QubitChat is a document-chat prototype combining classical MiniLM embeddings and candidate selection with simulated amplitude amplification. We evaluate retrieval apart from response generation on official SciFact and NFCorpus test sets, with 300 and 323 judged queries. Comparisons cover lexical retrieval, exact cosine, hierarchical navigable small-world indexing, analytical amplification, matched classical sampling, and Grover simulation. The encoder revision, preprocessing, shortlist size, shots, seeds, and statistical protocol were fixed before test evaluation. All reranking methods use the same classical exact-cosine shortlist and fall back to it when no candidates are marked. Reported timing excludes query embedding, corpus encoding, index construction, and response generation; Grover and sampling totals include five seeds, not one online query.\ \IfFileExists{generated/abstract_findings.tex}{\input{generated/abstract_findings.tex}}{Numerical findings are generated from the sealed run artifacts.} These results show no retrieval improvement or quantum advantage.
+Selecting useful retrieval evidence requires balancing relevance with repeated information. We evaluate L6-guided Grover Adaptive Search as document-set selection after classical dense and lexical retrieval. A cross-encoder supplies relevance scores, and a compact ideal simulator performs phase marking and amplitude amplification over improving subsets. The base policy selects eight of fifteen candidates. A constrained refinement expands the candidate pool, preserves the first five results, and searches for a less redundant three-document tail under neural-score constraints. Full tests cover scientific claims, nutrition-related retrieval, and financial questions. \resultinput{abstract_scope.tex} \resultinput{abstract_findings.tex} We provide paired query statistics, classical and neural controls, independent metric checks, oracle accounting, and mathematical preservation guarantees. These results characterize a relevance--redundancy tradeoff without establishing physical quantum acceleration, lower monetary cost, or improved generated answers.
 \end{abstract}
 \begin{IEEEkeywords}
-Amplitude amplification, document retrieval, information retrieval, quantum search, reproducibility.
+Grover Adaptive Search, document retrieval, cross-encoder, evidence selection, redundancy.
 \end{IEEEkeywords}
 
-\section{Introduction}
+\section{Introduction}\label{sec:introduction}
+Retrieval-augmented systems retrieve documents before producing an answer \cite{lewis2020retrieval}. A limited evidence budget makes both relevance and overlap important: several near-duplicate passages can consume space that might otherwise cover a different aspect of a question. Independent document scores do not explicitly consider relationships among selected documents. Set selection instead evaluates an evidence bundle as a whole, but its benefit must be measured against strong relevance models and classical methods optimizing the same objective.
 
-Large collections of research papers, technical reports, and other documents require retrieval methods that can identify relevant evidence before a response-generation model is invoked. Retrieval-augmented generation (RAG) systems address this requirement by separating document retrieval from language generation \cite{lewis2020retrieval}. In practice, the retrieval stage includes document extraction, text normalization, chunking, embedding, indexing, scoring, and candidate selection. Each of these stages contributes to the measured cost and must be distinguished from the cost of producing a final natural-language response.
+Grover search reduces oracle queries under a specified access model \cite{grover1996search,brassard2002amplitude}. It does not remove classical embedding, retrieval, state preparation, or reversible computation costs. In a threshold-marking reranker, equally marked documents have symmetric ideal amplification. Their measurement probabilities therefore do not themselves provide a graded relevance ordering. Transforming those probabilities into ranking scores requires controls for both threshold fallback and relevance distortion.
 
-Quantum search is often described using Grover's oracle-query bound, in which amplitude amplification can find marked items with fewer oracle applications under a specified oracle-access model \cite{grover1996search,brassard2002amplitude}. That bound does not by itself replace embedding computation, data loading, oracle construction, circuit compilation, measurement, or ranking. A retrieval experiment that uses classical scores to build a simulated oracle must therefore report those operations separately.
+We retain that original policy as a legacy comparator and use Grover Adaptive Search (GAS) to search document subsets instead \cite{gilliam2021gas}. A neural cross-encoder supplies relevance evidence, while document embeddings measure redundancy. An earlier base policy jointly optimizes relevance and redundancy over fifteen candidates. The follow-up refinement protects its five highest-ranked outputs, expands the available tail candidates, and minimizes redundancy subject to neural-score constraints. Grover amplification affects the sampled subset; it is not substituted for a learned relevance score.
 
-This paper studies that controlled setting. QubitChat is retained as the system platform, while the quantitative retrieval evaluation is deliberately separated from the Gemini response-generation service and from unverified OCR or user-study claims. The primary research questions are:
+Our questions are: (1) can constrained selection reduce redundancy while preserving the initial ranking prefix and limiting observed recall loss; (2) how does it compare with matched greedy, exact, random, lexical, and neural methods; and (3) what simulation work and resource assumptions are required? The contribution is an evaluated retrieval formulation and reproducible accounting, rather than a new quantum search algorithm. Gains shared with classical optimizers support the selection policy, not a uniquely quantum benefit. Redundancy is an embedding-similarity proxy, not a duplicate percentage, judged coverage score, or answer-quality measure.
 
-\begin{enumerate}
-    \item Does Grover-inspired reranking improve retrieval effectiveness over exact cosine ranking and a matched classical sampling control when candidate identities and raw scores are fixed?
-    \item Can any observed ranking changes be explained by thresholding, marked-state symmetry, finite-shot sampling, score quantization, ties, or candidate construction?
-    \item What classical preprocessing, oracle-construction, circuit, transpilation, simulation, and measurement costs are required by the evaluated implementation?
-\end{enumerate}
+\section{Related Work}\label{sec:related}
+Amplitude amplification separates oracle queries from the cost of constructing and executing each oracle \cite{grover1996search,brassard2002amplitude}. Search with an unknown marked-state count motivates randomized iteration schedules \cite{boyer1998tight}; quantum minimum finding updates incumbent thresholds \cite{durr1996minimum}. Gilliam, Woerner, and Gonciulea formulate GAS for constrained polynomial binary optimization and describe arithmetic oracles \cite{gilliam2021gas}. Our compact simulator reproduces ideal phase and reflection operations over a small subset basis. It does not realize all corresponding decision, arithmetic, and constraint registers on a quantum device.
 
-The contributions are threefold. First, we provide an artifact-backed MiniLM evaluation on two public BEIR datasets with published relevance judgments. Second, we specify and test a hybrid reranking policy that keeps classical retrieval distinct from simulated amplification and reports its cosine fallback. Third, we provide matched classical controls and query-derived circuit-resource measurements, including finite-precision effects; padding behavior is analyzed and unit-tested but is not exercised by the power-of-two candidate sizes in the reported runs.
+Fixed-cardinality selection can be represented with fixed-weight bit strings. Dicke-state constructions show that such states need not always require arbitrary dense state synthesis \cite{bartschi2019dicke}. However, a preparation method's theoretical circuit bound cannot be assigned to an implementation that does not execute it. Data access, arithmetic, and constraint checks remain central to interpreting quantum claims \cite{montanaro2016quantum}.
 
-\section{Related Work}
+Maximal marginal relevance (MMR) balances relevance with novelty relative to previously selected documents \cite{carbonell1998mmr}. Reciprocal-rank fusion (RRF) combines retrieval lists \cite{cormack2009rrf}, and BM25 supplies lexical relevance \cite{robertson2009bm25}. Exact and greedy controls distinguish an objective's value from a search mechanism's value. Our matched refinement controls share the expanded candidates, fixed prefix, score constraints, and redundancy definition.
 
-Grover's algorithm provides a foundational example of amplitude amplification for unstructured search \cite{grover1996search}. Brassard et al.~formalized amplitude amplification and its dependence on the fraction of marked states and the number of oracle applications \cite{brassard2002amplitude}. Montanaro surveyed quantum algorithms and their computational assumptions \cite{montanaro2016quantum}, while Biamonte et al.~reviewed quantum machine-learning directions and their data-access requirements \cite{biamonte2017quantum}. These works motivate the mathematical control used here, but they do not establish an end-to-end advantage for the document-retrieval implementation evaluated in this paper.
+Sentence encoders provide reusable dense vectors \cite{reimers2019sentencebert}. Cross-encoders jointly encode a query and passage to estimate relevance \cite{nogueira2019bert}. The common \texttt{all-MiniLM-L6-v2} embedding model and \texttt{ms-marco-MiniLM-L6-v2} cross-encoder have different roles and training objectives \cite{minilm_model,crossencoder_models}. ``MS MARCO'' identifies the latter's passage-ranking training task, rather than an alternative generic encoder. BEIR supplies heterogeneous collections for testing retrieval across domains \cite{thakur2021beir}.
 
-Neural retrieval and RAG systems use learned text representations to select evidence for downstream generation \cite{reimers2019sentencebert,lewis2020retrieval}. The BEIR benchmark provides heterogeneous information-retrieval datasets and standardized metrics, making it suitable for evaluating whether a retrieval change generalizes beyond a private document collection \cite{thakur2021beir}. BM25 and HNSW are established lexical and approximate-neighbor baselines \cite{robertson2009bm25,malkov2020hnsw}. The present work uses BEIR judgments at parent-document level and reports both conventional retrieval baselines and matched reranking controls.
+\section{Data and Experimental Protocol}\label{sec:protocol}
+\subsection{Datasets and representations}
+Official BEIR SciFact, NFCorpus, and FiQA-2018 cover scientific claims, nutrition-related retrieval, and financial questions \cite{thakur2021beir}. Table~\ref{tab:data} reports parent-document and judged-query counts. Every positively judged official test query is included. Input checksums, query/document references, and development/test ID separation are verified. The larger FiQA collection extends corpus and domain coverage; it does not enlarge the quantum pool to the corpus size.
 
-The distinction between an oracle-query bound and a complete data-processing pipeline is central to this study. Oracle synthesis and reversible data loading can dominate practical resource requirements; consequently, the circuits evaluated here are reported as resource experiments rather than as a claim that sentence embeddings or quantum random access memory have been implemented \cite{seidel2021oracle}.
-
-\section{Datasets and Evaluation Units}\label{sec:dataset}
-
-The quantitative evaluation uses the official BEIR SciFact and NFCorpus archives \cite{thakur2021beir}. SciFact contains scientific claims and evidence documents, while NFCorpus contains nutrition-related questions and documents. Threshold tuning uses held-out judgments only: a deterministic 20\% SHA-256 ordering of SciFact's official train queries using the input prefix \texttt{20260911:scifact:} concatenated with each query ID, and the official NFCorpus dev split. Test membership is defined by positive query IDs in the official \texttt{qrels/test.tsv} files; all 300 SciFact and 323 NFCorpus judged test queries are evaluated, without test-query subsampling.
-
-\input{generated/query_accounting.tex}
-
-Relevance is evaluated at parent-document level. When a document is divided into multiple chunks, the parent score is the maximum cosine score among its chunks; relevance is not assigned to every chunk merely because its parent is relevant. The \texttt{research-v1} run manifests record dataset-file checksums, split/query identifiers, configuration and provenance, source/dependency hashes, and result/circuit hashes; evaluation reads the relevance judgments from the corresponding official, checksummed BEIR qrels files.
-
-\begin{table*}[!t]
-\centering
-\caption{Dataset and evaluation statistics generated from frozen run manifests.}
-\label{tab:dataset}
-\resizebox{\textwidth}{!}{\input{generated/dataset_table.tex}}
-\end{table*}
-
-The application also contains document parsing and OCR paths for text-based and scanned inputs. Those implementation paths are shown in the processing figures, but this paper does not treat the BEIR text benchmark as a quantitative OCR-accuracy evaluation. Similarly, the Gemini generation service is outside the retrieval benchmark and its live-provider latency is not included in the retrieval tables.
-
-\begin{figure*}[!t]
-\centering
-\begin{minipage}{0.31\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{ocr_text.png}
-    \par\small (a) OCR extraction
-    \label{fig:ocr}
-\end{minipage}
-\hfill
-\begin{minipage}{0.31\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{chunked_doc.png}
-    \par\small (b) Chunking
-    \label{fig:chunk}
-\end{minipage}
-\hfill
-\begin{minipage}{0.31\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{chat_interaction.png}
-    \par\small (c) Interaction
-    \label{fig:chat}
-\end{minipage}
-\caption{Examples of document-processing and conversational-interface stages. These images document the prototype interface and are not quantitative OCR or user-study evidence.}
-\label{fig:dataset_samples}
-\end{figure*}
-
-\section{Methodology}
-
-\subsection{Preprocessing and MiniLM Embeddings}
-
-The benchmark loader applies Unicode NFKC normalization, whitespace collapse, trimming, and empty-text handling before retrieval. The frozen encoder is MiniLM-L6-v2 \cite{minilm_model}; its pinned model identifier is recorded in Table~\ref{tab:configuration}. The encoder produces 384-dimensional vectors, which are L2-normalized before similarity computation.
-
-Documents are tokenized with the pinned MiniLM tokenizer and segmented into windows of at most 190 content tokens. The implementation reserves two positions for special tokens, reports a nominal 192-token window, and uses a 32-token overlap, corresponding to a stride of 158 tokens. Boundary-safe offset construction and a second tokenization check prevent silent truncation. The measured chunk-length distribution is recorded in the run provenance.
-
-For a query embedding $q$ and chunk embedding $d_i$, cosine similarity is
-
-\begin{equation}
-    s_i = \operatorname{cos}(q,d_i) = \frac{q\cdot d_i}{\lVert q\rVert_2\lVert d_i\rVert_2}.
-    \label{eq:cosine}
-\end{equation}
-
-The highest-scoring chunk determines the score of its parent document. Query vectors for every test query are saved in the run directory, together with query IDs and the model revision, so that the 384-dimensional query representations are explicit audit artifacts rather than implicit intermediate values.
-
-\begin{figure*}[!t]
-\centering
-\fbox{\parbox{0.94\textwidth}{\centering
-\textbf{Text document} $\rightarrow$ \textbf{Unicode normalization and tokenization}
-$\rightarrow$ \textbf{190-content-token windows, 32-token overlap}\\[0.35em]
-\textbf{Pinned MiniLM encoder} $\rightarrow$ \textbf{L2-normalized 384-dimensional chunk vectors}\\[0.35em]
-\textbf{Query--chunk cosine scores} $\rightarrow$ \textbf{maximum score per parent document}
-}}
-\caption{Text preparation and parent aggregation used in the retrieval evaluation. Application OCR paths are not quantitatively evaluated.}
-\label{fig:preprocessing_pipeline}
-\end{figure*}
-
-\subsection{Hybrid Retrieval Architecture}
-
-The evaluated pipeline contains five logical stages:
-
-\begin{enumerate}
-    \item document loading and deterministic text normalization;
-    \item MiniLM tokenization, overlapping chunk construction, and embedding;
-    \item classical candidate construction using BM25, exact cosine, or HNSW;
-    \item matched reranking using exact cosine, analytical amplification, classical sampling, or Grover circuit simulation;
-    \item optional insertion of retrieved text into a response-generation prompt.
-\end{enumerate}
-
-The primary Grover, analytical, and sampling comparisons use the same exact-cosine shortlist of 64 parent documents. They are therefore evaluated as matched-candidate rerankers. The classical embedding and shortlist work is not counted as eliminated by the simulated quantum stage.
-
-The measured retrieval path and its fallback are summarized in Fig.~\ref{fig:architecture}.
-
-\begin{figure*}[!t]
-\centering
-\fbox{%
-\begin{minipage}{0.94\textwidth}
-\centering
-\textbf{Text or PDF input} $\rightarrow$ \textbf{Normalize, extract, and chunk} $\rightarrow$ \textbf{CPU MiniLM embeddings}\\[0.35em]
-\textbf{Full-pipeline baselines: BM25, exact cosine, or HNSW}\\[0.25em]
-\textbf{Matched reranking: exact-cosine top-64 shortlist} $\rightarrow$
-\textbf{classical threshold and marked-index calculation}\\[0.5em]
-\begin{minipage}[t]{0.44\linewidth}
-\centering
-\fbox{\parbox{0.90\linewidth}{\centering
-\textbf{No marked candidates}\\
-Exact-cosine fallback; no Grover circuit is run.}}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.44\linewidth}
-\centering
-\fbox{\parbox{0.90\linewidth}{\centering
-\textbf{At least one marked candidate}\\
-Grover simulation, analytical probabilities, or matched classical sampling.}}
-\end{minipage}\\[0.5em]
-\textbf{Ranking-score transformation and ID tie-break} $\rightarrow$ \textbf{Top-10 documents}
-$\rightarrow$ \textbf{optional Gemini generation (outside the benchmark)}\\[0.35em]
-\small\textit{Prototype integration (outside the measured retrieval path): React client, FastAPI service, Supabase Auth/Postgres, and Chroma storage.}
-\end{minipage}%
-}
-\caption{Prototype architecture and measured retrieval branch. BEIR corpus text is loaded directly; PDF extraction, OCR, and response generation are application context and are not quantitatively evaluated. Matched reranking methods share a classical exact-cosine shortlist, while the reversible score oracle is measured separately as a resource experiment.}
-\label{fig:architecture}
-\end{figure*}
-
-\subsection{Marked States and Amplitude Amplification}
-
-For a reranking call with $K\geq2$ valid candidates, the address register has
-
-\begin{equation}
-    b = \left\lceil\log_2 K\right\rceil, \qquad B=2^b
-    \label{eq:address_space}
-\end{equation}
-
-states. If $K$ is not a power of two, addresses $K,\ldots,B-1$ are padding states and are not valid documents. The implementation restricts the cosine threshold to $T\in[0,1]$ and defines the marked set
-
-\begin{equation}
-    \mathcal{M}=\{i\in\{0,\ldots,K-1\}:s_i\geq T\}, \qquad M=|\mathcal{M}|.
-    \label{eq:marked_set}
-\end{equation}
-
-The address qubit with index zero is the least-significant bit in the integer measurement convention used by the implementation \cite{qiskit_bits}. For $0<M<B$, define
-
-\begin{equation}
-    \theta=\arcsin\sqrt{\frac{M}{B}}, \qquad
-    P_{\mathrm{marked}}(r)=\sin^2((2r+1)\theta).
-    \label{eq:amplification}
-\end{equation}
-
-The ideal probability of each marked state is $P_{\mathrm{marked}}(r)/M$ and the ideal probability of each unmarked address is $(1-P_{\mathrm{marked}}(r))/(B-M)$. The implementation evaluates the floor and ceiling of the first-peak estimate and chooses the one with the larger marked probability, breaking ties toward the smaller iteration count; it does not use the oversimplified rule $r\approx\sqrt{N}$. The cases $K=0$, $K=1$, $M=0$, and $M=B$ are handled explicitly; no circuit is constructed for an empty or singleton candidate set. The primary retrieval uses $K=64$ and the resource grid uses $K\in\{4,8,16\}$, so all reported candidate counts are powers of two and no padded probability occurs in these experiments. Non-power-of-two padding is covered by unit tests, not by the reported resource grid.
-
-The circuit simulation produces an address distribution. It does not directly produce a sorted relevance list. To obtain a ranking, the implementation combines the signed cosine score with the measured or analytical probability:
-
-\begin{equation}
-    r_i=s_i+\beta\max(s_i,0)p_i, \qquad \beta\geq0,
-    \label{eq:rank_score}
-\end{equation}
-
-where $r_i$ is a ranking score, not a cosine similarity. The marked and unmarked states have group-wise ideal probabilities; amplification alone does not sort all candidates by their individual cosine values. Finite shots, ties, thresholding, quantization, and the signed score transformation can change the final order. The paper therefore reports exact cosine, analytical, and matched classical sampling controls rather than attributing every ranking difference to Grover's algorithm.
-
-\subsection{Oracle Model and Resource Accounting}
-
-In the primary retrieval runs, the threshold predicate is evaluated classically over the 64 cosine scores and the resulting marked indices are supplied to a marked-index phase oracle. The reversible score-lookup oracle described next is a separate resource experiment; it is not used to produce the primary Grover rankings. That resource experiment maps each cosine score $c_i$ and threshold $T$ to $[0,1]$ by $(c_i+1)/2$ and $(T+1)/2$, respectively. For a score width of $w$ bits, it sets $q_i=\operatorname{round}_{\mathrm{even}}((c_i+1)(2^w-1)/2)$ and $q_T=\lceil (T+1)(2^w-1)/2\rceil$. It loads the quantized scores, compares $q_i$ with $q_T$, applies a valid-and-good phase condition, and uncomputes the work registers. It does not implement reversible MiniLM inference, a quantum dot product, or free quantum random access memory. The resource grid enforces an 18-total-qubit cap; the application simulator settings separately default to a 10-address-qubit cap and 64 iterations, and those defaults are not the score-oracle cap. The primary $K=64$ address register requires six qubits, and the saved traces show no resource-limit fallback. The artifacts report address and work qubits, marked-set changes caused by quantization, and separate oracle and search-circuit resources. The reported build/export time covers construction of both circuits, $u/cx$ decomposition for gate counting, QASM serialization, and QASM/QPY file output when enabled; it is an aggregate rather than an isolated oracle-construction time. The retrieval traces separately record phase-oracle construction, transpilation, and simulator execution. A zero-iteration search still reports the separately constructed score oracle; it is not treated as an executed oracle call. These are resource measurements for the implemented oracle model, not physical-QPU performance claims \cite{seidel2021oracle}.
-
-\subsection{Retrieval Algorithm}
-
-The BM25 baseline lowercases text and tokenizes with the ASCII pattern \texttt{[a-z0-9]+}, using $k_1=0.9$ and $b=0.4$ \cite{robertson2009bm25}. HNSW indexes the MiniLM chunk vectors with $M=16$, $efConstruction=100$, and $ef=64$; it retrieves with fourfold chunk overfetch and aggregates duplicate chunks to parent documents by maximum score \cite{malkov2020hnsw}.
-
-\textbf{Algorithm 1: MiniLM Grover-Inspired Document Reranking}
-
-\begin{enumerate}
-    \item Normalize the corpus and query using the frozen text policy.
-    \item Tokenize documents into 190-content-token windows with 32-token overlap.
-    \item Encode document chunks and the query using the pinned MiniLM revision.
-    \item Compute cosine scores and aggregate chunk scores to parent documents.
-    \item Select the top 64 parent-document candidates using exact cosine similarity.
-    \item Compare thresholds 0.5, 0.3, and 0.7 on development nDCG@10 using the matched sampling control; average seeds within query and break ties in that order. The selected threshold is 0.7 on both datasets.
-    \item Compute the threshold predicate classically. If no candidate is marked, return the exact-cosine ranking; otherwise construct the address-space circuit for the selected method.
-    \item Apply analytical amplification, matched classical multinomial sampling, or Grover simulation.
-    \item Apply Eq.~\ref{eq:rank_score}, remove padded addresses, and use document-ID tie-breaking.
-    \item Return the top 10 documents and persist candidates, scores, probabilities, seeds, timing, and fallback reasons.
-\end{enumerate}
-
-\section{Experimental Protocol}
-
-The frozen configuration is generated directly from the run manifest.
-
-\begin{table*}[!t]
-\centering
-\caption{Frozen MiniLM retrieval and simulation configuration.}
-\label{tab:configuration}
-\resizebox{\textwidth}{!}{\input{generated/config_table.tex}}
-\end{table*}
-
-The primary metrics are nDCG@10, Recall@10, Recall@64, MRR@10, and P@5. nDCG@10 is the primary endpoint; it uses the published qrel grades directly as gains, while precision and recall treat any positive qrel as relevant, consistent with the BEIR/TREC evaluation convention \cite{thakur2021beir}. Stochastic Grover and classical-sampling repetitions are averaged within each query before statistical inference; seeds and shots are not treated as independent queries. For each dataset, the Holm family contains five paired nDCG@10 comparisons against exact cosine: BM25, HNSW, Grover policy, analytical policy, and sampling policy. The paired-comparison table reports unadjusted two-sided paired sign-randomization $p$-values, unadjusted 95\% percentile confidence intervals from 10,000 paired query-bootstrap resamples, Cohen's $d_z$, and the Holm rejection decision; bootstrap and randomization seeds are 0 and 1, respectively \cite{dror2018harnessing}.
-
-The timing boundary excludes query embedding (test query vectors are precomputed), corpus encoding, one-time HNSW index construction, and Gemini generation. For Grover and sampling, the reported per-query total adds the shared exact-cosine shortlist-selection time to the wall time for all five seeded reranks; it is therefore a five-seed evaluation cost, not single-seed online latency. Other methods are timed once per query. Median and P95 summarize one pass over the test queries and are descriptive, not repeated-run timing estimates. Circuit-resource experiments use five deterministic query-derived score sets per dataset and report unsupported configurations rather than silently changing the qubit or score-bit budget.
-
-\section{Results and Discussion}
-
-\subsection{Retrieval Effectiveness}
-
-The primary retrieval results are generated from all judged test queries and are shown in Table~\ref{tab:retrieval}. The paired comparisons are shown in Table~\ref{tab:matched}; BM25 and HNSW are full-pipeline comparisons, while the three amplification policies use identical exact-cosine candidates and scores. Grover, analytical, and sampling aggregate rows include the defined cosine fallback when no candidate is marked.
-
-\IfFileExists{generated/results_findings.tex}{\input{generated/results_findings.tex}}{}
-
-\begin{table*}[!t]
-\centering
-\caption{Retrieval effectiveness generated from sealed run artifacts. Reranking-policy rows include cosine fallback when no candidates meet the threshold.}
-\label{tab:retrieval}
-\resizebox{\textwidth}{!}{\input{generated/retrieval_table.tex}}
-\end{table*}
-
-\begin{table*}[!t]
-\centering
-\caption{Paired nDCG@10 comparisons against exact cosine. BM25 and HNSW compare full retrieval pipelines; amplification rows use identical candidates. Differences and confidence limits are in units of $10^{-3}$.}
-\label{tab:matched}
-\resizebox{\textwidth}{!}{\input{generated/matched_table.tex}}
-\end{table*}
-
-The baseline pattern is dataset-dependent. On SciFact, exact cosine and HNSW have the same nDCG@10 at the reported precision; on NFCorpus, BM25 has higher nDCG@10 than exact cosine (0.305 versus 0.295), while exact cosine has higher Recall@64 (0.267 versus 0.217). Thus, top-rank quality and candidate coverage do not move together in every collection. These point-estimate differences should be interpreted cautiously: every paired confidence interval includes zero, and none of the five comparisons per dataset is rejected by the Holm procedure. For the matched reranking policies, analytical amplification has no nDCG@10 difference at the reported precision, while the Grover and sampling differences are small and statistically unresolved. The result is evidence about reranking a classically selected shortlist, not about quantum candidate discovery.
-
-\subsection{Timing and Circuit Resources}
-
-Table~\ref{tab:timing} reports the timing boundaries stated above. Query embedding, corpus encoding, index construction, and response-generation latency are excluded.
-
-\begin{table}[!t]
-\centering
-\caption{Retrieval-stage timing generated from per-query traces.}
-\label{tab:timing}
-\resizebox{\columnwidth}{!}{\input{generated/timing_table.tex}}
+\begin{table}[t]
+\centering\small\setlength{\tabcolsep}{3pt}
+\caption{Dataset counts and frozen base lexical/diversity weights.}
+\label{tab:data}
+\resultinput{datasets.tex}
 \end{table}
 
-HNSW has the lowest reported retrieval median on both datasets, but these measurements exclude index construction and therefore do not establish a lower end-to-end system cost. The Grover P95 values (450.3 ms for SciFact and 550.8 ms for NFCorpus) are substantially above their respective medians; moreover, each Grover timing aggregates five seeded reranks. They should not be read as single-query online latency or as a direct comparison with a physical quantum device.
+Dense representations use the pinned encoder \path{sentence-transformers/all-MiniLM-L6-v2}, revision \texttt{1110a243\ldots{}529b4d41}, with 384-dimensional normalized vectors. Text uses Unicode NFKC and whitespace normalization. Full tokenizer offsets are obtained with padding and truncation disabled, including for the first document. Documents use at most 190 WordPiece content tokens per chunk with a step of 158; two special tokens yield at most 192 model-input tokens. Parent relevance is maximum query cosine over chunks. The representative passage is the maximizing original chunk, with the lowest chunk index breaking exact ties. Methods share parent IDs and representative passages for a given pool.
 
-Table~\ref{tab:resources} reports the query-derived circuit-resource grid. “Q-change” is the number of candidate mark/unmark decisions changed by fixed-point quantization; table entries are medians across five query-derived score sets. “Build/export” includes construction of both circuits, decomposition to the $u/cx$ basis for gate counting, QASM serialization, and enabled QASM/QPY file output. It is an aggregate measurement, not an isolated oracle-construction time. The score oracle uses classically prepared quantized values, so the table is an implementation-resource characterization, not a complete quantum retrieval cost.
+Queries are checked against the 190-content-token limit. Cross-encoder pairs are checked against 512 tokens without silent truncation. The relevance model is \path{cross-encoder/ms-marco-MiniLM-L6-v2}, revision \texttt{233902d2\ldots{}bee0a}; the L2 control uses revision \texttt{1b5cd67b\ldots{}9b787}. Full revisions and model-file hashes are retained in provenance. No test judgments enter retrieval, neural inference, or selection.
 
-The resource grid shows the cost of increasing the encoded problem size. At three score bits, increasing $K$ from 4 to 16 raises the address width from two to four qubits and the median oracle depth from 283 to 5{,}732. At $K=16$, increasing the score precision from three to six bits raises the reported total width from 11 to 17 qubits and oracle depth from 5{,}732 to 8{,}857, with the latter remaining below the configured 18-qubit cap. Search-circuit depth also depends on the query-derived marked set: for the $K=16$, three-bit rows it reaches 11{,}509, unlike the one-layer search circuits in rows with no marked states. These are decomposed simulator-resource counts with classical score loading, not physical-device or end-to-end retrieval costs.
+\subsection{Development choices and follow-up protocol}
+SciFact development is a deterministic 20\% subset of official training queries; NFCorpus and FiQA use official development splits. The base lexical grid is \(\beta\in\{0,0.25,0.5\}\), and its diversity grid is \(\lambda\in\{0,0.01,0.025,0.05\}\). All stochastic settings use seeds 0--4. Eligibility requires development mean nDCG@5 and Recall@8 to equal or exceed the same-shortlist L6-only baseline within \(10^{-12}\). Eligible settings prefer higher nDCG, higher recall, lower redundancy, smaller penalty, and smaller lexical weight, in that order. Zero penalty is retained when it wins.
 
-\clearpage
-\begin{strip}
+L6 MMR is independently tuned over \(\{0,0.1,0.25,0.5,0.75,1\}\), prioritizing nDCG, recall, lower redundancy, and smaller weight. Its selected weight is zero on these collections. This is a relevance-prioritizing development choice, not the entire MMR tradeoff frontier. Cosine-guided controls retain separate frozen development settings. Legacy thresholds \(\{0.3,0.5,0.7\}\) are selected on development nDCG@5 using matched classical sampling; ties prefer 0.5, then 0.3, then 0.7.
+
+Refinement uses deterministic 100-query training confirmation with namespace \texttt{accuracy-v3-confirmation-v1}, excluding historical development, test, and pilot IDs. Its gate requires unchanged mean nDCG@5, at least 98\% of matched base mean Recall@8, and strictly lower mean redundancy. The recall limit is relative, not two absolute percentage points. These mean gates do not prove statistical noninferiority. \resultinput{protocol_exception.tex}
+
+\resultinput{configuration_note.tex}
+The newer official tests are follow-up evaluations: earlier test outcomes had already informed method development. They are not an untouched holdout for the redesigned policy. The recorded parameters are not retuned against follow-up judgments. Training-confirmation outcomes are not substituted for full-test effectiveness.
+
+\subsection{Comparators, metrics, and timing}
+We retain twenty original methods and add seven expanded-pool comparisons where refinement is evaluated. Controls include cosine, BM25/dense RRF with rank constant 60, native cosine and L6 MMR, cosine-guided GAS, L6-only ranking, base L6-guided GAS, greedy/exact optimizers, random search, legacy Grover, and L2/L6 cross-encoders. Dense-fifteen and dense-sixty-four neural controls return eight in cross-encoder order. Their pools differ from hybrid-fifteen L6-only and the expanded union. Comparisons characterize complete policies, not isolated search substitutions.
+
+The seven expanded-pool methods are constrained GAS, local-swap greedy, exact float, exact quantized, matched random search, global union-L6, and protected-prefix union-L6. Matched refiners inherit each seed's baseline prefix. Random refinement draws \(\max(1,2q)\) uniform subsets, where \(q\) is that seed's actual refinement phase count, plus its initial incumbent. This matches a declared objective-access allowance, not exhaustive simulator work. Exact controls independently enumerate their objectives; GAS receives neither their optimum nor marked-state counts.
+
+Metrics are nDCG@5, Recall@8, and redundancy; nDCG@8 diagnoses changes below the protected prefix. nDCG uses linear gains and logarithmic discount, checked against NIST \texttt{trec\_eval} \cite{trec_eval}. Five seed values are averaged within each query, then across queries; seeds are not independent queries. Complete method exports accompany the compact tables.
+
+The host is an Intel Core i7-1355U, 12 logical CPUs, approximately 15.3\,GiB RAM, Linux, and Python 3.12.3. Processes use two compute threads. Packages include NumPy 1.26.4, SciPy 1.13.1, PyTorch 2.12.0+cpu, Transformers 4.57.6, Sentence Transformers 3.4.1, Qiskit 0.46.0, and Aer 0.13.3. Data/model restore and artificial-query warm-up are separate. Shared-host load and session boundaries are retained; the machine is not a dedicated latency laboratory.
+
+Online latency composes query encoding, dense retrieval, representative features, applicable lexical processing, original/additional neural inference, baseline selection, and refinement. Shared upstream measurements are charged to each applicable policy. Selector latency excludes retrieval/inference but includes objective preparation and bookkeeping. Combined selector percentiles add actual baseline and refinement times per request before aggregation. P95 is over seeded requests, never divided by five. Across-session differences are not matched speed experiments.
+
+\section{L6-Guided Grover Set Selection}\label{sec:method}
+\subsection{Retrieval and base objective}
+Let \(c_i\in[-1,1]\) be parent query cosine among dense top 64 and \(b_i\geq0\) its BM25 score. The reproduced hybrid score is
+\begin{equation}
+h_i=(1-\beta)\frac{1+c_i}{1+\max_jc_j}+\beta\frac{b_i}{\max_jb_j}.\label{eq:hybrid}
+\end{equation}
+If lexical scores are negligible, use only the dense term. If its denominator is negligible, use \((1+c_i)/2\). Negligibility uses tolerance \(10^{-12}\). Hybrid top fifteen is sorted by score and document ID. Keep raw logits \(z_i\), cosine, embeddings, and normalized relevance separate. Within the original fifteen,
+\begin{equation}
+r_i=\frac{z_i-\min_jz_j}{\max_jz_j-\min_jz_j},\label{eq:relevance}
+\end{equation}
+with \(r_i=0.5\) for negligible range. Negative logits are valid.
+
+For normalized representative vectors \(v_i\), define \(d_{ij}=\operatorname{clip}(v_i^\top v_j,0,1)\). For \(|S|=k=8\),
+\begin{align}
+\red(S)&=\binom{k}{2}^{-1}\sum_{\{i,j\}\subset S}d_{ij},\label{eq:red}\\
+U(S)&=k^{-1}\sum_{i\in S}r_i-\lambda\red(S).\label{eq:utility}
+\end{align}
+The base uses eight-bit coefficients, \(a=255\), and energy
+\begin{align}
+q_i&=\operatorname{round}(ar_i),\quad
+q_{ij}=\operatorname{round}\!\left(\frac{2a\lambda}{k-1}d_{ij}\right),\\
+E_b(S)&=-\sum_{i\in S}q_i+\sum_{\{i,j\}\subset S}q_{ij}.\label{eq:base_energy}
+\end{align}
+Rounding is ties-to-even. Raw-L6 top eight initializes the incumbent; raw L6 descending with document-ID ties determines final order. Summing coefficient errors gives, for each fixed set,
+\begin{equation}
+\left|\frac{-E_b(S)}{ak}-U(S)\right|\leq\frac{k+1}{4a}.\label{eq:base_bound}
+\end{equation}
+This bounds approximation, not retrieval accuracy. At zero penalty the top-L6 incumbent maximizes relevance and is retained; quantization does not justify arbitrary equal-energy reordering.
+
+\subsection{Protected-prefix refinement}
+Figure~\ref{fig:pipeline} shows how the base feeds refinement. Form union \(C\) of hybrid top-fifteen lists at \(\beta=0,0.25,0.5\), within the same dense top 64. It has at most 45 documents. Score the original shortlist first and preserve its exact logits; score only additional candidates afterward. This prevents neural batching changes from altering the base result.
+
+\begin{figure}[t]
 \centering
-\captionof{table}{Query-derived circuit-resource measurements.}
-\label{tab:resources}
-\resizebox{\textwidth}{!}{\input{generated/resource_table.tex}}
-\end{strip}
+\fbox{\parbox{0.9\columnwidth}{\centering Classical dense top 64 and BM25\\Frozen hybrid top 15; original L6 logits}}
+\par\smallskip$\downarrow$\par\smallskip
+\fbox{\parbox{0.9\columnwidth}{\centering Base GAS: choose eight; L6 ordering\\Keep the original first five fixed}}
+\par\smallskip$\downarrow$\par\smallskip
+\fbox{\parbox{0.9\columnwidth}{\centering Union of three hybrid lists; extra L6 scores\\Constrained GAS selects three tail documents}}
+\par\smallskip$\downarrow$\par\smallskip
+\fbox{\parbox{0.9\columnwidth}{\centering Protected five + L6-ordered tail\\Measure relevance, redundancy, and full cost}}
+\caption{Base selection and protected-prefix refinement. The base configuration returns after the second stage; refinement cost includes every applicable upstream stage.}
+\label{fig:pipeline}
+\end{figure}
 
-\subsection{Interpretation and Error Analysis}
+For each seed, let base ranking be \((s_1,\ldots,s_8)\), fixed prefix \(H=(s_1,\ldots,s_5)\), and original tail \(T_0\). Search \(T\subseteq C\setminus H\), \(|T|=3\). Ascending sorted tail logits must satisfy
+\begin{equation}
+z_{(j)}(T)\geq z_{(j)}(T_0)-\varepsilon,\quad j=1,2,3,\quad\varepsilon=10^{-12}.\label{eq:dominance}
+\end{equation}
+Candidates below the smallest original-tail logit minus \(\varepsilon\) can safely be discarded: they cannot occupy even the lowest position. Let \(M\) be the remaining tail-pool size. Constraint~\eqref{eq:dominance} is equivalent to requiring at least \(4-j\) tail scores above each fixed bound \(z_{(j)}(T_0)-\varepsilon\), using inclusive comparisons. A count violation identifies a sorted position below its bound, and meeting every count constraint places each position at or above its bound. This also handles tied scores.
 
-The principal diagnostic is whether the Grover and analytical rankings differ from the exact-cosine ranking on identical candidates. When ideal marked-state probabilities are shared within marked and unmarked groups, a ranking change must be explained by the score transformation, threshold boundary, ties, finite shots, quantization, or another explicitly recorded operation. The per-query traces record marked counts, amplification iterations, padded probability, fallback reasons, and per-seed rankings so that these mechanisms can be inspected rather than inferred from aggregate scores.
+Minimize \(\red(H\cup T)\), including prefix--prefix, prefix--tail, and tail--tail pairs. The fixed prefix term is constant but remains in reported redundancy. With \(a=2^{16}-1\), refinement energy is
+\begin{equation}
+E_r(H\cup T)=\sum_{\{i,j\}\subset H\cup T}\operatorname{round}(ad_{ij}).\label{eq:refine_energy}
+\end{equation}
+Mark valid states with strictly lower integer energy than the incumbent. Accept a measured update only if true redundancy also decreases by more than \(\varepsilon\). Output the original prefix followed by the new tail in raw-L6 order. This deliberately differs from a global L6 sort when an added document scores above a protected one.
 
-The experiment also distinguishes approximate HNSW candidate retrieval from exact cosine retrieval, and it records failures and classical fallbacks in the run denominator. A Grover request that cannot be executed within the configured simulator limits is not relabeled as a successful Grover result.
+\subsection{Guarantees and counterexample}
+\textit{Prefix preservation.} With fixed judgments, nDCG@5 depends only on the first five IDs and their order. Preserving them keeps DCG@5 and its ideal denominator identical. Per-query nDCG@5 and its seed/query means are therefore unchanged by construction. This is not an empirical accuracy gain uniquely due to Grover search; nDCG@8 and Recall@8 can change.
 
-\section{Limitations and Conclusion}
+\textit{Feasibility and redundancy.} The unchanged \(T_0\) satisfies~\eqref{eq:dominance}, survives the prefilter, and appears in the size-three basis. It supplies eight unique outputs even at budget exhaustion or when no improvement is sampled. Every accepted update strictly lowers true redundancy. Induction therefore gives final redundancy no greater than base redundancy. Strict improvement is not guaranteed per query; a trivial basis or an optimum can retain the original set.
 
-This study is limited to CPU-based classical simulation and public text retrieval judgments. The run manifests record Linux, 12 logical CPUs, and two configured CPU threads, but not the CPU model or RAM; timing results are therefore environment-specific and not fully hardware-reproducible. It does not demonstrate a physical quantum speedup, reversible MiniLM inference, free qRAM, quantitative OCR accuracy, a user study, or live-provider generation quality. The simulated Grover stage receives classical candidate scores and therefore cannot be interpreted as replacing the upstream embedding and candidate-construction work. The BEIR results also do not establish performance on every private document collection or every scanned-document distribution.
+\textit{Quantization bound.} Each of the 28 rounded pair coefficients differs from its unrounded value by at most \(1/2\). Thus
+\begin{equation}
+\left|\frac{E_r(S)}{28a}-\red(S)\right|\leq\frac{1}{2a}.\label{eq:refine_bound}
+\end{equation}
+Applying this twice bounds exact quantized-optimizer redundancy regret by \(1/a\) relative to the exact float optimizer over the same admissible domain. It does not prove budget-limited GAS reaches that optimizer. At sixteen bits the per-set bound is approximately \(7.63\times10^{-6}\); model error is not bounded by coefficient precision.
 
-On both datasets, the evaluated Grover policy has a slightly lower mean nDCG@10 than exact cosine; its paired confidence interval includes zero, and neither comparison is statistically significant after the declared tests and Holm correction. The evidence therefore establishes no retrieval improvement for this policy and no quantum advantage. The results instead characterize the cost and behavior of a simulated hybrid reranker whose threshold and candidate construction remain classical.
+\textit{Recall counterexample.} Replacing a relevant original-tail document by an irrelevant but higher-L6-scoring document can satisfy~\eqref{eq:dominance} while reducing recall. Therefore score dominance does not guarantee true relevance. Empirical recall gates and paired uncertainty remain necessary; neither an unchanged prefix nor higher logits establish overall noninferiority.
 
+\subsection{Amplitude amplification and budgets}
+The base has \(\binom{15}{8}=6{,}435\) cardinality-feasible subsets. Refinement has \(F=\binom{M}{3}\) size-three subsets after score prefiltering, including subsets later failing~\eqref{eq:dominance}. Only valid improving states are marked. For \(|u\rangle=F^{-1/2}\sum_x|x\rangle\), one step is
+\begin{align}
+G&=(2|u\rangle\langle u|-I)O_\tau,\\
+O_\tau|x\rangle&=(-1)^{[\mathrm{valid}(x)\land E(x)<\tau]}|x\rangle.\label{eq:grover}
+\end{align}
+The simulator explicitly flips marked amplitudes and reflects amplitudes about their post-oracle mean. These operations preserve the norm; measurement samples squared amplitudes. This is ideal amplitude amplification executed classically, not execution on quantum hardware.
+
+Each stage begins with its incumbent and window \(w=1\). A trial draws an integer from zero through \(\lceil w\rceil-1\), limited by remaining phase calls, prepares the uniform state, applies that many steps, and measures. Strict improvement resets \(w\); otherwise it grows by 1.2, capped at \(\sqrt F\). Each stage allows 64 phase calls, 32 trials, or a cooperative 15-second limit per seed. Baseline and refinement budgets are separate: a refined request can use up to 128 phase calls. The controller receives no optimum or marked-state count. Trivial bases and every termination reason remain recorded.
+
+\section{Results and Interpretation}\label{sec:results}
+\subsection{Effectiveness and controls}
+Table~\ref{tab:headline} gives reported L6-guided GAS results, and Table~\ref{tab:comparators} provides retrieval/neural comparisons. \resultinput{findings.tex}
+In the protected setting, unchanged nDCG@5 follows from the prefix proof. Tail membership changes explain why reporting only that protected metric would conceal recall and nDCG@8 tradeoffs.
+
+\begin{table}[t]
+\centering\small\setlength{\tabcolsep}{3pt}
+\caption{Reported L6-guided GAS full-test means. Red. is lower-is-better. \protect\resultinput{configuration_note.tex}}
+\label{tab:headline}
+\resultinput{headline.tex}
+\end{table}
+
+\begin{table*}[t]
+\centering\small\setlength{\tabcolsep}{4pt}
+\caption{Full-test comparisons. n@5 is nDCG@5, R@8 is Recall@8, and Red. is clipped-positive cosine redundancy. Reported GAS and matched optimizers follow Table~\ref{tab:headline}'s configuration note. Base GAS/L6-only use hybrid fifteen; dense-fifteen neural controls have a different shortlist.}
+\label{tab:comparators}
+\resultinput{comparators.tex}
+\end{table*}
+
+The matched classical controls distinguish a selection objective's benefit from a search mechanism's benefit. Exact enumeration is practical because only three tail positions change and score constraints often leave little freedom. Where greedy or exact selection matches GAS, improvement over base selection does not identify a Grover-specific gain. Global union-L6 and protected-prefix union-L6 controls, retained in the complete export, separate candidate expansion from prefix preservation. Some simpler controls attain lower redundancy with lower relevance; lower similarity alone is not universal policy superiority.
+
+\subsection{Paired statistics and recall}
+Table~\ref{tab:statistics} reports paired query differences. Confidence intervals use 10,000 paired bootstrap resamples with seed zero; sign-randomization tests use 10,000 permutations with seed one. Differences within \(10^{-12}\) are numerical ties. Protected-run Holm correction covers nine comparators by four metrics per dataset, not just displayed rows. The base-only nDCG audit uses all six declared comparators.
+
+\begin{table*}[t]
+\centering\small\setlength{\tabcolsep}{5pt}
+\caption{Reported GAS minus matched base GAS for protected runs; $^*$base GAS minus L6-only for the earlier configuration. Intervals are pointwise 95\% intervals; rejection decisions use the full recorded Holm family.}
+\label{tab:statistics}
+\resultinput{statistics.tex}
+\end{table*}
+
+Read recall changes with their intervals and query-level losses, not the mean gate alone. A positive mean change can coexist with harmed queries. An interval containing zero is not proof of equivalence or noninferiority \cite{dror2018harnessing}. Numerical averaging artifacts do not establish significance. Companion evidence retains all comparison families, query increase/decrease counts, and nDCG@8 diagnostics.
+
+\subsection{Latency and search outcomes}
+Table~\ref{tab:latency} charges all online stages. Expanded neural scoring increases complete latency against matched base GAS. Refinement-only milliseconds cannot be presented as the cost of the complete two-stage method. Reduced neural inference may cost less than dense-sixty-four reranking, but candidate opportunities differ. No universal speed advantage follows. Physical quantum runtime, monetary expenditure, and energy are not measured.
+
+\begin{table*}[t]
+\centering\small\setlength{\tabcolsep}{6pt}
+\caption{Composed online latency in milliseconds per seeded request. P50/P95 include applicable retrieval, lexical, neural, and selection stages; loading/warm-up are separate. Compare within a dataset/run, not sessions as matched speed experiments.}
+\label{tab:latency}
+\resultinput{latency.tex}
+\end{table*}
+
+\begin{table*}[t]
+\centering\small\setlength{\tabcolsep}{4pt}
+\caption{Requests and mean base/refinement phase calls (base-only shows 0/base). Hit: exact float-redundancy optimum for refinement, exact integer optimum for base-only. Same set: retained base membership. S50/S95: combined selector ms, excluding inference. Legacy fallback counts have their own request denominator.}
+\label{tab:execution}
+\resultinput{execution.tex}
+\end{table*}
+
+Table~\ref{tab:execution} distinguishes optimization from retrieval quality: an optimum for constrained redundancy can lose recall. Trial/budget termination retains a valid incumbent. Same-set counts include trivial bases and unsuccessful improvement attempts, distinct from legacy no-marked fallback. Complete evidence retains phase calls, measured trials, accepted updates, optimum gaps, and termination counts, without excluding unsuccessful queries or seeds.
+
+\subsection{Threshold and resource evidence}
+Table~\ref{tab:thresholds} summarizes recorded development threshold comparisons; no-marked rates use saved cosine candidates. No new rankings or test-driven threshold selection are performed. Lower thresholds reduce the no-marked condition but can change ranking behavior; the frozen development winner is 0.7. Subset search instead marks adaptive incumbent-energy improvement. It too may have no improving states, but safely returns its incumbent rather than assigning relevance from an empty marked set.
+
+\begin{table*}[t]
+\centering\small\setlength{\tabcolsep}{7pt}
+\caption{Legacy development thresholds. n@5 uses stored matched-sampling outcomes; None is the percentage of saved queries with no cosine candidate meeting the threshold. Query-level rates do not treat seeds as independent observations.}
+\label{tab:thresholds}
+\resultinput{thresholds.tex}
+\end{table*}
+
+\begin{table}[t]
+\centering\small\setlength{\tabcolsep}{3pt}
+\caption{Observed protected-refinement resource ranges over seeded requests. Refine ms is median refinement-only time, not online or combined selection time.}
+\label{tab:resources_observed}
+\resultinput{resources_observed.tex}
+\end{table}
+
+Compact simulation enumerates all \(F\) basis energies before amplification. These simulator evaluations are separate from initial/measured incumbent checks and logical phase calls. A phase call is recorded as two reversible objective calls for compute/uncompute; constraints and preparation would add physical work. Because the simulator already has every energy, a classical argmin can solve the encoded problem without amplitude simulation. Its phase budget cannot establish wall-clock acceleration over exact enumeration.
+
+Table~\ref{tab:resources_observed} records observed pool/basis sizes. Table~\ref{tab:resources_analytic} illustrates candidate scaling at fixed tail size three. Complex128 amplitudes occupy \(16\binom{M}{3}\) bytes, excluding energy tables, layouts, embeddings, and model/process memory. A dense physical-register statevector instead needs \(16\,2^q\) bytes for \(q\) qubits. These representation sizes are not interchangeable.
+
+\begin{table}[t]
+\centering\small\setlength{\tabcolsep}{3pt}
+\caption{Analytical scaling, not circuit execution measurements. $w_b$ is a conservative signed objective-difference register at $b$ pair-coefficient bits, excluding constraint/preparation ancillas.}
+\label{tab:resources_analytic}
+\resultinput{resources_analytic.tex}
+\end{table}
+
+Since \(0\leq E_r\leq28(2^b-1)\), a conservative signed register for incumbent difference has width
+\begin{equation}
+w_b=1+\operatorname{bitlength}\!\left(28(2^b-1)\right).\label{eq:width}
+\end{equation}
+A fixed-weight decision representation adds \(M\) decision qubits; reversible score-count constraints require more workspace. Precision increases arithmetic widths and tightens~\eqref{eq:refine_bound}, but does not reduce the amplitude count or NumPy integer storage width. Gate/depth costs depend on arithmetic, connectivity, constraints, preparation, and synthesis. A complete native circuit-depth sweep for the new constrained oracle was not performed. Small phase/reflection and reference-circuit checks establish limited numerical correctness, not deployment scaling. Legacy-oracle depths are not assigned to this different oracle.
+
+\section{Limitations and Reproducibility}\label{sec:limits}
+The classical top-64 and representative-chunk policies can exclude useful evidence before selection. Expansion stays within that pool; neural scoring supplies the relevance signal. A fixed quantum pool does not demonstrate quantum corpus search. The L2/L6 controls are concrete neural baselines, not every modern reranker. Development-selected zero-diversity MMR does not establish superiority over its full operating curve.
+
+Protected nDCG@5 is relative to a particular baseline prefix, not a globally optimal ranking. The recall gate is empirical, individual queries can worsen, and the configuration coverage differs as stated in Table~\ref{tab:headline}. Test reuse and the confirmation exception limit confirmatory inference. Embedding similarity does not directly measure semantic duplication, complementary evidence, hallucination, or answer quality.
+
+The simulator is noiseless and exhaustively prepares objectives. Efficient reversible data loading, a full constrained oracle, a noise study, monetary/energy models, and generated-answer experiments are not demonstrated. Logical estimates exclude some workspace. Shared-host variation and different candidate pools further limit speed comparisons. Small amplitude storage is not total-system memory saving.
+
+Selected runs retain query IDs, model revisions, data hashes, source snapshots, configurations, features, logits, timings, per-seed traces, sessions, and artifact hashes. A manuscript-only exporter verifies inputs, independently recomputes metrics from saved rankings, and generates result tables and outcome-bearing text. NIST checks and tie-corrected statistics remain bound to their original manifests, without rewriting experiments. A central mapping permits replacing a completed full-test source after coverage/provenance verification. Companion records retain all controls, protocol exceptions, commands, and outstanding limitations.
+
+\section{Conclusion}\label{sec:conclusion}
+\resultinput{conclusion.tex}
+
+\section*{Acknowledgment}
+OpenAI Codex assisted with drafting and revising the abstract and Sections I--VII, implementing the experimental software and manuscript exporter, and preparing the diagram and tables. Numerical results were computed by recorded programs from the cited datasets; the assistance is not evidence for the scientific claims.
+
+% IEEEtran's own column break balances the final references page.
+\IEEEtriggeratref{11}
 \begin{thebibliography}{99}
-
-\bibitem{lewis2020retrieval}
-P. Lewis \textit{et al.}, \textquotedblleft Retrieval-augmented generation for knowledge-intensive NLP tasks,\textquotedblright\ in \textit{Advances in Neural Information Processing Systems}, vol. 33, 2020, pp. 9459--9474.
-
-\bibitem{grover1996search}
-L. K. Grover, \textquotedblleft A fast quantum mechanical algorithm for database search,\textquotedblright\ in \textit{Proc. 28th Annu. ACM Symp. Theory Comput.}, 1996, pp. 212--219.
-
-\bibitem{brassard2002amplitude}
-G. Brassard, P. H\o yer, M. Mosca, and A. Tapp, \textquotedblleft Quantum amplitude amplification and estimation,\textquotedblright\ in \textit{Quantum Computation and Information}, Contemp. Math., vol. 305. Providence, RI, USA: Amer. Math. Soc., 2002, pp. 53--74, doi: 10.1090/conm/305/05215.
-
-\bibitem{montanaro2016quantum}
-A. Montanaro, \textquotedblleft Quantum algorithms: An overview,\textquotedblright\ \textit{npj Quantum Inf.}, vol. 2, Art. no. 15023, 2016, doi: 10.1038/npjqi.2015.23.
-
-\bibitem{biamonte2017quantum}
-J. Biamonte \textit{et al.}, \textquotedblleft Quantum machine learning,\textquotedblright\ \textit{Nature}, vol. 549, pp. 195--202, 2017, doi: 10.1038/nature23474.
-
-\bibitem{reimers2019sentencebert}
-N. Reimers and I. Gurevych, \textquotedblleft Sentence-BERT: Sentence embeddings using Siamese BERT-networks,\textquotedblright\ in \textit{Proc. EMNLP-IJCNLP}, 2019, pp. 3982--3992.
-
-\bibitem{thakur2021beir}
-N. Thakur, N. Reimers, A. R\"uckl\'e, A. Srivastava, and I. Gurevych, \textquotedblleft BEIR: A heterogeneous benchmark for zero-shot evaluation of information retrieval models,\textquotedblright\ in \textit{Proc. 35th Conf. Neural Information Processing Systems, Datasets and Benchmarks Track}, 2021.
-
-\bibitem{robertson2009bm25}
-S. Robertson and H. Zaragoza, \textquotedblleft The probabilistic relevance framework: BM25 and beyond,\textquotedblright\ \textit{Foundations and Trends in Information Retrieval}, vol. 3, no. 4, pp. 333--389, 2009, doi: 10.1561/1500000019.
-
-\bibitem{malkov2020hnsw}
-Y. A. Malkov and D. A. Yashunin, \textquotedblleft Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs,\textquotedblright\ \textit{IEEE Trans. Pattern Anal. Mach. Intell.}, vol. 42, no. 4, pp. 824--836, 2020, doi: 10.1109/TPAMI.2018.2889473.
-
-\bibitem{seidel2021oracle}
-R. Seidel \textit{et al.}, \textquotedblleft Automatic generation of Grover quantum oracles for arbitrary data structures,\textquotedblright\ arXiv:2110.07545, 2021.
-
-\bibitem{minilm_model}
-Sentence Transformers, \textquotedblleft all-MiniLM-L6-v2 model card,\textquotedblright\ Hugging Face. [Online]. Available: \url{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}. Accessed: Sep. 19, 2026.
-
-\bibitem{qiskit_bits}
-IBM Quantum, \textquotedblleft Bit ordering in the Qiskit SDK.\textquotedblright\ [Online]. Available: \url{https://quantum.cloud.ibm.com/docs/en/guides/bit-ordering}. Accessed: Sep. 19, 2026.
-
-\bibitem{dror2018harnessing}
-R. Dror, G. Baumer, S. Shlomov, and R. Reichart, \textquotedblleft The hitchhiker's guide to testing statistical significance in natural language processing,\textquotedblright\ in \textit{Proc. 56th Annu. Meeting Assoc. Comput. Linguistics}, 2018, pp. 1383--1392, doi: 10.18653/v1/P18-1128.
-
+\bibitem{lewis2020retrieval} P. Lewis \textit{et al.}, ``Retrieval-augmented generation for knowledge-intensive NLP tasks,'' in \textit{Advances in Neural Information Processing Systems}, vol. 33, 2020, pp. 9459--9474.
+\bibitem{grover1996search} L. K. Grover, ``A fast quantum mechanical algorithm for database search,'' in \textit{Proc. 28th Annu. ACM Symp. Theory Comput.}, 1996, pp. 212--219, doi: 10.1145/237814.237866.
+\bibitem{brassard2002amplitude} G. Brassard, P. H\o yer, M. Mosca, and A. Tapp, ``Quantum amplitude amplification and estimation,'' \textit{Contemp. Math.}, vol. 305, pp. 53--74, 2002, doi: 10.1090/conm/305/05215.
+\bibitem{gilliam2021gas} A. Gilliam, S. Woerner, and C. Gonciulea, ``Grover Adaptive Search for Constrained Polynomial Binary Optimization,'' \textit{Quantum}, vol. 5, Art. no. 428, 2021, doi: 10.22331/q-2021-04-08-428.
+\bibitem{boyer1998tight} M. Boyer, G. Brassard, P. H\o yer, and A. Tapp, ``Tight bounds on quantum searching,'' \textit{Fortschr. Phys.}, vol. 46, nos. 4--5, pp. 493--505, 1998.
+\bibitem{durr1996minimum} C. D\"urr and P. H\o yer, ``A quantum algorithm for finding the minimum,'' arXiv:quant-ph/9607014, 1996.
+\bibitem{bartschi2019dicke} A. B\"artschi and S. Eidenbenz, ``Deterministic preparation of Dicke states,'' in \textit{Proc. 22nd Int. Symp. Fundamentals of Computation Theory}, 2019, pp. 126--139, doi: 10.1007/978-3-030-25027-0\_9.
+\bibitem{montanaro2016quantum} A. Montanaro, ``Quantum algorithms: An overview,'' \textit{npj Quantum Inf.}, vol. 2, Art. no. 15023, 2016, doi: 10.1038/npjqi.2015.23.
+\bibitem{carbonell1998mmr} J. Carbonell and J. Goldstein, ``The use of MMR, diversity-based reranking for reordering documents and producing summaries,'' in \textit{Proc. 21st Annu. ACM SIGIR Conf.}, 1998, pp. 335--336, doi: 10.1145/290941.291025.
+\bibitem{cormack2009rrf} G. V. Cormack, C. L. A. Clarke, and S. Buettcher, ``Reciprocal rank fusion outperforms Condorcet and individual rank learning methods,'' in \textit{Proc. 32nd Int. ACM SIGIR Conf.}, 2009, pp. 758--759, doi: 10.1145/1571941.1572114.
+\bibitem{robertson2009bm25} S. Robertson and H. Zaragoza, ``The probabilistic relevance framework: BM25 and beyond,'' \textit{Found. Trends Inf. Retr.}, vol. 3, no. 4, pp. 333--389, 2009, doi: 10.1561/1500000019.
+\bibitem{reimers2019sentencebert} N. Reimers and I. Gurevych, ``Sentence-BERT: Sentence embeddings using Siamese BERT-networks,'' in \textit{Proc. EMNLP-IJCNLP}, 2019, pp. 3982--3992, doi: 10.18653/v1/D19-1410.
+\bibitem{nogueira2019bert} R. Nogueira and K. Cho, ``Passage re-ranking with BERT,'' arXiv:1901.04085, 2019.
+\bibitem{minilm_model} Sentence Transformers, ``all-MiniLM-L6-v2 model card.'' [Online]. Available: \url{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}. Accessed: Oct. 17, 2026.
+\bibitem{crossencoder_models} Sentence Transformers, ``MS MARCO MiniLM cross-encoder model cards.'' [Online]. Available: \url{https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2} and \url{https://huggingface.co/cross-encoder/ms-marco-MiniLM-L2-v2}. Accessed: Oct. 17, 2026.
+\bibitem{thakur2021beir} N. Thakur, N. Reimers, A. R\"uckl\'e, A. Srivastava, and I. Gurevych, ``BEIR: A heterogeneous benchmark for zero-shot evaluation of information retrieval models,'' in \textit{Proc. NeurIPS, Datasets and Benchmarks Track}, 2021.
+\bibitem{trec_eval} National Institute of Standards and Technology, ``trec\_eval.'' [Online]. Available: \url{https://github.com/usnistgov/trec_eval}. Accessed: Oct. 17, 2026.
+\bibitem{dror2018harnessing} R. Dror, G. Baumer, S. Shlomov, and R. Reichart, ``The hitchhiker's guide to testing statistical significance in natural language processing,'' in \textit{Proc. 56th Annu. Meeting Assoc. Comput. Linguistics}, 2018, pp. 1383--1392, doi: 10.18653/v1/P18-1128.
 \end{thebibliography}
 \end{document}

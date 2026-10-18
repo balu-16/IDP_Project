@@ -1,0 +1,12 @@
+{
+  "schema": "qubitchat-manuscript-sources-v1",
+  "method_label": "L6-guided GAS",
+  "datasets": {
+    "scifact": "research/runs/accuracy_v3_redundancy_scifact_test",
+    "nfcorpus": "research/runs/accuracy_v3_redundancy_nfcorpus_test",
+    "fiqa": "research/runs/accuracy_v2_fiqa_test"
+  },
+  "statistics_audits": {
+    "fiqa": "research/runs/accuracy_v2_statistics_audit/fiqa.json"
+  }
+}

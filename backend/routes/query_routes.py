@@ -5,6 +5,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from services.database import DatabaseService, Identity, get_database_service, get_identity
 from services.retrieval import RetrievalConfig, retrieve_ranked_documents
 from services.shared import get_pdf_processor, get_quantum_search, get_vector_store
+from services.l6_scorer import L6Unavailable
 
 router = APIRouter(tags=['query'])
 
@@ -26,13 +27,18 @@ async def search_query(body: QueryRequest, identity: Identity = Depends(get_iden
     await database.require_session(body.session_id, identity)
     records = await database.uploaded_files(identity, body.session_id)
     try:
+        encoding_started = time.perf_counter()
         embedding = await pdf_processor.embed_query(body.query)
-        embedding_ms = (time.perf_counter()-start)*1000
+        embedding_ms = (time.perf_counter()-encoding_started)*1000
         result = await retrieve_ranked_documents(embedding, vector_store, quantum_search,
             config=body.retrieval, user_id=identity.user_id, session_id=str(int(body.session_id)),
-            metadata_filter=body.filter_metadata,
+            metadata_filter=body.filter_metadata, query_text=body.query,
             allowed_document_ids={r['document_id'] for r in records if r.get('status') == 'ready'})
+    except L6Unavailable:
+        raise HTTPException(503, 'L6-guided GAS is temporarily unavailable; no alternate method was used') from None
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from None
+    result['timings_ms'].update(query_embedding=embedding_ms,
+                               pipeline_total=embedding_ms + result['retrieval_time_ms'])
     return {'success': True, 'query': body.query, **result, 'results_count': len(result['results']),
             'query_preparation_time_ms': embedding_ms, 'processing_time_ms': (time.perf_counter()-start)*1000}

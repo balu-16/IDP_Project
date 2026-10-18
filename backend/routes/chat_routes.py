@@ -8,6 +8,7 @@ from services.database import DatabaseService, Identity, get_database_service, g
 from services.documents import owner_lock
 from services.generation import generate_answer
 from services.retrieval import RetrievalConfig, retrieve_ranked_documents
+from services.l6_scorer import L6Unavailable
 from services.shared import get_pdf_processor, get_quantum_search, get_vector_store
 from config import settings
 
@@ -60,7 +61,10 @@ async def chat_message(body: ChatRequest, identity: Identity = Depends(get_ident
             embedding_ms = (time.perf_counter()-clock)*1000
             result = await retrieve_ranked_documents(embedding, vector_store, quantum_search,
                 config=body.retrieval, user_id=identity.user_id, session_id=session_id,
-                allowed_document_ids={r['document_id'] for r in records if r.get('status') == 'ready'})
+                allowed_document_ids={r['document_id'] for r in records if r.get('status') == 'ready'},
+                query_text=body.message)
+        except L6Unavailable:
+            raise HTTPException(503, 'L6-guided GAS is temporarily unavailable; no answer was saved') from None
         except ValueError as exc:
             raise HTTPException(422, str(exc)) from None
         history = await database.history(session_id, identity)
@@ -80,6 +84,7 @@ async def chat_message(body: ChatRequest, identity: Identity = Depends(get_ident
                 'requested_method': body.retrieval.strategy, 'fallback_reason': result['fallback_reason'],
                 'candidate_count': result['candidate_count'], 'quantum': result['quantum'],
                 'timings_ms': {**result['timings_ms'], 'query_embedding': embedding_ms,
+                               'pipeline_total': embedding_ms + result['retrieval_time_ms'],
                                'generation': (time.perf_counter()-clock)*1000}})
         await database.request('POST', '/rest/v1/chat_history', json={
             'chat_id': int(session_id), 'user_id': identity.user_id, 'input_data': body.message,

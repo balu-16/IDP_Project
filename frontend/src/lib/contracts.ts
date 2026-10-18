@@ -17,6 +17,8 @@ export const sourceSchema = z.object({
   rank_score: z.number(),
   sampling_probability: z.number().nullable(),
   search_method: z.string(),
+  l6_logit: z.number().finite().optional(),
+  normalized_relevance: z.number().min(0).max(1).optional(),
 });
 export type Source = z.infer<typeof sourceSchema>;
 export const chatResponseSchema = z.object({
@@ -27,4 +29,4 @@ export const chatResponseSchema = z.object({
   metadata: z.object({ retrieval_method: z.string(), fallback_reason: z.string().nullable() }).passthrough(),
 });
 export type ChatResponse = z.infer<typeof chatResponseSchema>;
-export type RetrievalStrategy = 'cosine' | 'grover' | 'closed_form' | 'classical_sampling';
+export type RetrievalStrategy = 'cosine' | 'grover' | 'closed_form' | 'classical_sampling' | 'l6_gas';
