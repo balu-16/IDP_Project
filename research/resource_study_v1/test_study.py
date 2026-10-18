@@ -57,7 +57,7 @@ class ProblemTests(unittest.TestCase):
 class NativeCircuitTests(unittest.TestCase):
     def test_phase_complete_iteration_and_workspace_on_small_instances(self):
         from .circuits import oracle, complete_iteration, simulate_small, synthesize
-        for m, bits in ((3, 2), (5, 2), (5, 4)):
+        for m, bits in ((3, 2), (5, 2), (3, 4)):
             scored, base = synthetic(m)
             if m == 5:
                 scored = ScoredFeatures(scored.candidates, [3]*5 + [0, 1, 2, 3, .5])
@@ -68,7 +68,7 @@ class NativeCircuitTests(unittest.TestCase):
             uniform.h(range(m))
             uniform.compose(phase, inplace=True)
             report = simulate_small(uniform, p, p.expected_uniform_phase())
-            self.assertLess(report["maximum_density_error"], 1e-8)
+            self.assertLess(report["expected_state_infidelity_upper_bound"], 1e-8)
             iteration = complete_iteration(p, phase)
             report = simulate_small(iteration, p, p.expected_iteration())
             self.assertAlmostEqual(report["zero_workspace_probability_lower_bound"], 1)

@@ -1,0 +1,30 @@
+{
+  "schema": "manuscript-paragraph-spacing-v1",
+  "checked_utc": "2026-10-18T06:16:34.427773+00:00",
+  "source_sha256": "a90fda431201639b9f572992d326eaf5819ee331cac3b362153b5fa9cb0f7f60",
+  "pdf_sha256": "219dc68a3d834d842b27d21e49a28762f1ea17335d4992962ebd7561286dae19",
+  "previous_pdf_sha256": "f31f1dc6f1d2655b30260279b808722af1bce4f6da7fd8907db764b0611496a8",
+  "source_archive_sha256": "709acf9babce76691997891a1ac8cffbb93c607ff43e4174af00f20d2d8e69fb",
+  "provenance_sha256": "b8780d5648fb812f829cdeb8e888026cd1617d8d6dd8552bbbd6152832f4e172",
+  "change": "Use natural vertical spacing from the limitations section onward; surplus column space stays at the bottom.",
+  "source_content_unchanged_except_layout_command": true,
+  "all_extracted_pdf_words_unchanged": true,
+  "page_6_paragraph_gaps_pt": {
+    "before": [
+      45.65490399999999,
+      45.65489400000001
+    ],
+    "after": [
+      2.9887939999999844,
+      2.9887939999999844
+    ]
+  },
+  "pages": 8,
+  "references": 32,
+  "standalone_compilation_passed": true,
+  "standalone_text_matches": true,
+  "all_fonts_embedded": true,
+  "no_overflow_or_unresolved_references": true,
+  "source_archive_matches_upload_folder": true,
+  "new_evaluations_or_inference": false
+}

@@ -1,6 +1,139 @@
 # Grover evidence selection: dataset evaluation and paper revision plan
 
-## Active execution — 18 October 2026 (Asia/Kolkata)
+## Current status — 18 October 2026 (Asia/Kolkata)
+
+**FiQA, the queued application checks, and the independent resource study
+have finished. No dataset or resource collection remains running.** Older
+launch instructions below are historical records; do not restart either batch.
+
+### FiQA full-test outcome
+
+All **648 queries, 27 methods, and five seeds** were collected, sealed,
+independently evaluated, and reported. The scientific gate **failed**:
+
+| Check | Matched baseline | Protected refinement | Outcome |
+|---|---:|---:|---|
+| nDCG@5 | 0.357490 | 0.357490 | Unchanged |
+| Recall@8 | 0.434063 | 0.422768 | −2.601978% relative; fails 98% retention |
+| Mean redundancy | 0.531244 | 0.487500 | −8.234319% relative |
+
+The failed outcome is preserved without test-set retuning. The manuscript's
+headline uses the disclosed earlier FiQA configuration; the new failure is
+reported separately. Do not mix the new redundancy with the earlier recall.
+
+- Report: `research/runs/accuracy_v3_redundancy_fiqa_test/REPORT.md`.
+- State: `research/runs/accuracy_v3_redundancy_fiqa_full_execution.json`
+  (`gate_failed`, all execution stages completed).
+- Recovery launcher: `build/accuracy_v3/launch_fiqa_full_test.py`.
+  No recovery or new launch is currently needed.
+
+### Application verification completed
+
+Backend regression tests, frontend contract/retry tests, TypeScript, lint,
+production build, and local pinned-L6 smoke checks all passed **after FiQA's
+timed collection ended**. Two backend skips remain documented in the logs;
+no cloud answer-generation or physical-device check is claimed. The first
+verification attempt and its corrected test expectation are retained under
+`build/application_gas/attempt_1/`.
+
+- State: `build/application_gas/verification.json` (`passed`).
+- Logs: `build/application_gas/`; implementation details remain in the
+  historical launch record and `backend/README.md`.
+
+### Technical Comment 2.3 resource study completed
+
+The separate package `research/resource_study_v1/` reads saved confirmation
+features and scores; it does not retrieve, encode corpora, or tune parameters.
+It started after FiQA and all queued application checks finished.
+
+- Froze **32 deterministic queries per dataset**, the six tail-pool sizes,
+  four coefficient precisions, five seeds, and source/dependency/input hashes
+  before measurement. Every smaller pool retains its recorded baseline tail.
+- Compared compact GAS with independent exact-float and exact-quantized
+  selection. Saved fresh timing, separately replayed allocation memory,
+  process RSS, phase/oracle counts, gaps, and termination reasons.
+- **178/178 tasks completed**, including **80 native synthesis cells**.
+  Pools 16/20 use clearly labelled synthetic stress cases because the frozen
+  real sample has no eligible pools of those sizes. All real-data availability
+  counts, including exclusions, are preserved.
+- The new native oracle computes cardinality, all three score constraints,
+  signed integer improvement, and compute–phase–uncompute. All decision,
+  arithmetic, comparator, and flag qubits are counted; signed bounds include
+  invalid-cardinality states. Pinned Qiskit/Aer, `u/cx`, optimization level 1,
+  and transpiler seed 0 are unchanged.
+- Complete-iteration synthesis includes preparation/reflection for at most
+  eight decisions. **Six native iterations validated; 42 additional native
+  simulation attempts were refused by the memory guard.** Native simulation
+  is restricted to at most five decisions. Independent nontrivial two-bit toy
+  tests also check marking, reflection, normalization, and clean workspace.
+- Each native worker retains the **120-second / 2-GiB** limits. Larger
+  complete simulation, hardware connectivity/noise, QPU, energy, and monetary
+  measurements remain unperformed. Compact and native timings are separate.
+- The eight-task pilot ran before the detached collection, with a conservative
+  **6.3–18.9-minute** projection. Final supervisor session: **10:57–11:02 IST**;
+  earlier pilot work is separately recorded. No supervisor remains active.
+
+Current records:
+
+- `research/runs/resource_study_v1_final/REPORT.md` and `summary.json`.
+- `native_resources.csv`, `resource_table.tex`, `manifest.json`,
+  `report_manifest.json`, `protocol.json`, `verification.json`.
+- `tasks.json`, `inputs/`, `results/`, `logs/`, `source_snapshot/`.
+- `execution.json`, `supervisor.log`, `supervisor.pid`.
+- `manuscript_support/records/resource_hardware.json` (host during collection).
+
+The earlier `research/runs/resource_study_v1/` engineering pilot is preserved
+separately, including its native memory-estimation refusal. It is not the
+completed study or a substitute for its final provenance.
+
+Monitoring and recovery, from the repository root:
+
+```bash
+backend/.venv/bin/python -m research.resource_study_v1 status
+# Recreate summaries only from verified, completed checkpoints:
+backend/.venv/bin/python -m research.resource_study_v1 report
+# Only after interruption; preserves committed tasks and validates identity:
+backend/.venv/bin/python -m research.resource_study_v1 run --resume --background
+```
+
+A foreground run can stop with Ctrl-C. To stop a future detached run, first
+validate the PID's `/proc/<pid>/cmdline` identifies this study and directory,
+then send SIGTERM. The supervisor retains committed results and logs the
+session boundary. Never delete checkpoints or change dependencies to bypass
+corruption or incompatible-resume rejection. Existing completed studies need
+no restart; changed protocols require a separate namespace.
+
+### Manuscript delivery
+
+The paper now includes a compact measured constrained-oracle table and its
+bounded coverage, replacing the analytical-only resource table. The reviewer
+response distinguishes completed synthesis from limited native simulation.
+The FiQA failure, NFCorpus confirmation exception, follow-up test reuse, and
+matched classical results remain explicit. No Grover superiority claim is made.
+
+- Clean upload folder: `new_paper/`; PDF: `new_paper/main.pdf`.
+- Portable sources: `manuscript_support/latex_source.zip`.
+- Evidence mapping: `manuscript_support/paper_sources.json`.
+- Reviewer response: `manuscript_support/reviewer_response.md`.
+- Current status/check records: `manuscript_support/REVISION_STATUS.md`
+  and `manuscript_support/records/`, including `resource_final_audit.json`
+  (98 saved inputs, all 178 tasks, and 3,360 completed compact cells verified).
+
+The complete manuscript remains **eight pages including references**, with
+embedded fonts, resolved references, no overfull boxes, a 189-word abstract,
+and a single 150-word conclusion. All eight pages were visually inspected;
+standalone-folder compilation and archive integrity are checked separately.
+The preceding checked source/PDF is preserved in
+`manuscript_support/before_resource_revision.zip`. Author/organizer PDF
+validation and any submission remain external actions.
+
+## Historical execution records
+
+The following sections preserve previous plans and progress notes. Their
+present-tense running/pending statements are historical; current status is
+recorded above.
+
+## Historical launch record — 18 October 2026 (Asia/Kolkata)
 
 **FiQA is running in the background. Backend implementation and minimal
 frontend wiring are complete; full application verification is deferred until

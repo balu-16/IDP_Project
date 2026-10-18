@@ -87,6 +87,8 @@ def compiled_location(aux, label):
 
 def reviewer_response(e, aux):
     loc = lambda label: compiled_location(aux,label)
+    study = e.get("resource_study")
+    followup_gate = study["protocol"]["prerequisites"]["fiqa_gate"] if study else None
     rows = [
       ("Technical comments 1.1: only two datasets",
        "The evidence now includes all 300 SciFact, 323 NFCorpus, and 648 FiQA test queries, including FiQA's 57,638 parents. "
@@ -118,11 +120,20 @@ def reviewer_response(e, aux):
        "Marked states have symmetric ideal amplification; probabilities do not inherently provide graded relevance. "
        "Raw L6 determines base ordering and tail order, while the protected prefix deliberately takes priority over global sorting. "
        "Cosine remains upstream retrieval and redundancy evidence. The original probability-based policy remains a comparator. " + loc("sec:method")),
-      ("Technical comments 2.3: candidate/precision circuit resources — PARTIALLY ADDRESSED",
+      (("Technical comments 2.3: measured constrained-oracle resources — BOUNDED COVERAGE" if study else
+        "Technical comments 2.3: candidate/precision circuit resources — PARTIALLY ADDRESSED"),
+       (("Added a separate frozen study of 32 saved confirmation queries per collection, five compact-search seeds, "
+         "tail pools 3/5/8/12/16/20 where available, and 4/8/12/16-bit coefficients. "
+         "The native oracle computes cardinality, all L6-score constraints, integer improvement, and uncomputation; "
+         "reported qubits include every workspace register. Actual u/cx synthesis uses fixed seeds and optimization level. "
+         "Complete-iteration synthesis is limited to eight decisions, native simulation to five; memory/time-limited cases "
+         "and synthetic stress data are retained explicitly. Compact selection, native synthesis, and simulation timings "
+         "have separate boundaries. No physical-device routing or QPU-speed claim is made. ")
+        if study else
        "Added observed candidate/basis sizes and simulation time, analytical amplitude-storage and signed-register scaling, "
        "explicit objective enumeration, phase/compute-uncompute accounting, and quantization proofs. "
        "A full native constrained-oracle circuit-depth/precision sweep has not been performed. "
-       "The paper labels this outstanding and does not reuse incompatible legacy depths as new-method measurements. " +
+       "The paper labels this outstanding and does not reuse incompatible legacy depths as new-method measurements. ") +
        loc("tab:resources_observed") + "; " + loc("tab:resources_analytic")),
       ("Technical comments 2.4: additional classical rerankers",
        "Included RRF, independently development-tuned MMR, L6-only, greedy, exact float/integer, and random-search controls. "
@@ -131,7 +142,10 @@ def reviewer_response(e, aux):
       ("Technical comments 2.5: larger document collection",
        "The full 648-query FiQA L6-guided GAS test covers 57,638 parents, versus 5,183 SciFact and 3,633 NFCorpus parents. "
        "This extends domain/classical-corpus coverage, without demonstrating quantum corpus-size scaling. " +
-       ("A full FiQA refinement test remains unavailable in this revision. " if not e["runs"]["fiqa"]["refined"] else "") + loc("tab:data")),
+       (f"An additional complete FiQA refinement follow-up failed the recall gate: {followup_gate['recall_relative_change_percent']:+.4f}% relative recall, "
+        f"with unchanged nDCG@5 and {followup_gate['redundancy_relative_reduction_percent']:.4f}% lower redundancy. The earlier headline configuration is retained "
+        "and the failure is disclosed without retuning. " if study else
+        "A full FiQA refinement test remains unavailable in this revision. " if not e["runs"]["fiqa"]["refined"] else "") + loc("tab:data")),
     ]
     text = "# Response to technical comments — ICECMSN-1883\n\n"
     text += "Manuscript: **Qubit Chat: A Controlled Evaluation of Grover-Inspired Reranking for Document Retrieval**.\n\n"
@@ -143,16 +157,53 @@ def reviewer_response(e, aux):
     text += ("## Evidence and remaining author actions\n\n"
              "`records/evidence.json` and `records/provenance.json` bind values to sealed inputs; `records/all_methods.csv` retains all controls. "
              "Statistical reports preserve numerical ties and complete correction families. The supplied IEEEtran class is unchanged; "
-             "the final PDF is checked for page count, fonts, references, and overflow.\n\n"
-             "The unperformed native constrained-oracle depth study remains an explicit limitation. "
-             + ("The full FiQA refinement test is not included yet. " if not e["runs"]["fiqa"]["refined"] else "") +
+             "the final PDF is checked for page count, fonts, references, and overflow.\n\n" +
+             ("Native-resource results have explicit pool, preparation, simulation, memory, and connectivity limits. "
+              "FiQA's failed full-test refinement gate remains failed. " if study else
+              "The unperformed native constrained-oracle depth study remains an explicit limitation. "
+              + ("The full FiQA refinement test is not included yet. " if not e["runs"]["fiqa"]["refined"] else "")) +
              "Local checks do not replace organizer/PDF eXpress acceptance. Nothing has been submitted.\n")
     return text
+
+
+def check_upload_text(value, location):
+    pattern = r"\b(?:OpenAI|Codex)\b|\bAI[-\s]+(?:assisted|assistance|generated)\b|\b(?:generative\s+AI|AI\s+tools)\b"
+    require(not re.search(pattern, value, re.I), f"Unexpected assistance disclosure in {location}")
+
+
+def bibliography_checks(tex):
+    entries = re.findall(r"\\bibitem\{([^}]+)\}(.*?)(?=\n\\bibitem|\n\\end\{thebibliography\})", tex, re.S)
+    keys = [key for key, _ in entries]
+    require(len(keys) == len(set(keys)) == 32, "Expected 32 unique references")
+    body = tex.split(r"\begin{thebibliography}", 1)[0]
+    expanded = re.sub(r"\\resultinput\{([^}]+)\}",
+                      lambda m: (INCLUDES / m.group(1)).read_text(), body)
+    cited = []
+    for group in re.findall(r"\\cite(?:\[[^\]]*\])*\{([^}]+)\}", expanded):
+        for key in group.split(","):
+            key = key.strip()
+            if key not in cited:
+                cited.append(key)
+    require(set(cited) == set(keys), "Missing or uncited bibliography entries")
+    require(cited == keys, "References must follow first-citation order")
+    metadata_path = RECORDS / "bibliography_sources.json"
+    metadata = json.loads(metadata_path.read_text())
+    require(metadata["target_reference_count"] == 32 and len(metadata["new_sources"]) == 14,
+            "Bibliography verification metadata is incomplete")
+    by_key = dict(entries)
+    for key, item in metadata["new_sources"].items():
+        require(key in by_key and hashlib.sha256(by_key[key].strip().encode()).hexdigest() == item["bibitem_sha256"],
+                f"Verified reference changed: {key}")
+    return {"entries": len(keys), "unique_cited_entries": len(cited),
+            "first_citation_order": True, "verified_additions": 14,
+            "source_record_sha256": sha(metadata_path), "ordered_keys": keys}
 
 
 def package_source():
     """Create an upload ZIP outside the clean LaTeX directory."""
     files = [PAPER / "main.tex", PAPER / "IEEEtran.cls", PAPER / "README.md", *sorted(INCLUDES.glob("*.tex"))]
+    for path in files:
+        check_upload_text(path.read_text(), str(path.relative_to(PAPER)))
     archive = HERE / "latex_source.zip"
     with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as handle:
         for path in files:
@@ -181,11 +232,25 @@ def main():
     require(p["sources_sha256"]==sha(HERE/"paper_sources.json") and p["exporter_sha256"]==sha(HERE/"export_verified_results.py"),"Generated evidence is stale; regenerate it")
     for path,digests in p["inputs"].items():
         require(sha(ROOT/path/"manifest.json")==digests["manifest_sha256"] and sha(ROOT/path/"evaluation.json")==digests["evaluation_sha256"],"Mapped results changed")
+    if "resource_study" in p:
+        import sys
+        sys.path.insert(0, str(ROOT))
+        from manuscript_support.resource_integration import load_resource
+        mapping=json.loads((HERE/"paper_sources.json").read_text())
+        study=load_resource(mapping)
+        require(p["resource_study"]=={k:study[k] for k in
+            ("directory","manifest_sha256","report_manifest_sha256")},"Resource study changed")
+        require(p["resource_integration_sha256"]==sha(HERE/"resource_integration.py"),"Resource integration changed")
+        require(p["resource_hardware_sha256"]==study["hardware_sha256"],"Resource hardware record changed")
     for name,digest in p["generated"].items():
         require(sha(ROOT/name)==digest,f"Generated file changed: {name}")
     template=ROOT/"conference-latex-template/IEEE-conference-template-062824/IEEEtran.cls"
     require(sha(template)==sha(PAPER/"IEEEtran.cls"),"The supplied class must remain unchanged")
     tex=source.read_text()
+    check_upload_text(tex, "main source")
+    require(not re.search(r"\\section\*?\{Acknowledg(?:e)?ments?\}", tex, re.I),
+            "The removed acknowledgement section must not be restored")
+    bibliography = bibliography_checks(tex)
     require({path.name for path in PAPER.iterdir()}=={"main.tex","main.pdf","IEEEtran.cls","README.md","includes"},
             "The upload folder contains unexpected files")
     require(all(path.is_file() and path.suffix==".tex" for path in INCLUDES.iterdir()),
@@ -212,6 +277,10 @@ def main():
     require(not re.search(r"(?:Citation|Reference) .* undefined|There were undefined|Overfull \\[hv]box",log),"Unresolved reference or overflowing content")
     extracted=subprocess.check_output(["pdftotext","-layout",str(pdf),"-"],text=True)
     require("??" not in extracted and "pending results" not in extracted.lower(),"Unresolved PDF content")
+    check_upload_text(extracted, "compiled PDF")
+    compiled_bib = dict(re.findall(r"\\bibcite\{([^}]+)\}\{(\d+)\}", aux))
+    require(compiled_bib == {key: str(i) for i, key in enumerate(bibliography["ordered_keys"], 1)},
+            "Compiled bibliography numbering disagrees with first-citation order")
     font_output=subprocess.check_output(["pdffonts",str(pdf)],text=True)
     fonts=[line.split() for line in font_output.splitlines()[2:] if line.strip()]
     require(fonts and all(row[-5]=="yes" for row in fonts),"All PDF fonts must be embedded")
@@ -227,14 +296,21 @@ def main():
     require(abstract_words<=250,f"Abstract exceeds 250 words: {abstract_words}")
     (HERE/"reviewer_response.md").write_text(reviewer_response(e,aux))
     shutil.copy2(pdf,PAPER/"main.pdf")
+    archive = package_source()
+    p["manuscript"] = {"source_sha256":sha(source), "readme_sha256":sha(PAPER/"README.md"),
+        "pdf_sha256":sha(PAPER/"main.pdf"), "builder_sha256":sha(Path(__file__)),
+        "bibliography_sources_sha256":sha(RECORDS/"bibliography_sources.json"),
+        "source_archive_sha256":archive["sha256"]}
+    (RECORDS/"provenance.json").write_text(json.dumps(p,indent=2)+"\n")
     checks={"pages":pages,"abstract_words":abstract_words,"abstract_count_method":"Expanded abstract source; PDF layout columns are not mixed",
             "conclusion_words":e["conclusion_word_count"],
             "mathematical_checks":proofs,"supplied_class_sha256":sha(template),"embedded_fonts":True,
             "unresolved_references":False,"overfull_boxes":False,"compiled_labels":{label:compiled_location(aux,label) for label in labels},
             "source_sha256":sha(source),"pdf_sha256":sha(PAPER/"main.pdf"),"builder_sha256":sha(Path(__file__)),
             "provenance_sha256":sha(RECORDS/"provenance.json"),
+            "bibliography":bibliography, "assistance_disclosures_absent":True,
             "new_rankings_or_model_inference":False,"visual_inspection":"Pending separate page-by-page inspection",
-            "latex_archive":package_source()}
+            "latex_archive":archive}
     (RECORDS/"publication_checks.json").write_text(json.dumps(checks,indent=2)+"\n")
     print(f"Built and checked {pages} pages; abstract {abstract_words} words; conclusion {e['conclusion_word_count']} words")
 

@@ -1,0 +1,920 @@
+{
+  "schema": "manuscript-bibliography-sources-v1",
+  "verified_utc": "2026-10-18T06:06:00.366728+00:00",
+  "original_reference_count": 18,
+  "target_reference_count": 32,
+  "new_reference_count": 14,
+  "all_new_sources_have_contextual_citations": true,
+  "new_sources": {
+    "wadden2020scifact": {
+      "purpose": "Dataset provenance",
+      "primary_source": "https://aclanthology.org/2020.emnlp-main.609/",
+      "bibitem": "D. Wadden \\textit{et al.}, ``Fact or fiction: Verifying scientific claims,'' in \\textit{Proc. EMNLP}, 2020, pp. 7534--7550, doi: 10.18653/v1/2020.emnlp-main.609.",
+      "bibitem_sha256": "6c6d3604adafd835162f1f673223e01765a6e065dbbedb3a4e67629e40dd025e",
+      "publisher_registered_metadata": {
+        "doi": "10.18653/v1/2020.emnlp-main.609",
+        "title": [
+          "Fact or Fiction: Verifying Scientific Claims"
+        ],
+        "authors": [
+          {
+            "given": "David",
+            "family": "Wadden",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Shanchuan",
+            "family": "Lin",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Kyle",
+            "family": "Lo",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Lucy Lu",
+            "family": "Wang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Madeleine",
+            "family": "van Zuylen",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Arman",
+            "family": "Cohan",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Hannaneh",
+            "family": "Hajishirzi",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "container": [
+          "Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)"
+        ],
+        "volume": null,
+        "issue": null,
+        "page": "7534-7550",
+        "article-number": null,
+        "published": {
+          "date-parts": [
+            [
+              2020
+            ]
+          ]
+        },
+        "source_url": "https://api.crossref.org/works/10.18653%2Fv1%2F2020.emnlp-main.609",
+        "publisher": "Association for Computational Linguistics"
+      },
+      "verification_method": "Publisher-deposited DOI metadata via Crossref; primary record and citation context reviewed."
+    },
+    "boteva2016nfcorpus": {
+      "purpose": "Dataset provenance",
+      "primary_source": "https://link.springer.com/chapter/10.1007/978-3-319-30671-1_58",
+      "bibitem": "V. Boteva, D. Gholipour, A. Sokolov, and S. Riezler, ``A full-text learning to rank dataset for medical information retrieval,'' in \\textit{Advances in Information Retrieval}, 2016, pp. 716--722, doi: 10.1007/978-3-319-30671-1\\_58.",
+      "bibitem_sha256": "94871ef1b86af7b34fece35142498c349834d762fad15c4f4310ddb3e17894d8",
+      "publisher_registered_metadata": {
+        "doi": "10.1007/978-3-319-30671-1_58",
+        "title": [
+          "A Full-Text Learning to Rank Dataset for Medical Information Retrieval"
+        ],
+        "authors": [
+          {
+            "given": "Vera",
+            "family": "Boteva",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Demian",
+            "family": "Gholipour",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Artem",
+            "family": "Sokolov",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Stefan",
+            "family": "Riezler",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "container": [
+          "Lecture Notes in Computer Science",
+          "Advances in Information Retrieval"
+        ],
+        "volume": null,
+        "issue": null,
+        "page": "716-722",
+        "article-number": null,
+        "published": {
+          "date-parts": [
+            [
+              2016
+            ]
+          ]
+        },
+        "source_url": "https://api.crossref.org/works/10.1007%2F978-3-319-30671-1_58",
+        "publisher": "Springer International Publishing"
+      },
+      "verification_method": "Publisher-deposited DOI metadata via Crossref; primary record and citation context reviewed."
+    },
+    "maia2018fiqa": {
+      "purpose": "Dataset provenance",
+      "primary_source": "https://doi.org/10.1145/3184558.3192301",
+      "bibitem": "M. Maia \\textit{et al.}, ``WWW'18 open challenge: Financial opinion mining and question answering,'' in \\textit{Companion Proc. Web Conf.}, 2018, pp. 1941--1942, doi: 10.1145/3184558.3192301.",
+      "bibitem_sha256": "ba7dd3cda21148ac659807bd9c7dddd6ceb1e9f2e8ff36452fe341dc99c40464",
+      "publisher_registered_metadata": {
+        "doi": "10.1145/3184558.3192301",
+        "title": [
+          "WWW'18 Open Challenge"
+        ],
+        "authors": [
+          {
+            "given": "Macedo",
+            "family": "Maia",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "University of Passau, Passau, Germany"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Siegfried",
+            "family": "Handschuh",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "University of Passau, Passau, Germany"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Andr\u00e9",
+            "family": "Freitas",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "The University of Manchester, Manchester, United Kingdom"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Brian",
+            "family": "Davis",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Maynooth University, Maynooth, Ireland"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Ross",
+            "family": "McDermott",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "National University of Ireland, Galway, Ireland"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Manel",
+            "family": "Zarrouk",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "National University of Ireland, Galway, Ireland"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Alexandra",
+            "family": "Balahur",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Joint Research Centre EuropeanCommission(EC), Ispra, Italy"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "container": [
+          "Companion of the The Web Conference 2018 on The Web Conference 2018  - WWW '18"
+        ],
+        "volume": null,
+        "issue": null,
+        "page": "1941-1942",
+        "article-number": null,
+        "published": {
+          "date-parts": [
+            [
+              2018
+            ]
+          ]
+        },
+        "source_url": "https://api.crossref.org/works/10.1145%2F3184558.3192301",
+        "publisher": "ACM Press"
+      },
+      "verification_method": "Publisher-deposited DOI metadata via Crossref; primary record and citation context reviewed."
+    },
+    "bajaj2016msmarco": {
+      "purpose": "Cross-encoder training-task provenance",
+      "primary_source": "https://arxiv.org/abs/1611.09268",
+      "bibitem": "P. Bajaj \\textit{et al.}, ``MS MARCO: A human generated machine reading comprehension dataset,'' arXiv:1611.09268, 2016.",
+      "bibitem_sha256": "eda93fe45b3b259df8e5b061cae8eeb91a805d74bf4bc65fcc7eddffc2609f66",
+      "verification_method": "Primary publisher/author record inspected via web; title, authors, year and applicable venue/pages verified.",
+      "year_note": "2016 follows the dataset maintainer citation recommendation; the author list follows the expanded arXiv record.",
+      "additional_source": "https://microsoft.github.io/msmarco/Datasets"
+    },
+    "devlin2019bert": {
+      "purpose": "Contextual encoder foundation",
+      "primary_source": "https://aclanthology.org/N19-1423/",
+      "bibitem": "J. Devlin, M.-W. Chang, K. Lee, and K. Toutanova, ``BERT: Pre-training of deep bidirectional transformers for language understanding,'' in \\textit{Proc. NAACL-HLT}, 2019, pp. 4171--4186, doi: 10.18653/v1/N19-1423.",
+      "bibitem_sha256": "65b29d7ab7e73dfb028db883031a42993ae00ccc7e56ec219672a54e65db7585",
+      "publisher_registered_metadata": {
+        "doi": "10.18653/v1/n19-1423",
+        "title": [
+          "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding"
+        ],
+        "authors": [
+          {
+            "given": "Jacob",
+            "family": "Devlin",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Ming-Wei",
+            "family": "Chang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Kenton",
+            "family": "Lee",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Kristina",
+            "family": "Toutanova",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "container": [
+          "Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers)"
+        ],
+        "volume": null,
+        "issue": null,
+        "page": "4171-4186",
+        "article-number": null,
+        "published": {
+          "date-parts": [
+            [
+              2019
+            ]
+          ]
+        },
+        "source_url": "https://api.crossref.org/works/10.18653%2Fv1%2FN19-1423",
+        "publisher": "Association for Computational Linguistics"
+      },
+      "verification_method": "Publisher-deposited DOI metadata via Crossref; primary record and citation context reviewed."
+    },
+    "wang2020minilm": {
+      "purpose": "Distilled transformer model family",
+      "primary_source": "https://proceedings.neurips.cc/paper/2020/hash/3f5ee243547dee91fbd053c1c4a845aa-Abstract.html",
+      "bibitem": "W. Wang, F. Wei, L. Dong, H. Bao, N. Yang, and M. Zhou, ``MiniLM: Deep self-attention distillation for task-agnostic compression of pre-trained transformers,'' in \\textit{Advances in Neural Information Processing Systems}, vol. 33, 2020, pp. 5776--5788.",
+      "bibitem_sha256": "3cb9278f6e5e6522ffffa5d6e364a477460dd6d22e54d867a35a1b27490209a4",
+      "verification_method": "Primary publisher/author record inspected via web; title, authors, year and applicable venue/pages verified.",
+      "publisher_bibtex": "@inproceedings{NEURIPS2020_3f5ee243,\n author = {Wang, Wenhui and Wei, Furu and Dong, Li and Bao, Hangbo and Yang, Nan and Zhou, Ming},\n booktitle = {Advances in Neural Information Processing Systems},\n editor = {H. Larochelle and M. Ranzato and R. Hadsell and M.F. Balcan and H. Lin},\n pages = {5776--5788},\n publisher = {Curran Associates, Inc.},\n title = {MiniLM: Deep Self-Attention Distillation for Task-Agnostic Compression of Pre-Trained Transformers},\n url = {https://proceedings.neurips.cc/paper_files/paper/2020/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf},\n volume = {33},\n year = {2020}\n}\n"
+    },
+    "karpukhin2020dpr": {
+      "purpose": "Related dual-encoder architecture",
+      "primary_source": "https://aclanthology.org/2020.emnlp-main.550/",
+      "bibitem": "V. Karpukhin \\textit{et al.}, ``Dense passage retrieval for open-domain question answering,'' in \\textit{Proc. EMNLP}, 2020, pp. 6769--6781, doi: 10.18653/v1/2020.emnlp-main.550.",
+      "bibitem_sha256": "1a0703db9e8d2cddfba12a5f4546e35ac7e1a7483d0c700b7ec2e2efc7f320df",
+      "publisher_registered_metadata": {
+        "doi": "10.18653/v1/2020.emnlp-main.550",
+        "title": [
+          "Dense Passage Retrieval for Open-Domain Question Answering"
+        ],
+        "authors": [
+          {
+            "given": "Vladimir",
+            "family": "Karpukhin",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Barlas",
+            "family": "Oguz",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Sewon",
+            "family": "Min",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Patrick",
+            "family": "Lewis",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Ledell",
+            "family": "Wu",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Sergey",
+            "family": "Edunov",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Danqi",
+            "family": "Chen",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Wen-tau",
+            "family": "Yih",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "container": [
+          "Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)"
+        ],
+        "volume": null,
+        "issue": null,
+        "page": "6769-6781",
+        "article-number": null,
+        "published": {
+          "date-parts": [
+            [
+              2020
+            ]
+          ]
+        },
+        "source_url": "https://api.crossref.org/works/10.18653%2Fv1%2F2020.emnlp-main.550",
+        "publisher": "Association for Computational Linguistics"
+      },
+      "verification_method": "Publisher-deposited DOI metadata via Crossref; primary record and citation context reviewed."
+    },
+    "khattab2020colbert": {
+      "purpose": "Related late-interaction architecture",
+      "primary_source": "https://arxiv.org/abs/2004.12832",
+      "bibitem": "O. Khattab and M. Zaharia, ``ColBERT: Efficient and effective passage search via contextualized late interaction over BERT,'' in \\textit{Proc. 43rd Int. ACM SIGIR Conf.}, 2020, pp. 39--48, doi: 10.1145/3397271.3401075.",
+      "bibitem_sha256": "807cc909841cc0fc8aa8727e2adf43feb06393db4dcedcc9bf2725d0b8ab299b",
+      "publisher_registered_metadata": {
+        "doi": "10.1145/3397271.3401075",
+        "title": [
+          "ColBERT"
+        ],
+        "authors": [
+          {
+            "given": "Omar",
+            "family": "Khattab",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "Stanford University, Stanford, CA, USA"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Matei",
+            "family": "Zaharia",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Stanford University, Stanford, CA, USA"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "container": [
+          "Proceedings of the 43rd International ACM SIGIR Conference on Research and Development in Information Retrieval"
+        ],
+        "volume": null,
+        "issue": null,
+        "page": "39-48",
+        "article-number": null,
+        "published": {
+          "date-parts": [
+            [
+              2020,
+              7,
+              25
+            ]
+          ]
+        },
+        "source_url": "https://api.crossref.org/works/10.1145%2F3397271.3401075",
+        "publisher": "ACM"
+      },
+      "verification_method": "Publisher-deposited DOI metadata via Crossref; primary record and citation context reviewed."
+    },
+    "nogueira2020seq2seq": {
+      "purpose": "Related sequence-to-sequence ranking architecture",
+      "primary_source": "https://aclanthology.org/2020.findings-emnlp.63/",
+      "bibitem": "R. Nogueira, Z. Jiang, R. Pradeep, and J. Lin, ``Document ranking with a pretrained sequence-to-sequence model,'' in \\textit{Findings of EMNLP}, 2020, pp. 708--718, doi: 10.18653/v1/2020.findings-emnlp.63.",
+      "bibitem_sha256": "d180c8df2388d2ad3ec6e753869ded1d40a2a67e5bc1c5ee02e95b4f15d31de2",
+      "publisher_registered_metadata": {
+        "doi": "10.18653/v1/2020.findings-emnlp.63",
+        "title": [
+          "Document Ranking with a Pretrained Sequence-to-Sequence Model"
+        ],
+        "authors": [
+          {
+            "given": "Rodrigo",
+            "family": "Nogueira",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Zhiying",
+            "family": "Jiang",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Ronak",
+            "family": "Pradeep",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Jimmy",
+            "family": "Lin",
+            "sequence": "additional",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "container": [
+          "Findings of the Association for Computational Linguistics: EMNLP 2020"
+        ],
+        "volume": null,
+        "issue": null,
+        "page": "708-718",
+        "article-number": null,
+        "published": {
+          "date-parts": [
+            [
+              2020
+            ]
+          ]
+        },
+        "source_url": "https://api.crossref.org/works/10.18653%2Fv1%2F2020.findings-emnlp.63",
+        "publisher": "Association for Computational Linguistics"
+      },
+      "verification_method": "Publisher-deposited DOI metadata via Crossref; primary record and citation context reviewed."
+    },
+    "jarvelin2002gain": {
+      "purpose": "Discounted cumulative-gain evaluation",
+      "primary_source": "https://doi.org/10.1145/582415.582418",
+      "bibitem": "K. J\\\"arvelin and J. Kek\\\"al\\\"ainen, ``Cumulated gain-based evaluation of IR techniques,'' \\textit{ACM Trans. Inf. Syst.}, vol. 20, no. 4, pp. 422--446, 2002, doi: 10.1145/582415.582418.",
+      "bibitem_sha256": "fb9f283b672ea2d3351f4bae3806783382c152e781f58cebc957132ca5027c9b",
+      "publisher_registered_metadata": {
+        "doi": "10.1145/582415.582418",
+        "title": [
+          "Cumulated gain-based evaluation of IR techniques"
+        ],
+        "authors": [
+          {
+            "given": "Kalervo",
+            "family": "J\u00e4rvelin",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "University of Tampere, Finland"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Jaana",
+            "family": "Kek\u00e4l\u00e4inen",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "University of Tampere, Finland"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "container": [
+          "ACM Transactions on Information Systems"
+        ],
+        "volume": "20",
+        "issue": "4",
+        "page": "422-446",
+        "article-number": null,
+        "published": {
+          "date-parts": [
+            [
+              2002,
+              10
+            ]
+          ]
+        },
+        "source_url": "https://api.crossref.org/works/10.1145%2F582415.582418",
+        "publisher": "Association for Computing Machinery (ACM)"
+      },
+      "verification_method": "Publisher-deposited DOI metadata via Crossref; primary record and citation context reviewed."
+    },
+    "smucker2007tests": {
+      "purpose": "Paired bootstrap and randomization methodology",
+      "primary_source": "https://doi.org/10.1145/1321440.1321528",
+      "bibitem": "M. D. Smucker, J. Allan, and B. Carterette, ``A comparison of statistical significance tests for information retrieval evaluation,'' in \\textit{Proc. 16th ACM CIKM}, 2007, pp. 623--632, doi: 10.1145/1321440.1321528.",
+      "bibitem_sha256": "c47b5306b79dacdc326abbcb5731704d560970fd276204e324f518b2027b3054",
+      "publisher_registered_metadata": {
+        "doi": "10.1145/1321440.1321528",
+        "title": [
+          "A comparison of statistical significance tests for information retrieval evaluation"
+        ],
+        "authors": [
+          {
+            "given": "Mark D.",
+            "family": "Smucker",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "University of Massachusetts Amherst, Amherst, MA"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "James",
+            "family": "Allan",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "University of Massachusetts Amherst, Amherst, MA"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Ben",
+            "family": "Carterette",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "University of Massachusetts Amherst, Amherst, MA"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "container": [
+          "Proceedings of the sixteenth ACM conference on Conference on information and knowledge management"
+        ],
+        "volume": null,
+        "issue": null,
+        "page": "623-632",
+        "article-number": null,
+        "published": {
+          "date-parts": [
+            [
+              2007,
+              11,
+              6
+            ]
+          ]
+        },
+        "source_url": "https://api.crossref.org/works/10.1145%2F1321440.1321528",
+        "publisher": "ACM"
+      },
+      "verification_method": "Publisher-deposited DOI metadata via Crossref; primary record and citation context reviewed."
+    },
+    "holm1979multiple": {
+      "purpose": "Familywise multiple-testing correction",
+      "primary_source": "https://www.jstor.org/stable/4615733",
+      "bibitem": "S. Holm, ``A simple sequentially rejective multiple test procedure,'' \\textit{Scand. J. Stat.}, vol. 6, no. 2, pp. 65--70, 1979.",
+      "bibitem_sha256": "008d17e4e71b3b9102d50b94bf684be434e17e6c57373b5b4ec1ad02a63890fb",
+      "verification_method": "Primary publisher/author record inspected via web; title, authors, year and applicable venue/pages verified.",
+      "additional_source": "https://www.jstor.org/stable/i412579"
+    },
+    "javadi2024qiskit": {
+      "purpose": "Circuit software family; recorded release remains 0.46.0",
+      "primary_source": "https://arxiv.org/abs/2405.08810",
+      "bibitem": "A. Javadi-Abhari \\textit{et al.}, ``Quantum computing with Qiskit,'' arXiv:2405.08810, 2024.",
+      "bibitem_sha256": "73b82152c17741f378b73afb373e04459f888d1e399fb7d9cd878a7a18d70cfa",
+      "verification_method": "Primary publisher/author record inspected via web; title, authors, year and applicable venue/pages verified."
+    },
+    "vidal2003simulation": {
+      "purpose": "Entanglement-dependent classical simulation resources",
+      "primary_source": "https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.91.147902",
+      "bibitem": "G. Vidal, ``Efficient classical simulation of slightly entangled quantum computations,'' \\textit{Phys. Rev. Lett.}, vol. 91, Art. no. 147902, 2003, doi: 10.1103/PhysRevLett.91.147902.",
+      "bibitem_sha256": "94f68ab327a56d5f3c6cdba003fdea8b32cf1882a3e79402aa4a066d4946959e",
+      "publisher_registered_metadata": {
+        "doi": "10.1103/physrevlett.91.147902",
+        "title": [
+          "Efficient Classical Simulation of Slightly Entangled Quantum Computations"
+        ],
+        "authors": [
+          {
+            "given": "Guifr\u00e9",
+            "family": "Vidal",
+            "sequence": "first",
+            "affiliation": [],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "container": [
+          "Physical Review Letters"
+        ],
+        "volume": "91",
+        "issue": "14",
+        "page": null,
+        "article-number": "147902",
+        "published": {
+          "date-parts": [
+            [
+              2003,
+              10,
+              1
+            ]
+          ]
+        },
+        "source_url": "https://api.crossref.org/works/10.1103%2FPhysRevLett.91.147902",
+        "publisher": "American Physical Society (APS)"
+      },
+      "verification_method": "Publisher-deposited DOI metadata via Crossref; primary record and citation context reviewed."
+    }
+  }
+}

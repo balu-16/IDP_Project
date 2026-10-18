@@ -45,7 +45,9 @@ def report(directory):
             rows = [r for r in native if r["pool"] == m and r["bits"] == bits]
             measured = [r for r in rows if r["status"] == "completed"]
             item = {"attempted": len(rows), "completed": len(measured),
-                    "limited": len(rows)-len(measured), "datasets": sorted({r["dataset"] for r in rows})}
+                    "limited": len(rows)-len(measured), "datasets": sorted({r["dataset"] for r in rows}),
+                    "native_simulations_completed": sum("iteration_validation" in r for r in measured),
+                    "native_simulations_resource_limited": sum(r.get("native_simulation", {}).get("status") == "memory_limit" for r in measured)}
             if measured:
                 item.update(qubits_max=max(r["registers"]["total"] for r in measured),
                     oracle_depth_max=max(r["oracle"]["depth"] for r in measured),
@@ -86,7 +88,7 @@ def report(directory):
             "Thirty-two training-confirmation queries per dataset; not a fresh retrieval-effectiveness evaluation.",
             "Native circuit metrics use at most two fixed seed-0 queries per dataset and pool; synthetic cells are labelled.",
             "Native complete iteration synthesis is limited to eight decisions; validation simulation to five.",
-            "MPS decision-density and workspace-marginal validation uses zero configurable truncation and a 1e-8 tolerance.",
+            "MPS inverse-expected-state/local-Z validation uses zero truncation threshold, bond cap 128, and a 1e-8 infidelity bound.",
             "Qiskit 0.46/Aer 0.13.3 are preserved; no package upgrade or physical QPU execution.",
             "Circuit constants come from classical saved coefficients; construction costs are recorded.",
             "Per-method allocation replay is excluded from selector timing; whole-worker RSS includes its entire query grid.",
@@ -94,7 +96,7 @@ def report(directory):
         ]}
     write_checked(directory / "summary.json", summary)
     header = ["dataset", "qid", "pool", "bits", "status", "qubits", "oracle_depth", "oracle_cx",
-              "build_ms", "transpile_ms", "iteration_simulation_ms", "peak_rss_bytes"]
+              "build_ms", "transpile_ms", "iteration_simulation_ms", "simulation_status", "peak_rss_bytes"]
     csv_text = io.StringIO()
     writer = csv.DictWriter(csv_text, fieldnames=header)
     writer.writeheader()
@@ -104,6 +106,7 @@ def report(directory):
             "oracle_depth": r.get("oracle", {}).get("depth"), "oracle_cx": r.get("oracle", {}).get("cx_gates"),
             "build_ms": r.get("build_ms"), "transpile_ms": r.get("oracle", {}).get("transpile_ms"),
             "iteration_simulation_ms": r.get("iteration_validation", {}).get("simulation_ms"),
+            "simulation_status": "validated" if "iteration_validation" in r else r.get("native_simulation", {}).get("status", "not_performed"),
             "peak_rss_bytes": r.get("process_peak_rss_bytes")})
     atomic_bytes(directory / "native_resources.csv", csv_text.getvalue().encode())
     lines = ["# Constrained-oracle resource study", "",
@@ -125,6 +128,8 @@ def report(directory):
     atomic_bytes(directory / "resource_table.tex", ("\n".join(tex)+"\n").encode())
     lines += ["", "Values separated by / compare 4 and 16 bits. Resource entries are observed maxima.",
               "Full 4/8/12/16-bit results, simulator times, memory, gaps, and exclusions are in summary.json and native_resources.csv.",
+              f"Native iterations validated: {sum('iteration_validation' in r for r in native)}; "
+              f"native simulation memory-limit outcomes: {sum(r.get('native_simulation',{}).get('status') == 'memory_limit' for r in native)}.",
               "", "## Coverage and limits", "", *["- "+s for s in summary["limitations"]]]
     atomic_bytes(directory / "REPORT.md", ("\n".join(lines)+"\n").encode())
     write_checked(directory / "report_manifest.json", {"study_manifest_sha256": sha(directory / "manifest.json"),

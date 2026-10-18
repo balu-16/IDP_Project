@@ -1,6 +1,7 @@
 {
-  "sources_sha256": "7fa89201d1a32adf7139a88e2ef95750f0c6579bf06b66c656f05b7c0aa495c3",
-  "exporter_sha256": "d4ff48f4876d69957bd864e4bccf6fa1a6b59c5d01dc4ec4ac1f1148e805af5e",
+  "schema": "qubitchat-manuscript-provenance-v2",
+  "sources_sha256": "fac4f3d4710a4670a2a09ff47606084c0790157859e5eb9fe876092661f81eb0",
+  "exporter_sha256": "2d92da19ade9732cf073c3fca1e377be3cc70b1547476c1a590872ede80b3274",
   "inputs": {
     "research/runs/accuracy_v3_redundancy_scifact_test": {
       "manifest_sha256": "6d5e329be4337d26ebe8b174941d66414ea894bba90bc849bb09a344d397da42",
@@ -27,17 +28,28 @@
     "new_paper/includes/execution.tex": "04623ed6bece21c43471adfef056a1e62c0e1df96f70c0d52f9f0aedc116a0ea",
     "new_paper/includes/thresholds.tex": "08b3291c21a15cc641713d04de6ad6a816702a920e132912bbfd5325b6a2c569",
     "new_paper/includes/resources_observed.tex": "a4c59a7155dddf56a5d5928f64ddae1cc0dd58345aec275ee3b3b85bdbb39d41",
-    "new_paper/includes/resources_analytic.tex": "2a91c8a701ce661abcdfb26f1e47b385ff3c85dd06781df852ea3ebb361facf7",
+    "new_paper/includes/resources_analytic.tex": "9b3e3b3d534daf83e4551875c44b75fd8968a6799e5741f262bb8252e7fac2cd",
+    "new_paper/includes/resource_findings.tex": "6691cc5eb1d2d531f9a41a55fa7c7baecf9c00ba086a8c47b562e307f5e3b340",
+    "new_paper/includes/fiqa_followup.tex": "0b0939c895cb986050b6ad55e66caf54d6fa3c8385c3c465966389bfbd84e1f4",
     "new_paper/includes/abstract_findings.tex": "78f016fd3519e429db05e6391741462aa4e6b2791d67cbd7f7e04bd74e1401de",
     "new_paper/includes/protocol_exception.tex": "45c7842a768c18ee3684cd77bf429ba381ac5991f49b884c73c54f17c7dc52f3",
-    "new_paper/includes/conclusion.tex": "965a3331f6fd17df0b3a18bf20d5004b7654ea41e8154c1f2e4ad065d0d9cd55",
+    "new_paper/includes/conclusion.tex": "ad377abb7a0229527e5f63ec4f4182ae6f621365c95bf78cbe5c5ba291a12b5e",
     "manuscript_support/records/all_methods.csv": "a36556de8281013bea4413985103e03502d6d09f040e93aa94375895867819a2",
-    "manuscript_support/records/evidence.json": "027b6b6c497e45d20a9a0213aff63885a2e982a0e9adde061d8f81b8ef4bfcc5"
+    "manuscript_support/records/evidence.json": "9bcf296bc3ff7752dc9f2e6579e07dc270847d19a61933115b6d1189f6da1585"
   },
-  "schema": "qubitchat-manuscript-provenance-v2",
-  "relocation": {
-    "original_provenance_record": "manuscript_support/records/before_cleanup.json",
-    "original_exporter_sha256": "0c3be618ab83fb6498da5b5d6e757e29d9533d91cf321e4b096804eda9c373bc",
-    "policy": "Only output locations and tool paths changed; every generated file retains its original hash."
+  "resource_study": {
+    "directory": "research/runs/resource_study_v1_final",
+    "manifest_sha256": "35e3e4194b7202b642e5a37b79438521efbb130cbbf9fbfa5244f46f1f3e4c7d",
+    "report_manifest_sha256": "eea754192be675cc50de8553ba49d8bfdc1dde6e9bc8d27c35d63d7b3f0936a2"
+  },
+  "resource_integration_sha256": "37aad3b0cdbdc3921f3a02a8b269be57557ec5fb8e57c849a681cb50df45b850",
+  "resource_hardware_sha256": "e13e9065a55d2a42bcf6248be5326f3dc60cdf60ed8589c6e812b14c37b9528c",
+  "manuscript": {
+    "source_sha256": "a90fda431201639b9f572992d326eaf5819ee331cac3b362153b5fa9cb0f7f60",
+    "readme_sha256": "9f2f97d9c73308fc5e2a23ef396edb90c0c23473b3f1a8a2bc5ffeb2c8fc3747",
+    "pdf_sha256": "219dc68a3d834d842b27d21e49a28762f1ea17335d4992962ebd7561286dae19",
+    "builder_sha256": "3e04f823ddc25040aeb094c24d8b8e801da6ec742ba79a246784896f8b0c3d41",
+    "bibliography_sources_sha256": "ac6e7daae947fd2826ef429312ed2b09dbb287b39624d8e6128d047c43b85949",
+    "source_archive_sha256": "709acf9babce76691997891a1ac8cffbb93c607ff43e4174af00f20d2d8e69fb"
   }
 }

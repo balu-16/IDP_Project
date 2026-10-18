@@ -68,7 +68,8 @@ def main():
             if subset is None:
                 raise ValueError("Frozen native cell is no longer available")
             loading = time.perf_counter()
-            from .circuits import oracle, complete_iteration, simulate_small, synthesize
+            from .circuits import (oracle, complete_iteration, simulate_small, synthesize,
+                                   NativeSimulationUnavailable)
             libraries_ms = (time.perf_counter()-loading)*1000
             start = time.perf_counter()
             p = OracleProblem(subset, payload["baselines"]["0"], task["bits"])
@@ -91,8 +92,11 @@ def main():
                 phase_test = phase.copy_empty_like()
                 phase_test.h(range(p.m))
                 phase_test.compose(phase, inplace=True)
-                output["phase_validation"] = simulate_small(phase_test, p, p.expected_uniform_phase())
-                output["iteration_validation"] = simulate_small(iteration, p, p.expected_iteration())
+                try:
+                    output["phase_validation"] = simulate_small(phase_test, p, p.expected_uniform_phase())
+                    output["iteration_validation"] = simulate_small(iteration, p, p.expected_iteration())
+                except NativeSimulationUnavailable as exc:
+                    output["native_simulation"] = {"status": "memory_limit", "reason": str(exc)}
             else:
                 output["native_simulation"] = {"status": "not_performed",
                     "reason": "native validation simulations are restricted to five decisions"}

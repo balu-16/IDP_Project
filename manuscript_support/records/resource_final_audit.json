@@ -1,0 +1,23 @@
+{
+  "checked_utc": "2026-10-18T05:43:46.633080+00:00",
+  "study_directory": "research/runs/resource_study_v1_final",
+  "manifest_sha256": "35e3e4194b7202b642e5a37b79438521efbb130cbbf9fbfa5244f46f1f3e4c7d",
+  "report_manifest_sha256": "eea754192be675cc50de8553ba49d8bfdc1dde6e9bc8d27c35d63d7b3f0936a2",
+  "all_source_dependency_parent_and_result_checks_passed": true,
+  "unique_saved_inputs_verified": 98,
+  "task_coverage": {
+    "compact": 98,
+    "native": 80
+  },
+  "compact_rows": {
+    "completed": 3360,
+    "unavailable": 2100
+  },
+  "required_methods_per_completed_cell": 3,
+  "negative_float_gaps_against_quantized_control": 9,
+  "quantized_gap_interpretation": "Unrounded redundancy differences may be negative because the exact quantized control optimizes rounded coefficients. All differences respect the quantization-regret bound; exact float is the unrounded optimum reference.",
+  "saved_feature_hashes_verified": true,
+  "independent_metric_export_audit_log": "build/resource_paper_final_audit.log",
+  "independent_metric_export_audit_log_sha256": "384f46e05023a6148c889a720ca6cbc77d1a34c1bc1b325b0e353d29ac266d02",
+  "syntax_checks_passed": true
+}

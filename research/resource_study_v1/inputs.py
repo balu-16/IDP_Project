@@ -46,6 +46,8 @@ def freeze(directory):
         "seeds": list(SEEDS), "prefix": 5, "tail_selected": 3, "phase_budget": 64,
         "trial_budget": 32, "native_seed": 0, "native_queries_per_cell": 2,
         "circuit_timeout_seconds": 120, "circuit_address_space_limit_bytes": 2 << 30,
+        "native_maximum_bond_dimension": 128, "native_validation_tolerance": 1e-8,
+        "engineering_pilot_directory": "research/runs/resource_study_v1",
         "verification_sha256": sha(check_path),
         "coefficient_choices_are_tuning": False, "prerequisites": conditions}
     # Identity and sampled IDs exist before feature processing or circuit work.

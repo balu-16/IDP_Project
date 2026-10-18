@@ -1,100 +1,23 @@
 {
-  "schema": "qubitchat-manual-page-inspection-v1",
-  "inspected_utc": "2026-10-17T17:38:13.688974+00:00",
-  "pdf_sha256": "3c8001f0a92f31193d05b70bf3fcbaba0df4be6d946ca4bcf12b4407118e5f02",
-  "page_count": 8,
-  "method": "Prior page-by-page visual inspection carried forward by exact 110-dpi rendered image equality for all eight pages after relocation; standalone extracted text also matches.",
-  "pages": [
-    {
-      "page": 1,
-      "image_sha256": "7039758234c2dbaa772f7bc6d841a32f7477b381aacfc4230e6b26da3fe38fad",
-      "reviewed": true,
-      "checks": [
-        "No clipping or overlap",
-        "Readable tables, equations and text",
-        "Consistent template margins and columns"
-      ]
-    },
-    {
-      "page": 2,
-      "image_sha256": "84ccab881431dfb608688183f8ed147cdc2c0e576c7c6ea34c3a109f710bd850",
-      "reviewed": true,
-      "checks": [
-        "No clipping or overlap",
-        "Readable tables, equations and text",
-        "Consistent template margins and columns"
-      ]
-    },
-    {
-      "page": 3,
-      "image_sha256": "9c307de8481f522b7b2c3f98bfa5fec606d596d2ec7471f121a99eefdbb53041",
-      "reviewed": true,
-      "checks": [
-        "No clipping or overlap",
-        "Readable tables, equations and text",
-        "Consistent template margins and columns"
-      ]
-    },
-    {
-      "page": 4,
-      "image_sha256": "2f53a44787236cb40a542e942afdcc383b77de3483a2b32a01e49acda60bab9a",
-      "reviewed": true,
-      "checks": [
-        "No clipping or overlap",
-        "Readable tables, equations and text",
-        "Consistent template margins and columns"
-      ]
-    },
-    {
-      "page": 5,
-      "image_sha256": "f8961285a73f9eeb347adfe733bba169895ba77804d74fbbe8e739ec8f38ff4d",
-      "reviewed": true,
-      "checks": [
-        "No clipping or overlap",
-        "Readable tables, equations and text",
-        "Consistent template margins and columns"
-      ]
-    },
-    {
-      "page": 6,
-      "image_sha256": "3a9e60c10d7ee2d1a8e58cc3dd384cdf7f0a447c672f814f47e5dcc21f511f3c",
-      "reviewed": true,
-      "checks": [
-        "No clipping or overlap",
-        "Readable tables, equations and text",
-        "Consistent template margins and columns"
-      ]
-    },
-    {
-      "page": 7,
-      "image_sha256": "7714c43d0c3b58792af616b63a40c9a6fd14de603e59b0eed3a4db95ce665bf7",
-      "reviewed": true,
-      "checks": [
-        "No clipping or overlap",
-        "Readable tables, equations and text",
-        "Consistent template margins and columns"
-      ]
-    },
-    {
-      "page": 8,
-      "image_sha256": "a49bf5b676d97c38696fca2742cf0a2392eb39367bb225d87a5430acbcf21cea",
-      "reviewed": true,
-      "checks": [
-        "No clipping or overlap",
-        "Readable tables, equations and text",
-        "Consistent template margins and columns"
-      ]
-    }
-  ],
-  "findings": [
-    "Eight pages fit the conference range",
-    "All table columns and the pipeline diagram fit",
-    "No unresolved references observed",
-    "Final reference columns balanced; no blank trailing page"
-  ],
-  "external_pdf_express_validation": false,
-  "verified_after_cleanup_utc": "2026-10-17T17:52:43.212628+00:00",
-  "previous_pdf_sha256": "3f2d69e7e25af5eb83481ec5c2b9d9f188c91b0462225dea1ef56fd761937f0a",
-  "relocation_check": "standalone_check.json",
-  "relocation_check_sha256": "c738d1f2ee629af20436386fa930facb9c88989aa43cd4f5d24ff18b87b305c4"
+  "inspected_utc": "2026-10-18T06:16:34.427773+00:00",
+  "pdf": "new_paper/main.pdf",
+  "pdf_sha256": "219dc68a3d834d842b27d21e49a28762f1ea17335d4992962ebd7561286dae19",
+  "pages": 8,
+  "method": "Direct inspection of final pages 5\u20138 at 110 dpi, including corrected page-6 spacing; pages 1\u20134 verified pixel-identical to prior inspected renderings.",
+  "render_directory": "build/paragraph_spacing",
+  "page_image_sha256": {
+    "1": "bf6e016d75521afe26dcd960c8440827d96fd529f0c6f7175e16bdd5a242e80e",
+    "2": "07f83c4122655d45a2602b449da26471158dc7172cd9c1d3d3d41be2910faaf7",
+    "3": "0c7ee43ea21626eb17879fe4badf9680272b968e18598f3668acfd99435b0c64",
+    "4": "80d11513b2808a71a71ac8f74dc2209e8056323beaff0cde49c2c2eee105328d",
+    "5": "af00c62459435a352c8d08e0d1409d77d0e7e2f54f6faaa1b5a4d33e8fda1543",
+    "6": "2d11736e0601d204ee0680e9131c10ee3f1092107a0c33dfedaa538d2900852d",
+    "7": "f1e871ae7b758700af8910d2f6e29cbe7ecb52d58001c5f9db0414eb1a6973c5",
+    "8": "5b6b976229c4463f3b946d6cd6086e209151bd8498b72222415091688c77e82d"
+  },
+  "no_visible_clipping_or_overlap": true,
+  "all_figures_and_tables_legible": true,
+  "page_6_paragraph_spacing_corrected": true,
+  "previous_pdf_sha256": "f31f1dc6f1d2655b30260279b808722af1bce4f6da7fd8907db764b0611496a8",
+  "standalone_check": "paragraph_spacing_checks.json"
 }

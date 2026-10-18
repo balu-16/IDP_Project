@@ -1,6 +1,6 @@
 # LaTeX source
 
-Upload this folder to Overleaf, set **main.tex** as the main document, and select **pdfLaTeX**. All required LaTeX fragments are in `includes/`; the conference's unchanged `IEEEtran.cls` is included. The bibliography is inside `main.tex`.
+Upload this folder to Overleaf, set **main.tex** as the main document, and select **pdfLaTeX**. All required LaTeX fragments are in `includes/`; the conference's unchanged `IEEEtran.cls` is included. The bibliography is inside `main.tex`. Its 32 references are cited in the text.
 
 `main.pdf` is the latest checked eight-page paper. No Python scripts, datasets, JSON files, or external project folders are required to compile the LaTeX.
 

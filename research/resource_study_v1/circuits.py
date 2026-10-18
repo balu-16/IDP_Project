@@ -11,6 +11,10 @@ from qiskit.circuit.library import IntegerComparator, QuadraticForm, StatePrepar
 from .problem import OracleProblem
 
 
+class NativeSimulationUnavailable(RuntimeError):
+    """A resource-limited simulator outcome, distinct from an oracle mismatch."""
+
+
 def counter(m, width, members):
     circuit = QuantumCircuit(m + width, name="count")
     for source in members:
@@ -102,31 +106,43 @@ def synthesize(circuit):
 
 
 def simulate_small(circuit, problem, expected):
-    """Check decision coherences and each workspace marginal without huge snapshots."""
+    """Inverse expected-state preparation tests phase-sensitive fidelity locally."""
     if problem.m > 5:
         raise ValueError("Native validation simulations are limited to five decisions")
     from qiskit_aer import AerSimulator
+    from qiskit.quantum_info import Pauli
     candidate = circuit.copy()
-    candidate.save_density_matrix(list(range(problem.m)), label="decision_density")
-    for i in range(problem.m, candidate.num_qubits):
-        candidate.save_probabilities([i], label=f"workspace_{i}")
+    # Density/amplitude snapshots in this pinned Aer version can trigger
+    # full-register memory estimates. An inverse expected-state preparation
+    # followed by local Z checks verifies the same coherent state without
+    # allocating an exponentially large snapshot.
+    candidate.append(StatePreparation(expected).inverse(), list(range(problem.m)))
+    candidate.save_expectation_value(Pauli("I"), [0], label="norm")
+    for i in range(candidate.num_qubits):
+        candidate.save_expectation_value(Pauli("Z"), [i], label=f"zero_{i}")
     simulator = AerSimulator(method="matrix_product_state", max_parallel_threads=2,
-        matrix_product_state_truncation_threshold=0.0, seed_simulator=0)
+        matrix_product_state_truncation_threshold=0.0,
+        matrix_product_state_max_bond_dimension=128, max_memory_mb=2048, seed_simulator=0)
     compile_start = time.perf_counter()
     candidate = transpile(candidate, simulator, optimization_level=0, seed_transpiler=0)
     validation_transpile_ms = (time.perf_counter()-compile_start)*1000
     start = time.perf_counter()
     result = simulator.run(candidate, shots=1).result()
     if not result.success:
-        raise RuntimeError("Native simulator did not complete successfully")
+        detail = str(result.results[0].status) if result.results else str(result.status)
+        if "memory" in detail.lower():
+            raise NativeSimulationUnavailable(detail)
+        raise RuntimeError(f"Native simulator did not complete successfully: {detail}")
     data = result.data(0)
-    density = np.asarray(data["decision_density"], dtype=complex)
-    error = float(np.max(np.abs(density - np.outer(expected, expected.conj()))))
-    dirty_bound = sum(float(data[f"workspace_{i}"][1]) for i in range(problem.m, candidate.num_qubits))
-    norm = float(np.trace(density).real)
-    if error > 1e-8 or abs(norm-1) > 1e-8 or dirty_bound > 1e-8:
-        raise ArithmeticError(f"Native phase/reflection/workspace mismatch: error={error}, norm={norm}, dirty={dirty_bound}")
-    return {"simulation_ms": (time.perf_counter()-start)*1000, "maximum_density_error": error,
+    leakage = [max(0., (1-float(np.real(data[f"zero_{i}"])))/2) for i in range(candidate.num_qubits)]
+    dirty_bound = sum(leakage[problem.m:])
+    total_bound = sum(leakage)
+    norm = float(np.real(data["norm"]))
+    if total_bound > 1e-8 or abs(norm-1) > 1e-8:
+        raise ArithmeticError(f"Native phase/reflection/workspace mismatch: leakage={total_bound}, norm={norm}")
+    return {"simulation_ms": (time.perf_counter()-start)*1000,
+            "expected_state_infidelity_upper_bound": total_bound,
             "zero_workspace_probability_lower_bound": max(0., 1-dirty_bound),
             "state_norm": norm, "method": "noiseless MPS, zero configurable truncation threshold",
+            "maximum_bond_dimension": 128, "acceptance_tolerance": 1e-8,
             "simulated_qubits": circuit.num_qubits, "validation_transpile_ms": validation_transpile_ms}

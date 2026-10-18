@@ -8,5 +8,6 @@
   },
   "statistics_audits": {
     "fiqa": "research/runs/accuracy_v2_statistics_audit/fiqa.json"
-  }
+  },
+  "resource_study": "research/runs/resource_study_v1_final"
 }

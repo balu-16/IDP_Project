@@ -1,6 +1,15 @@
 # Current continuation point
 
-The manuscript now uses completed protected-prefix SciFact and NFCorpus tests, and the completed earlier 648-query FiQA test. The separate new FiQA 100-query training confirmation is excluded from the manuscript. Its background continuation stopped after confirmation; it did not start the full FiQA test.
+The manuscript uses completed protected-prefix SciFact and NFCorpus tests and
+the earlier 648-query FiQA test. The new full FiQA refinement follow-up has
+completed but failed its recall gate; its failure is disclosed separately.
+The FiQA 100-query confirmation supplies no headline effectiveness result.
+
+The sealed constrained-oracle study is
+`research/runs/resource_study_v1_final/` and is mapped through
+`paper_sources.json`. It supplies measured resource data, not new retrieval
+tuning. The earlier engineering pilot is preserved separately. See the
+resource package README for commands and its explicit simulation limits.
 
 No evaluation should be started by the paper build/export tools. The next full FiQA evaluation requires the user's later start instruction and the frozen experiment's existing recovery/provenance checks. Do not use the obsolete cosine-GAS commands or paused 23-query NFCorpus checkpoint for current manuscript results.
 

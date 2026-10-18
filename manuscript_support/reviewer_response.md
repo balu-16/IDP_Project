@@ -6,7 +6,7 @@ The revision uses complete verified test runs, without collecting new dataset ra
 
 ## Technical comments 1.1: only two datasets
 
-The evidence now includes all 300 SciFact, 323 NFCorpus, and 648 FiQA test queries, including FiQA's 57,638 parents. SciFact and NFCorpus include protected-prefix refinement; FiQA reports the earlier fifteen-candidate configuration. Matched optimizers use the corresponding configuration; these are distinct policies within the L6-guided GAS family. The 100-query FiQA confirmation is excluded. Table II, p. 4
+The evidence now includes all 300 SciFact, 323 NFCorpus, and 648 FiQA test queries, including FiQA's 57,638 parents. SciFact and NFCorpus include protected-prefix refinement; FiQA reports the earlier fifteen-candidate configuration. Matched optimizers use the corresponding configuration; these are distinct policies within the L6-guided GAS family. The 100-query FiQA confirmation is excluded. Table II, p. 5
 
 ## Technical comments 1.2: classical cosine dependence
 
@@ -14,7 +14,7 @@ The manuscript explicitly charges and describes classical dense/BM25 retrieval, 
 
 ## Technical comments 1.3: high P95 simulation latency
 
-Complete online P50/P95 includes original/additional inference, both selection stages, and upstream retrieval wherever used. Combined selector and refinement-only boundaries are separate. Expanded scoring increases latency versus matched base selection; matched classical methods are reported without a Grover speed claim. Table V, p. 6; Table VI, p. 6
+Complete online P50/P95 includes original/additional inference, both selection stages, and upstream retrieval wherever used. Combined selector and refinement-only boundaries are separate. Expanded scoring increases latency versus matched base selection; matched classical methods are reported without a Grover speed claim. Table V, p. 7; Table VI, p. 7
 
 ## Technical comments 1.4: incomplete hardware
 
@@ -22,7 +22,7 @@ Added Intel Core i7-1355U, 12 logical CPUs, approximately 15.3 GiB RAM, two comp
 
 ## Technical comments 1.5: advanced neural comparisons
 
-Added pinned MS MARCO MiniLM L2/L6 cross-encoders on dense-fifteen and dense-sixty-four pools, along with hybrid-fifteen L6-only. The different pools are disclosed. These are specific neural controls, not an exhaustive state-of-the-art survey. Table III, p. 5
+Added pinned MS MARCO MiniLM L2/L6 cross-encoders on dense-fifteen and dense-sixty-four pools, along with hybrid-fifteen L6-only. The different pools are disclosed. These are specific neural controls, not an exhaustive state-of-the-art survey. Table III, p. 6
 
 ## Technical comments 1.6: figure citations/numbering
 
@@ -30,7 +30,7 @@ The pipeline diagram is explicitly cited before its appearance and uses consiste
 
 ## Technical comments 1.7: conclusion length
 
-The conclusion is one generated paragraph containing 172 whitespace-delimited words (150–200 required). Section VII, p. 7
+The conclusion is one generated paragraph containing 150 whitespace-delimited words (150–200 required). Section VII, p. 6
 
 ## Technical comments 2.1: alternative thresholds and no-marked fallback
 
@@ -40,20 +40,20 @@ The already recorded development comparison at cosine thresholds 0.3/0.5/0.7 is 
 
 The mechanism was redesigned rather than claiming an optimized probability-to-relevance formula. Marked states have symmetric ideal amplification; probabilities do not inherently provide graded relevance. Raw L6 determines base ordering and tail order, while the protected prefix deliberately takes priority over global sorting. Cosine remains upstream retrieval and redundancy evidence. The original probability-based policy remains a comparator. Section IV, p. 3
 
-## Technical comments 2.3: candidate/precision circuit resources — PARTIALLY ADDRESSED
+## Technical comments 2.3: measured constrained-oracle resources — BOUNDED COVERAGE
 
-Added observed candidate/basis sizes and simulation time, analytical amplitude-storage and signed-register scaling, explicit objective enumeration, phase/compute-uncompute accounting, and quantization proofs. A full native constrained-oracle circuit-depth/precision sweep has not been performed. The paper labels this outstanding and does not reuse incompatible legacy depths as new-method measurements. Table VIII, p. 7; Table IX, p. 7
+Added a separate frozen study of 32 saved confirmation queries per collection, five compact-search seeds, tail pools 3/5/8/12/16/20 where available, and 4/8/12/16-bit coefficients. The native oracle computes cardinality, all L6-score constraints, integer improvement, and uncomputation; reported qubits include every workspace register. Actual u/cx synthesis uses fixed seeds and optimization level. Complete-iteration synthesis is limited to eight decisions, native simulation to five; memory/time-limited cases and synthetic stress data are retained explicitly. Compact selection, native synthesis, and simulation timings have separate boundaries. No physical-device routing or QPU-speed claim is made. Table VIII, p. 7; Table IX, p. 7
 
 ## Technical comments 2.4: additional classical rerankers
 
-Included RRF, independently development-tuned MMR, L6-only, greedy, exact float/integer, and random-search controls. The aggregate-quality agreement of matched protected controls on SciFact and NFCorpus is reported explicitly. No uniquely quantum effectiveness gain is asserted. Table III, p. 5
+Included RRF, independently development-tuned MMR, L6-only, greedy, exact float/integer, and random-search controls. The aggregate-quality agreement of matched protected controls on SciFact and NFCorpus is reported explicitly. No uniquely quantum effectiveness gain is asserted. Table III, p. 6
 
 ## Technical comments 2.5: larger document collection
 
-The full 648-query FiQA L6-guided GAS test covers 57,638 parents, versus 5,183 SciFact and 3,633 NFCorpus parents. This extends domain/classical-corpus coverage, without demonstrating quantum corpus-size scaling. A full FiQA refinement test remains unavailable in this revision. Table I, p. 2
+The full 648-query FiQA L6-guided GAS test covers 57,638 parents, versus 5,183 SciFact and 3,633 NFCorpus parents. This extends domain/classical-corpus coverage, without demonstrating quantum corpus-size scaling. An additional complete FiQA refinement follow-up failed the recall gate: -2.6020% relative recall, with unchanged nDCG@5 and 8.2343% lower redundancy. The earlier headline configuration is retained and the failure is disclosed without retuning. Table I, p. 2
 
 ## Evidence and remaining author actions
 
 `records/evidence.json` and `records/provenance.json` bind values to sealed inputs; `records/all_methods.csv` retains all controls. Statistical reports preserve numerical ties and complete correction families. The supplied IEEEtran class is unchanged; the final PDF is checked for page count, fonts, references, and overflow.
 
-The unperformed native constrained-oracle depth study remains an explicit limitation. The full FiQA refinement test is not included yet. Local checks do not replace organizer/PDF eXpress acceptance. Nothing has been submitted.
+Native-resource results have explicit pool, preparation, simulation, memory, and connectivity limits. FiQA's failed full-test refinement gate remains failed. Local checks do not replace organizer/PDF eXpress acceptance. Nothing has been submitted.

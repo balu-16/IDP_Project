@@ -10,7 +10,7 @@ import sys
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=("freeze", "check", "pilot", "run", "report", "status"))
-    parser.add_argument("--directory", type=Path, default=Path("research/runs/resource_study_v1"))
+    parser.add_argument("--directory", type=Path, default=Path("research/runs/resource_study_v1_final"))
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--background", action="store_true")
     args = parser.parse_args()

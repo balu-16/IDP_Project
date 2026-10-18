@@ -196,6 +196,8 @@ def output_path(name):
 
 
 def generate(mapping, runs, official):
+    from manuscript_support.resource_integration import load_resource, findings as resource_findings, fiqa_followup
+    resource_study = load_resource(mapping)
     output = {}
     def put(name, content):
         output[name] = content
@@ -298,6 +300,10 @@ def generate(mapping, runs, official):
         f = math.comb(m, 3)
         rows.append([m, f"{f:,}", f"{16*f:,}", "14", "18", "22"])
     put("resources_analytic.tex", tex_table("rrrrrr", r"Tail pool & $\binom{M}{3}$ & Amp. bytes & $w_8$ & $w_{12}$ & $w_{16}$", rows))
+    if resource_study:
+        put("resources_analytic.tex", resource_study["resource_table"])
+        put("resource_findings.tex", resource_findings(resource_study) + "\n")
+        put("fiqa_followup.tex", fiqa_followup(resource_study, not runs["fiqa"]["refined"]) + "\n")
     abstract = "The reported full-test normalized discounted cumulative gain at rank five is "
     abstract += ", ".join(f"{runs[x]['evaluation']['means'][runs[x]['method']]['nDCG@5']:.4f} on {NAMES[x]}" for x in ORDER) + ". "
     abstract += " ".join(f"{NAMES[x]} redundancy falls {runs[x]['evaluation']['gate']['redundancy_relative_reduction_percent']:.2f} percent relative to matched base selection." for x in refined)
@@ -323,13 +329,38 @@ def generate(mapping, runs, official):
          "mean embedding redundancy relative to matched base selection. " if refined else "") +
         "The recall changes and their uncertainty are reported explicitly; preserving neural-score thresholds does not prove "
         "preservation of judged relevance. " +
-        (f"The full {joined(earlier)} evaluation uses the earlier configuration and extends domain and corpus-size coverage, "
-         "without validating the refinement on that collection. " if earlier else "") +
+        (("FiQA's additional refinement follow-up failed the recall gate; its headline retains the earlier configuration. "
+          if resource_study else
+          f"The full {joined(earlier)} evaluation uses the earlier configuration and extends domain and corpus-size coverage, "
+          "without validating the refinement on that collection. ") if earlier else "") +
         "Matched classical optimizers are essential controls: any shared effectiveness benefit belongs to the constrained "
         "selection policy rather than uniquely to Grover search. Additional neural scoring and simulation remain part of "
         "the complete pipeline cost. The evidence therefore supports a reproducible relevance--redundancy tradeoff, "
-        "not physical quantum acceleration or monetary savings. Future work should complete the remaining configuration "
-        "evaluations, implement reversible constraint oracles, and test quantum resources and generated-answer quality independently.")
+        "not physical quantum acceleration or monetary savings. " +
+        ("Bounded reversible-oracle measurements expose resource growth and simulation limits. Future work should evaluate "
+         "hardware connectivity, noise, energy costs, and generated-answer quality independently."
+         if resource_study else
+         "Future work should complete the remaining configuration evaluations, implement reversible constraint oracles, "
+         "and test quantum resources and generated-answer quality independently."))
+    if resource_study:
+        conclusion = (
+            "We evaluated L6-guided Grover Adaptive Search for evidence selection after dense and lexical retrieval. "
+            "A cross-encoder scores relevance, while a compact classical simulator applies phase marking and amplitude "
+            "amplification to document subsets. " +
+            (f"On {joined(refined)}, refinement kept the first five results and reduced mean redundancy relative to matched base selection. "
+             if refined else "") +
+            "Recall changes and their paired uncertainty remain explicit: score constraints do not guarantee judged relevance. " +
+            ("FiQA's refinement follow-up failed the recall gate, so its headline uses the earlier configuration. "
+             if earlier else
+             "Historical FiQA recall loss remains a limitation even when later configurations are reported. ") +
+            "Greedy and exact controls matched the protected method's quality, supporting the selection policy without "
+            "establishing a unique Grover benefit. Native circuit measurements show resource growth, with limits on "
+            "preparation, simulation, and memory. Classical retrieval, neural scoring, and simulation remain part of "
+            "the full cost. These findings support a reproducible relevance--redundancy tradeoff without establishing "
+            "quantum speed or monetary savings. Future work should assess device connectivity, noise, energy use, "
+            "and generated-answer quality.")
+        if len(conclusion.split()) < 150:
+            conclusion += " These empirical gates do not establish statistical noninferiority."
     words = len(conclusion.split())
     checked(150 <= words <= 200, f"Conclusion has {words} words")
     put("conclusion.tex", conclusion + "\n")
@@ -355,7 +386,10 @@ def generate(mapping, runs, official):
                  "holm": r["evaluation"]["holm"] if r["refined"] else r["statistics_audit"]["holm"]}
                  for name, r in runs.items()},
         "limitations": ["Follow-up test reuse", "NFCorpus confirmation exception retained",
+                        "Bounded native resource/simulation coverage" if resource_study else
                         "No physical full constrained-oracle depth measurement", "No Grover superiority established"]}
+    if resource_study:
+        evidence["resource_study"] = {k: v for k, v in resource_study.items() if k != "resource_table"}
     put("evidence.json", json.dumps(evidence, indent=2, allow_nan=False) + "\n")
     INCLUDES.mkdir(parents=True, exist_ok=True)
     RECORDS.mkdir(parents=True, exist_ok=True)
@@ -365,6 +399,11 @@ def generate(mapping, runs, official):
                   "sources_sha256": sha(HERE / "paper_sources.json"), "exporter_sha256": sha(Path(__file__)),
                   "inputs": {r["path"]: {"manifest_sha256": r["manifest_sha256"], "evaluation_sha256": r["evaluation_sha256"]} for r in runs.values()},
                   "generated": {str(output_path(name).relative_to(ROOT)): sha(output_path(name)) for name in output}}
+    if resource_study:
+        provenance["resource_study"] = {k: resource_study[k] for k in
+            ("directory", "manifest_sha256", "report_manifest_sha256")}
+        provenance["resource_integration_sha256"] = sha(HERE / "resource_integration.py")
+        provenance["resource_hardware_sha256"] = resource_study["hardware_sha256"]
     (RECORDS / "provenance.json").write_text(json.dumps(provenance, indent=2) + "\n")
     print(f"Exported verified LaTeX to {INCLUDES}; evidence to {RECORDS}; conclusion {words} words")
 
@@ -385,6 +424,13 @@ def main():
             checked(p["inputs"][r["path"]] == {"manifest_sha256": r["manifest_sha256"], "evaluation_sha256": r["evaluation_sha256"]}, "Mapped input changed")
         for name, expected in p["generated"].items():
             checked(sha(ROOT / name) == expected, f"Generated file changed: {name}")
+        if mapping.get("resource_study"):
+            from manuscript_support.resource_integration import load_resource
+            resource_study = load_resource(mapping)
+            checked(p["resource_study"] == {k: resource_study[k] for k in
+                ("directory", "manifest_sha256", "report_manifest_sha256")}, "Resource provenance changed")
+            checked(p["resource_integration_sha256"] == sha(HERE / "resource_integration.py"), "Resource exporter changed")
+            checked(p["resource_hardware_sha256"] == resource_study["hardware_sha256"], "Resource hardware record changed")
         print("All input and generated hashes verified")
     else:
         generate(mapping, runs, official)

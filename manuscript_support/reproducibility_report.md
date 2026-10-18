@@ -32,13 +32,57 @@ All newer official-test evaluations are follow-up studies after earlier test res
 
 SciFact refinement loses about 0.93% relative mean recall and reduces redundancy about 3.21%; NFCorpus gains about 1.95% relative mean recall and reduces redundancy about 2.63%. Prefix nDCG@5 is unchanged by construction. Some individual queries lose recall. Greedy and exact-float refiners match the aggregate quality on these two tests. These findings support constrained selection, not a uniquely Grover-derived improvement. FiQA base has the same reported nDCG/recall as its L6-only control.
 
+The new full 648-query FiQA refinement follow-up completed and failed the
+frozen gate: nDCG@5 remained unchanged, relative recall fell 2.601978%, and
+redundancy fell 8.234319%. Its sealed results remain under
+`research/runs/accuracy_v3_redundancy_fiqa_test/`; they were not retuned or mixed
+into the older headline row. The resource protocol binds this follow-up's
+manifest/evaluation hashes, and the paper discloses the failure.
+
 ## Resource analysis and outstanding work
 
 Compact simulation exhaustively builds objective arrays before amplification and stores complex128 amplitudes over cardinality-feasible subsets. The controller receives neither optimum nor marked-state count. Recorded phase and reversible objective counts are distinct from simulator objective enumeration. The latter is real classical work; exact argmin can use it without amplification.
 
-Observed refinement pools and times come from saved traces. Analytical candidate/precision tables use `F=choose(M,3)`, amplitude bytes `16F`, and signed objective-difference width `1 + bit_length(28(2^b−1))`. Width estimates exclude constraint/preparation workspace. The actual NumPy representation uses fixed integer widths. The quantization proof bounds an exact quantized minimizer over the same admissible domain; it does not imply every GAS request is globally optimal.
+Observed primary refinement pools and times come from saved traces. The new
+resource study freezes 32 confirmation queries per dataset, five search seeds,
+six tail-pool sizes, and four pair precisions. All 178 tasks completed,
+including 80 native synthesis cells; artificial 16/20-candidate stress cells
+are labelled. Real pool availability is recorded per dataset/seed. Native
+representatives are the first two eligible frozen seed-zero queries for each
+dataset/pool, held identical across precisions.
 
-There is no full reversible constrained-oracle gate/depth or noise sweep, physical QPU run, energy/money measurement, comprehensive modern-reranker comparison, or generated-answer evaluation. Existing small reference circuits for the older objective are not evidence for a complete implementation of the new constraints. A full new FiQA refinement test remains future work. The 98% empirical mean recall gate is not a statistical noninferiority proof. These limits remain in the paper and reviewer response.
+The native oracle implements cardinality, three L6 threshold counts, signed
+integer improvement, and compute/phase/uncompute. Its full logical width is
+M+w+2c+3, where c=ceil(log2(M+1)) and w bounds the signed polynomial over all
+bit strings. Every counter, comparator carry, and flag register is included.
+The u/cx basis, optimization level 1, and seed 0 are fixed; counts assume
+unrestricted connectivity. Complete-iteration synthesis includes generic
+fixed-weight preparation/reflection for at most eight decisions.
+
+Six native complete iterations passed phase-sensitive checks; 42 additional
+simulation attempts were refused by the simulator's conservative memory
+estimator. Limits remain 120 seconds and 2 GiB per circuit worker. Small native
+verification also includes a nontrivial five-decision/two-bit toy instance.
+MPS uses zero configurable truncation and bond cap 128; inverse independent
+expected-state preparation and local Z expectations bound state infidelity
+and workspace leakage by 1e-8. Larger native simulations are explicitly
+unperformed. Construction/transpilation, native simulation, and compact
+selection times remain separate. Per-method allocation profiling is a second
+replay excluded from selector timings; process RSS covers the fresh query
+worker's complete grid. Full data are in `resource_study_v1_final/`.
+
+Complex128 amplitudes use 16*choose(M,3) bytes, excluding energies/layouts and
+process memory. NumPy integer widths are fixed. The quantization proof bounds
+an exact quantized minimizer on the same domain; it does not imply each GAS
+request is globally optimal. `records/resource_hardware.json` records the host
+during collection and is bound into manuscript provenance.
+
+There is no physical-device routing/noise sweep, QPU run, energy/money
+measurement, comprehensive modern-reranker comparison, or generated-answer
+evaluation. Larger complete-iteration preparation and simulation remain
+unperformed. The older-objective circuit helper was not used to stand in for
+the new constrained oracle. The 98% mean recall gate is not a statistical
+noninferiority proof. These limits remain in the paper and reviewer response.
 
 ## Build and replacement
 
