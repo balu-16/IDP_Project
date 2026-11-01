@@ -1,0 +1,106 @@
+{
+  "checked_at_utc": "2026-10-25T05:55:19.782385+00:00",
+  "before_pdf_sha256": "a85c39f2f837d3cc1f94bee18b474ddba219b678f9d07249c30b090f7d634236",
+  "relocated_pdf_sha256": "3a7a3f6fee3c4f9bedb166bbeed652bc57b680d78a44c174c491b5332e3de593",
+  "render_dpi": 100.8,
+  "pages": [
+    {
+      "page": 1,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 2,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 3,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 4,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 5,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 6,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 7,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 8,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 9,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 10,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 11,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 12,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 13,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 14,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 15,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 16,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 17,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 18,
+      "text_matches": true,
+      "pixels_match": true
+    },
+    {
+      "page": 19,
+      "text_matches": true,
+      "pixels_match": true
+    }
+  ],
+  "scientific_sources_and_figures_unchanged": true,
+  "generated_scientific_evidence_unchanged": true,
+  "scope": "Relocation, build-path repair, cleanup and a faculty-review plan only; no application or experiment changes."
+}

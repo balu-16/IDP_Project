@@ -1,0 +1,73 @@
+\section{Journal Extension: Coverage, Failure, and Cost Diagnostics}\label{sec:diagnostics}
+\subsection{Candidate coverage separates retrieval from selection}
+We reconstruct candidate membership from the saved feature and ranking records. It evaluates~\eqref{eq:coverage_ceiling} on dense sixty-four, hybrid fifteen, and, where available, the expanded union. This analysis produces no new rankings. Before calculating coverage, we independently check pool sizes, subset inclusion, and parent IDs so that historical field names do not obscure the actual pools.
+
+\begin{table*}[t]
+\centering\small
+\caption{New secondary analysis of saved candidate pools. Judged coverage includes every positively judged parent in the pool. The Recall@8 ceiling additionally enforces the eight-output budget and relaxes relevance-score and prefix constraints. Values are query means.}
+\label{tab:coverage}\input{includes/coverage}
+\end{table*}
+
+Table~\ref{tab:coverage} and Fig.~\ref{fig:coverage} show that candidate opportunity is substantially collection-dependent. SciFact's hybrid-fifteen ceiling is \scifactShortCeiling{}, and its expanded-union ceiling is \scifactUnionCeiling{}. NFCorpus's corresponding ceilings are \nfcorpusShortCeiling{} and \nfcorpusUnionCeiling{}. FiQA's base shortlist has a ceiling of \fiqaShortCeiling{}, compared with \fiqaDenseCeiling{} in dense sixty-four. These are optimistic judged opportunities, not estimates of what a learned reranker will necessarily attain.
+
+There are \scifactNoRelevant{} SciFact, \nfcorpusNoRelevant{} NFCorpus, and \fiqaNoRelevant{} FiQA queries with no positively judged parent in the hybrid shortlist. An eight-of-fifteen selector cannot improve judged recall for those queries without first changing the available candidates. Expansion can repair some such exclusions on the protected datasets, but it remains confined to dense sixty-four and cannot recover an omitted corpus document outside that set.
+
+\begin{figure*}[t]
+\centering\includegraphics[width=\textwidth]{candidate_coverage.pdf}
+\caption{New judgment-based Recall@8 ceilings for the saved candidate pools, compared with the observed reported-policy recall. The dashed line is the same policy within each dataset panel. Expanded-union ceilings relax the protected-prefix and tail-score constraints and therefore do not measure pure search inefficiency.}
+\label{fig:coverage}
+\end{figure*}
+
+The ceiling also clarifies why raw Recall@8 is not directly comparable across datasets. If a query has many judged-relevant documents, even eight perfectly chosen outputs retrieve only a fraction of them. NFCorpus includes queries with much larger relevant sets than the single-evidence cases common in SciFact. Its lower recall scale therefore combines task structure, candidate opportunity, and ranking performance. A useful interpretation compares policies on the same queries and relates their outputs to the appropriate candidate ceiling.
+
+The union enlarges the relaxed opportunity set, but the final constrained task can remain difficult for reasons unrelated to quantum search. Five output positions are committed to the original head; admissible replacements must satisfy neural-score dominance; and redundancy is only a proxy for complementary evidence. The remaining gap to the union ceiling includes those constraints and model errors. Attributing the entire gap to a finite search budget would overstate what this diagnostic establishes.
+
+\subsection{Mean improvements coexist with individual losses}
+Table~\ref{tab:query_outcomes} counts query-level effects after averaging seeds within each query. SciFact has \scifactWins{} recall gains, \scifactLosses{} losses, and \scifactTies{} ties relative to base GAS. NFCorpus has \nfcorpusWins{} gains, \nfcorpusLosses{} losses, and \nfcorpusTies{} ties. Its favorable mean therefore coexists with harmed queries. FiQA has no recall differences beyond the tie tolerance relative to L6-only, even though some selected memberships and redundancy values differ.
+
+\begin{table*}[t]
+\centering\small\setlength{\tabcolsep}{4pt}
+\caption{New query-level outcome and seed-stability analysis. References are base GAS for SciFact/NFCorpus and L6-only for FiQA. Counts use a $10^{-12}$ numerical tie tolerance. Seed-varying ranks count queries with more than one final ordered list among the five saved seeds.}
+\label{tab:query_outcomes}\input{includes/query_outcomes}
+\end{table*}
+
+Refinement lowers redundancy for \scifactLowerRed{} SciFact queries and \nfcorpusLowerRed{} NFCorpus queries. It raises redundancy for none, as required by Proposition~\ref{prop:safety}. Figure~\ref{fig:paired} shows the paired recall and redundancy changes. The cumulative distributions reveal many zero changes and the small subset of queries with recall differences, which a mean alone conceals.
+
+\begin{figure*}[t]
+\centering\includegraphics[width=\textwidth]{paired_distributions.pdf}
+\caption{New empirical cumulative distributions of query-level refinement-minus-base differences. Recall changes can be positive or negative. Nonpositive redundancy changes follow the refinement acceptance rule. Seeds are averaged within queries before these distributions are constructed.}
+\label{fig:paired}
+\end{figure*}
+
+Two deterministically selected extreme cases illustrate the risk without claiming representativeness. SciFact query 384 has one positively judged relevant parent. Base recall is 1, whereas refined recall is 0, despite a candidate-pool ceiling of 1 and unchanged top-five output. The sole relevant output was therefore lost below the protected head. Redundancy decreases by approximately 0.04373. The case supplies an observed instance in which the optimization proxy improves while judged retrieval becomes worse.
+
+For NFCorpus query PLAIN-2570, the judgments contain 40 relevant parents. Base Recall@8 is 0.075 and refined Recall@8 is 0.025, corresponding to three versus one positively judged output. Mean redundancy decreases by approximately 0.09454. Both the original and expanded pool have a relaxed Recall@8 ceiling of 0.125 for this query. Additional candidate opportunity alone therefore does not explain the loss; admissibility, relevance estimates, and the selected objective also matter. These cases were chosen by the lowest paired recall change, then largest redundancy decrease, then query ID, using a fixed retrospective rule.
+
+The practical implication is limited but important. Preserving a top-five relevance metric can be appropriate when the application explicitly values that prefix, yet it does not establish that the full evidence set is safe to replace. A mean-retention threshold can also hide a severe loss on a rare query. Judged recall distributions, the number of harmed queries, and application-specific costs of those losses should accompany the mean.
+
+\subsection{Seed stability is a property of outputs, not independent evidence}
+The final reported rankings vary across seeds for \scifactSeedVary{} SciFact queries, \nfcorpusSeedVary{} NFCorpus queries, and \fiqaSeedVary{} FiQA queries. Recall itself varies across seeds for \scifactSeedRecall{}, \nfcorpusSeedRecall{}, and \fiqaSeedRecall{} queries, respectively. Deterministic final outcomes can arise even when an algorithm samples different internal trajectories. The distinction between trajectory randomness and output variability is important when interpreting a five-seed average.
+
+Stable outcomes do not increase the number of independent queries. Conversely, seed variability in the selected tail does not necessarily change recall because different documents can have the same judged status. NFCorpus demonstrates both effects: the number of queries with varying ordered lists exceeds the number with varying recall. The complete seed export retains individual scores and search statuses, permitting this distinction to be inspected rather than inferred from aggregate variances.
+
+These findings also limit the role of simulation in the observed quality gains. A stochastic search that consistently reaches an output also found by matched greedy and exact methods provides no evidence that randomness or amplitude amplification uniquely caused the effectiveness result. It does, however, characterize the stability of this specific implementation under its frozen budgets and seeds.
+
+\subsection{Additive cost attribution and the scope for selector acceleration}
+For each primary seeded request, the journal exporter reconstructs
+\begin{align}
+T_{\mathrm{online}}={}&T_{\mathrm{upstream}}+T_{\mathrm{L6,original}}
++T_{\mathrm{L6,extra}}\nonumber\\
+&+T_{\mathrm{base}}+T_{\mathrm{refine}}.
+\label{eq:cost_composition}
+\end{align}
+Upstream time includes query encoding, dense search, representative features, and applicable lexical/hybrid/union processing. Extra inference and refinement are zero for the FiQA base policy. The reconstructed sum is checked against the saved request total before means are calculated. Additivity applies to these composed stage measurements; it does not imply that separately measured percentile values are additive.
+
+\begin{figure*}[t]
+\centering\includegraphics[width=\textwidth]{cost_decomposition.pdf}
+\caption{New decomposition of arithmetic mean online time using additive per-request components. Small selector segments are retained. The plot uses means for additivity; Table~\ref{tab:latency} separately reports request-level medians and P95 values. Differences between collection sessions are not controlled cross-session speed experiments.}
+\label{fig:cost}
+\end{figure*}
+
+Figure~\ref{fig:cost} shows that original L6 inference alone accounts for \scifactOriginalLsixShare\%, \nfcorpusOriginalLsixShare\%, and \fiqaOriginalLsixShare\% of the respective primary mean online times. Additional L6 scoring further dominates the refined pipelines. Combined base-plus-refinement selection accounts for \scifactSelectorShare\%, \nfcorpusSelectorShare\%, and \fiqaSelectorShare\%, respectively. Thus, even an idealized removal of all measured selector time would leave most of the composed request cost.
+
+More formally, for $f=\overline{T}_{\mathrm{selector}}/\overline{T}_{\mathrm{online}}$ and unchanged upstream stages, replacing selection by a hypothetical zero-time implementation could reduce this mean by only fraction $f$. The corresponding idealized speedup is $1/(1-f)$. This is an accounting bound for the same staged computation, not a prediction of hardware performance. A practical quantum implementation would additionally require state preparation, data access, reversible arithmetic, and measurement, none of which can be assumed free. The measured cost boundary therefore gives little support to an end-to-end acceleration claim based solely on reducing selection phase counts.

@@ -1,0 +1,50 @@
+\section{Data and Experimental Protocol}\label{sec:protocol}
+\subsection{Collections, splits, and model identities}
+Table~\ref{tab:datasets} lists the three collections, their complete judged test-query counts, and the frozen base settings. All positive-query IDs in each official test split are evaluated. The reported evidence comprises 300 SciFact, 323 NFCorpus, and 648 FiQA queries; no partially collected fourth collection is included. The separate resource study uses saved features from these same domains; it is not another retrieval-effectiveness test.
+
+\begin{table*}[t]
+\centering\small
+\caption{Recorded datasets and configurations. Documents are parent documents. SciFact development is derived from official training; the other two use official development splits. The lexical weight is $\beta$ and the base redundancy weight is $\lambda$.}
+\label{tab:datasets}\input{includes/datasets}
+\end{table*}
+
+The dense encoder is \path{sentence-transformers/all-MiniLM-L6-v2}, producing 384-dimensional normalized vectors. The main relevance model is \path{cross-encoder/ms-marco-MiniLM-L6-v2}; an L2 cross-encoder supplies a smaller neural control. Full repository revisions and model-file hashes are retained in the evidence manifest. These identities distinguish a named model family from the exact artifacts used for a run. The journal does not download new model weights or rerun inference.
+
+Text normalization uses Unicode NFKC, whitespace collapse, and deterministic handling of document text. Tokenizer offsets are computed without padding or truncation. A chunk contains at most 190 WordPiece content tokens, advances by 158 content tokens, and includes two special tokens in a model input of at most 192 tokens. Every parent score is the maximum query cosine over its chunks; the lowest chunk index resolves an exact maximum tie. The selected original chunk is the representative passage. This policy preserves a common parent ID and passage representation across compared methods sharing a pool.
+
+Queries are checked against the content-token limit, and cross-encoder query--passage pairs are checked against the 512-token limit. Silent truncation is not an accepted substitute for these checks. Preserving the original fifteen logits during expansion further prevents a changed neural batching context from perturbing the baseline result. Corpus, query, and judgment hashes bind the saved inputs to the recorded experiments.
+
+\subsection{Development decisions and follow-up status}
+The fixed SciFact development sample contains one fifth of the official training queries. Tuning on NFCorpus and FiQA uses the supplied development splits. The base parameter search covers
+\begin{equation}
+\begin{aligned}
+\beta&\in\{0,0.25,0.5\},\\
+\lambda&\in\{0,0.01,0.025,0.05\}.
+\end{aligned}
+\label{eq:development_grids}
+\end{equation}
+All stochastic settings use seeds zero through four. A development setting is eligible if its mean nDCG@5 and Recall@8 match or exceed L6-only on the same shortlist within $10^{-12}$. Eligible configurations are ordered lexicographically: maximize nDCG@5 first and Recall@8 second; then minimize redundancy, followed by $\lambda$ and finally $\beta$.
+
+This selection rule permits zero diversity weight. SciFact's selected zero weight is informative: under this configuration the base's relevance-ranked incumbent is already optimal for its unquantized relevance objective. It would be incorrect to infer a nonzero diversity effect merely because the search mechanism is called GAS. The objective, its frozen weights, and the search process must be reported separately.
+
+The L6 MMR tuning grid contains six values: 0, 0.1, 0.25, 0.5, 0.75, and 1. The recorded relevance-first preference selects zero diversity weight on these collections. Its measured row therefore represents one selected operating point, not the full MMR tradeoff frontier. Cosine-guided controls retain their own frozen settings. Legacy threshold selection considers $\{0.3,0.5,0.7\}$ on development nDCG@5, with the declared tie preferences.
+
+The refinement confirmation protocol uses deterministic 100-query training samples, excluding historical development, pilot, and test IDs. Its descriptive acceptance rule combines three checks against the matched base: equal mean nDCG@5, a mean-recall ratio of at least 0.98, and a strict decrease in mean redundancy. NFCorpus's confirmation lost 2.1561\% relative recall and failed this gate. An explicitly recorded continuation then collected its full test without changing the method or the global gate. The later full-test outcome does not retroactively turn that failed confirmation into a pass.
+
+Earlier test outcomes had already been observed during method development. The newer official tests must consequently be described as follow-up evaluations. The reported parameters were not retuned against those follow-up judgments, but the tests are not an untouched holdout for the redesign. The journal diagnostics are retrospective descriptions of these same saved runs.
+
+\subsection{Controls and comparison fairness}
+The original evaluation contains twenty methods; protected-refinement runs add seven expanded-pool policies. They include dense cosine, dense/BM25 RRF with rank constant 60, native cosine and L6 MMR, cosine-guided GAS, L6-only ranking, base L6-guided GAS, greedy and exact optimizers, random search, legacy threshold Grover, and L2/L6 neural controls. Cross-encoder controls on dense fifteen and dense sixty-four are distinct from L6-only on hybrid fifteen.
+
+The seven expanded-pool policies are constrained GAS, constrained local-swap greedy, exact float, exact quantized, matched random search, global union-L6 ranking, and union-L6 with the protected prefix. Constrained policies share each seed's actual baseline prefix and the same tail feasibility rules. The random refiner draws $\max(1,2Q)$ uniform subsets plus its initial incumbent, where $Q$ is that seed's recorded refinement phase count. This matches a specified objective-access allowance; it does not match every operation performed by the compact simulator.
+
+Exact controls independently enumerate their own float or quantized objectives. The GAS controller receives neither their optimum nor the count of marked states. A comparison across different candidate pools characterizes complete policies. A comparison among constrained refiners on identical features is more specific: it isolates their search outcomes for the same objective and admissible domain. These two kinds of comparison support different causal interpretations.
+
+\subsection{Metrics, inference, and hardware}
+The principal metrics are nDCG@5, Recall@8, and redundancy from~\eqref{eq:redundancy}. We also report nDCG@8 to expose effects at ranks six through eight. Discounted gains use linear judgment values and logarithmic rank discount~\cite{jarvelin2002gain}; saved-ranking checks use NIST's trec\_eval~\cite{trec_eval}. A five-seed policy is averaged within each query before queries are averaged. Five seeds do not provide five independent relevance judgments for the same query.
+
+The recorded protected-run inference uses 10,000 paired bootstrap resamples with seed zero and 10,000 paired sign-randomization draws with seed one. Numerical differences no larger than $10^{-12}$ are ties. Holm correction covers nine comparators by four metrics for each protected dataset. The earlier FiQA nDCG audit covers its six declared comparators and removes numerical averaging artifacts before testing. We retain those families and pointwise intervals; no new selected family is substituted to improve apparent significance.
+
+The recorded host is an Intel Core i7-1355U with 12 logical CPUs and approximately 15.3\,GiB of RAM, running Linux and Python 3.12.3. Compute libraries use two threads. The recorded software includes NumPy 1.26.4, SciPy 1.13.1, CPU PyTorch 2.12.0, Transformers 4.57.6, Sentence Transformers 3.4.1, Qiskit 0.46.0, and Aer 0.13.3~\cite{javadi2024qiskit}. Model loading, corpus/cache restoration, and artificial-query warm-up are outside online latency. Session and host-load records remain available; the experiments were not a dedicated latency laboratory.
+
+Online time composes the applicable retrieval, lexical, neural, and selection stages. Reused upstream computation is attributed to every policy that requires it. Combined selector percentiles use the actual sum of base and refinement selection time for each seeded request before aggregation. Request P95 is not divided by the number of seeds. Section~\ref{sec:diagnostics} adds an additive mean-cost decomposition and explicitly avoids interpreting sums of component percentiles as pipeline percentiles.

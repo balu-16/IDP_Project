@@ -1,0 +1,35 @@
+{
+  "query_counts": {
+    "scifact": 300,
+    "nfcorpus": 323,
+    "fiqa": 648
+  },
+  "independently_checked_query_method_metric_values": 119124,
+  "exporter_sha256": "6bf698f20d09f82b253b5c4d7580673394913d689b7f9e9c3059c9f36971b4c0",
+  "new_rankings": false,
+  "model_inference": false,
+  "scidocs_included": false,
+  "generated_sha256": {
+    "includes/datasets.tex": "7aa9d0e7de357794eb93cde718aeb2b2581fa237e2d85d38ba90fe8f134b9cac",
+    "includes/comparators.tex": "ea9bc2401d11cb991c704bbe55be3eaf5a4d067a1362f4e71ba4252ce2fc76a4",
+    "includes/native_resources.tex": "9b3e3b3d534daf83e4551875c44b75fd8968a6799e5741f262bb8252e7fac2cd",
+    "includes/expanded_controls.tex": "2dd181fbec7996a400fcd89f6f7197bdd51f05529daf2e6bdd45fd2dcbd41065",
+    "includes/search.tex": "19ffe932c31096252fdd0f718e660bdd5620c0a7717a8f29172fae3023d8c24e",
+    "includes/thresholds.tex": "84c754a9f895690c2f3bc74361496192fe310729d281e3b396242f846da15bd2",
+    "includes/latency.tex": "4316b9212167050e1603c5f3bf4fa2ed049010044ad7731be4727b4eccc02d9d",
+    "includes/numbers.tex": "70673addeeeb7bbbb07521047034452417d6dec69f0355947ef42a1866d02888",
+    "includes/coverage.tex": "c0ba3e8c7276dd742b2778e3909acc81665f5cab86d39c83de5510bb26a8c621",
+    "includes/headline.tex": "3ad5c01f0f65f668f089069e261dbf739b4ea8717d1a7eaee9c02174d24a6fe4",
+    "includes/statistics.tex": "b68086afda56939c9d0751b4f2d0f9fa5dc0a023adb8be746d49cc8b6668b95b",
+    "includes/query_outcomes.tex": "53f15b2e561bc3ce57078ffda814b7a3d6ee7c7782a8f41eb62f90ba6f6a8086",
+    "evidence/primary_request_timings.csv": "b802136f13bab7c82fcc2387300ee014c07a7664d2e2a16ff05cf784ece3805a",
+    "evidence/per_query_diagnostics.csv": "3392f4ba7dbad1035268e2800a73adee2a3b8fc1dc6f0a8b5a274afe6efd6d52",
+    "evidence/all_methods.csv": "6d3b360b2da6bf16c7f6f0b13b3f91a21d3c185dfc521b02aee35f0da54ff5ed",
+    "evidence/verified_runs.json": "fa3ac764786c7fc21b5b02c70b7e8db318effea9538c03c664be69367edb2e71",
+    "evidence/native_resources.csv": "81dee9d91bd43957a71655125cd613f6c2c3c63becff8ca65aea8d08a56b1e02",
+    "evidence/paper_sources.json": "fac4f3d4710a4670a2a09ff47606084c0790157859e5eb9fe876092661f81eb0",
+    "evidence/primary_seed_metrics.csv": "9acc49d1e53e1b98f7a65ec9907b1cb1519540eb035f4d3e74b3a3b63b879df7",
+    "evidence/resource_study.json": "760c005532a893bed193399da08f03a4b3c76ba61021e42762752c9a50bd2f7c",
+    "evidence/secondary_analysis.json": "2b1515276095e311621738390d5e5c0f1279ef10988df212f7c1f28944f9e644"
+  }
+}

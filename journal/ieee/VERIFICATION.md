@@ -1,0 +1,19 @@
+# Final artifact review
+
+The completed manuscript is `main.pdf` (20 pages), now in `journal/ieee/`. The portable `latex_source.zip` contains the matching pdfLaTeX/BibTeX sources, seven vector figures, bibliography, and unchanged publisher-template assets. It builds without experiment data or Python. This folder additionally retains reproducibility scripts, evidence exports and compact review records. Duplicate PNG figures, downloaded reading copies, the local compiler, caches and temporary build/page previews are removed after validation; they can be recreated when needed.
+
+- Final compiler pass: no warnings, undefined references/citations, missing glyphs, or overfull/underfull boxes. The abstract contains 223 words; all 52 bibliography entries are cited, including all 13 requested additions.
+- Every figure and all 13 tables are referenced in the text. All 20 pages were rendered and inspected; the architecture labels and algorithm condition were corrected during review.
+- A separate build of the standalone ZIP has identical extracted text and identical page pixels at 100.8 dpi. All 47 publisher-template assets match their recorded source hashes.
+- Existing verification independently recomputed 119,124 query/method/metric values. Generated manuscript values are bound to the evidence exporter by SHA-256. Candidate containment, coverage ceilings, query partitions, selected failure cases, quantization reasoning, and additive request timing were checked.
+- The native-resource CSV is a byte-for-byte copy of the verified sealed report, including validation and resource-limit statuses. The reported study has 80 completed native cells, six validated complete iterations, and 42 memory-guard refusals.
+- No new retrieval rankings, neural inference, benchmark collection, or circuit experiments were performed for this journal extension. SciFact, NFCorpus, and the earlier FiQA base are the selected headline sources.
+- The conference scientific content and other original project artifacts were preserved. The user-requested authorship update is recorded in `evidence/authorship_update.json`; both papers and source ZIPs were rebuilt with four authors. An observed concurrent change to `docker-compose.yml` was left untouched and recorded separately without resetting the initial snapshots. No unrecorded outside-folder differences remain in the final check.
+
+`evidence/publication_checks.json`, `artifact_integrity.json`, `visual_inspection.json`, `export_verification.json`, and `outside_folder_check.json` record the checks. The local exact-phrase diagnostic is not an iThenticate score or a measure of scientific novelty.
+
+`evidence/reorganization_comparison.json` verifies that the relocated PDF has the same extracted text and page pixels as the pre-cleanup manuscript. The retained artifact can be checked after cleanup with `python3 -B journal/ieee/scripts/review_artifact.py --saved` from the project root. The complete build/review/cleanup workflow is in `README.md`.
+
+Before submission, follow `AUTHOR_REVIEW.md`. In particular, funding/conflict declarations and author approval must be confirmed, conference metadata should be updated when published, and publisher similarity screening remains necessary. The official IEEE template ZIP returned HTTP 403; current assets are unchanged from a pinned mirror, with direct official-archive equivalence still unverified. Nothing was submitted or uploaded to a publisher.
+
+The current revision removes the author prefix from the running header and edits prose throughout the research sections. The Codex bibliography citation was removed at the user’s request; the acknowledgment remains. IEEE Access requires an AI-system citation for AI-generated text, so this is an outstanding submission issue; see `AUTHOR_REVIEW.md`. Similarity screening remains outstanding.

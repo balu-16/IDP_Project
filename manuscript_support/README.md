@@ -18,17 +18,20 @@ The manuscript uses **L6-guided GAS** consistently. Its note discloses protected
 
 ## Latest editorial revision
 
-The upload manuscript now contains **32 cited references**, ordered by first
-appearance. The acknowledgement section is removed from the source, PDF,
-upload README, and portable source ZIP. The builder checks these conditions
-on every rebuild. Bibliographic metadata and citation purposes for the 14
-additions are in records/bibliography_sources.json.
+The upload manuscript contains **40 cited references**, ordered by first
+appearance. All 13 requested application papers are included and cited in the
+related-work discussion. Five background references on neural architectures
+and training data were removed to retain the eight-page limit. Publisher metadata,
+including corrected author order, titles, years and the resolved fraud-paper
+DOI, is retained in records/requested_references.json. The builder checks every
+required citation and the bibliography hashes on each rebuild.
 
-All generated numerical fragments and the complete method/proof source remain
-unchanged. Records/bibliography_revision_checks.json binds the new PDF and ZIP
+Generated numerical fragments and the method/proof content remain unchanged.
+The conclusion and bibliography use normal column flow instead of the former
+fixed break. Records/reference_update_checks.json binds the current PDF and ZIP
 to a fresh standalone compilation and archive audit. Records/visual_inspection.json
-records direct inspection of all eight final pages. The preceding checked
-upload folder is preserved in before_bibliography_revision.zip.
+records inspection of all eight final pages. Records/bibliography_revision_checks.json
+and before_bibliography_revision.zip retain the earlier revision's evidence.
 
 ## Verify and build
 
@@ -39,6 +42,8 @@ PYTHONDONTWRITEBYTECODE=1 backend/.venv/bin/python manuscript_support/build_manu
 ```
 
 This compiles existing LaTeX only and checks provenance, source inputs, eight-page compliance, embedded fonts, references, overflow, and the mathematical statements. It creates no benchmark rankings or neural inference. The current PDF is copied to `new_paper/main.pdf`; administrative records stay here.
+
+If the local Tectonic compiler has been cleaned up, pass `--pdflatex /absolute/path/to/pdflatex` to use an available pdfLaTeX installation. The builder runs three passes and applies the same manuscript checks.
 
 Regenerate results from **existing completed rankings**, then build:
 

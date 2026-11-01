@@ -1,0 +1,20 @@
+{
+  "layout": [
+    "journal/ieee/",
+    "journal/quantum/PLAN.md"
+  ],
+  "pdf_pages": 19,
+  "compiler_warnings": 0,
+  "scientific_sources_unchanged": true,
+  "outside_folder_unexpected_differences": {
+    "tracked_hash_changes": [],
+    "outside_journal_metadata_changes": [],
+    "outside_journal_added_files": [],
+    "outside_journal_removed_files": []
+  },
+  "preserved_external_edits": [
+    "docker-compose.yml"
+  ],
+  "quantum_content": "Faculty-review plan only; no new circuit code or experiments",
+  "removed_file_count": 6774
+}

@@ -1,0 +1,35 @@
+{
+  "updated_at_utc": "2026-10-26T05:02:52.159164+00:00",
+  "authorization": "User requested removal of an author throughout the current conference and journal manuscripts and recompilation of both papers.",
+  "authors": [
+    "Bala Rakesh Gundapaneni",
+    "Abdul Basith Syed",
+    "Jagadeeshbabu Borru",
+    "Naga Sravanthi Puppala"
+  ],
+  "corresponding_author": "Naga Sravanthi Puppala",
+  "new_experiments_or_inference": false,
+  "research_data_and_generated_numerical_fragments_changed": false,
+  "original_acceptance_letter_changed": false,
+  "historical_archives_changed": false,
+  "conference": {
+    "source_sha256": "904f2cd8c637656d1b43f4229696947f150072e13c7c142414f2ab06d5ee4460",
+    "pdf_sha256": "1e2399861034a5e6ed19ed3c76e8c2ebbe9c9c9eb9247c796c3218fb2be01191",
+    "source_archive_sha256": "f39ecd65cc0e082f7604d3a3f2ac278f2156ab1cda4c8d2ee914e1b43c965a7f",
+    "pages": 8,
+    "pdf_author_metadata": "Bala Rakesh Gundapaneni; Abdul Basith Syed; Jagadeeshbabu Borru; Naga Sravanthi Puppala",
+    "standalone_compiled": true,
+    "standalone_page_pixels_match": true,
+    "visual_review_complete": true
+  },
+  "journal": {
+    "source_sha256": "7c6067f821bd5b697bc66e74ac08eed649da72f94feea0d8b07f66ed839e2226",
+    "pdf_sha256": "cd787b823031ea9e855a37702a63fbf2e16a4dca4d9ee3ff34751d6655ca6954",
+    "source_archive_sha256": "5e812030b2d1ca4c77842a3b56cd66fd128c7b8129a699729d7642988cb49a79",
+    "pages": 19,
+    "pdf_author_metadata": "Bala Rakesh Gundapaneni; Abdul Basith Syed; Jagadeeshbabu Borru; Naga Sravanthi Puppala",
+    "standalone_compiled": true,
+    "standalone_page_pixels_match": true,
+    "visual_review_complete": true
+  }
+}

@@ -1,0 +1,1618 @@
+{
+  "source": "new_paper/main.pdf",
+  "conference_sha256": "8a51243274bd29676f1b336747932bbf1bac3d64494f478b4e1acee2f4dcfa70",
+  "journal_pdf_sha256": "f4eee34e13d3d27516503ed350fa23e1f46e6eb9a2adfdf103705ab455a4ad41",
+  "normalization": "PDF content order; lowercase ASCII alphanumeric tokens after Unicode NFKC and line-hyphen repair; text before REFERENCES, including tables, headers and equations.",
+  "exact_phrase_words": 10,
+  "conference_body_tokens": 5408,
+  "journal_body_tokens": 12729,
+  "journal_tokens_in_shared_phrases": 723,
+  "covered_fraction": 0.056799434362479376,
+  "shared_phrases": [
+    {
+      "phrase": "0 6878 0 8011 0 4336 0 3689 0 1530",
+      "occurrences": 4
+    },
+    {
+      "phrase": "6878 0 8011 0 4336 0 3689 0 1530 0",
+      "occurrences": 4
+    },
+    {
+      "phrase": "0 8011 0 4336 0 3689 0 1530 0 4318",
+      "occurrences": 4
+    },
+    {
+      "phrase": "8011 0 4336 0 3689 0 1530 0 4318 0",
+      "occurrences": 4
+    },
+    {
+      "phrase": "0 4336 0 3689 0 1530 0 4318 0 3575",
+      "occurrences": 4
+    },
+    {
+      "phrase": "4336 0 3689 0 1530 0 4318 0 3575 0",
+      "occurrences": 4
+    },
+    {
+      "phrase": "0 3689 0 1530 0 4318 0 3575 0 4341",
+      "occurrences": 3
+    },
+    {
+      "phrase": "3689 0 1530 0 4318 0 3575 0 4341 0",
+      "occurrences": 3
+    },
+    {
+      "phrase": "n 5 r 8 red n 5 r 8 red",
+      "occurrences": 2
+    },
+    {
+      "phrase": "0 6878 0 8086 0 4480 0 3689 0 1500",
+      "occurrences": 2
+    },
+    {
+      "phrase": "6878 0 8086 0 4480 0 3689 0 1500 0",
+      "occurrences": 2
+    },
+    {
+      "phrase": "0 8086 0 4480 0 3689 0 1500 0 4447",
+      "occurrences": 2
+    },
+    {
+      "phrase": "8086 0 4480 0 3689 0 1500 0 4447 0",
+      "occurrences": 2
+    },
+    {
+      "phrase": "0 4480 0 3689 0 1500 0 4447 0 3575",
+      "occurrences": 2
+    },
+    {
+      "phrase": "4480 0 3689 0 1500 0 4447 0 3575 0",
+      "occurrences": 2
+    },
+    {
+      "phrase": "0 3689 0 1500 0 4447 0 3575 0 4341",
+      "occurrences": 2
+    },
+    {
+      "phrase": "3689 0 1500 0 4447 0 3575 0 4341 0",
+      "occurrences": 2
+    },
+    {
+      "phrase": "0 1500 0 4447 0 3575 0 4341 0 5313",
+      "occurrences": 2
+    },
+    {
+      "phrase": "0 1530 0 4318 0 3575 0 4341 0 5311",
+      "occurrences": 2
+    },
+    {
+      "phrase": "1530 0 4318 0 3575 0 4341 0 5311 matched",
+      "occurrences": 2
+    },
+    {
+      "phrase": "of computer science and engineering srm university ap andhra pradesh",
+      "occurrences": 1
+    },
+    {
+      "phrase": "computer science and engineering srm university ap andhra pradesh 522502",
+      "occurrences": 1
+    },
+    {
+      "phrase": "science and engineering srm university ap andhra pradesh 522502 india",
+      "occurrences": 1
+    },
+    {
+      "phrase": "normalized discounted cumulative gain at rank five is 0 6878",
+      "occurrences": 1
+    },
+    {
+      "phrase": "discounted cumulative gain at rank five is 0 6878 on",
+      "occurrences": 1
+    },
+    {
+      "phrase": "cumulative gain at rank five is 0 6878 on scifact",
+      "occurrences": 1
+    },
+    {
+      "phrase": "gain at rank five is 0 6878 on scifact 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "at rank five is 0 6878 on scifact 0 3689",
+      "occurrences": 1
+    },
+    {
+      "phrase": "rank five is 0 6878 on scifact 0 3689 on",
+      "occurrences": 1
+    },
+    {
+      "phrase": "five is 0 6878 on scifact 0 3689 on nfcorpus",
+      "occurrences": 1
+    },
+    {
+      "phrase": "task specific decision pipelines also appear in blockchain mining trust",
+      "occurrences": 1
+    },
+    {
+      "phrase": "specific decision pipelines also appear in blockchain mining trust scoring",
+      "occurrences": 1
+    },
+    {
+      "phrase": "these studies provide application context their tasks and reported results",
+      "occurrences": 1
+    },
+    {
+      "phrase": "studies provide application context their tasks and reported results are",
+      "occurrences": 1
+    },
+    {
+      "phrase": "provide application context their tasks and reported results are separate",
+      "occurrences": 1
+    },
+    {
+      "phrase": "application context their tasks and reported results are separate from",
+      "occurrences": 1
+    },
+    {
+      "phrase": "context their tasks and reported results are separate from our",
+      "occurrences": 1
+    },
+    {
+      "phrase": "their tasks and reported results are separate from our documentretrieval",
+      "occurrences": 1
+    },
+    {
+      "phrase": "tasks and reported results are separate from our documentretrieval evaluation",
+      "occurrences": 1
+    },
+    {
+      "phrase": "and reported results are separate from our documentretrieval evaluation iii",
+      "occurrences": 1
+    },
+    {
+      "phrase": "the reproduced hybrid score is hi 1 1 ci 1",
+      "occurrences": 1
+    },
+    {
+      "phrase": "z j t z j t0 j 1 2 3",
+      "occurrences": 1
+    },
+    {
+      "phrase": "j t z j t0 j 1 2 3 10",
+      "occurrences": 1
+    },
+    {
+      "phrase": "t z j t0 j 1 2 3 10 12",
+      "occurrences": 1
+    },
+    {
+      "phrase": "rrf with rank constant 60 native cosine and l6 mmr",
+      "occurrences": 1
+    },
+    {
+      "phrase": "with rank constant 60 native cosine and l6 mmr cosine",
+      "occurrences": 1
+    },
+    {
+      "phrase": "rank constant 60 native cosine and l6 mmr cosine guided",
+      "occurrences": 1
+    },
+    {
+      "phrase": "constant 60 native cosine and l6 mmr cosine guided gas",
+      "occurrences": 1
+    },
+    {
+      "phrase": "60 native cosine and l6 mmr cosine guided gas l6",
+      "occurrences": 1
+    },
+    {
+      "phrase": "native cosine and l6 mmr cosine guided gas l6 only",
+      "occurrences": 1
+    },
+    {
+      "phrase": "cosine and l6 mmr cosine guided gas l6 only ranking",
+      "occurrences": 1
+    },
+    {
+      "phrase": "and l6 mmr cosine guided gas l6 only ranking base",
+      "occurrences": 1
+    },
+    {
+      "phrase": "l6 mmr cosine guided gas l6 only ranking base l6",
+      "occurrences": 1
+    },
+    {
+      "phrase": "mmr cosine guided gas l6 only ranking base l6 guided",
+      "occurrences": 1
+    },
+    {
+      "phrase": "cosine guided gas l6 only ranking base l6 guided gas",
+      "occurrences": 1
+    },
+    {
+      "phrase": "guided gas l6 only ranking base l6 guided gas greedy",
+      "occurrences": 1
+    },
+    {
+      "phrase": "local swap greedy exact float exact quantized matched random search",
+      "occurrences": 1
+    },
+    {
+      "phrase": "swap greedy exact float exact quantized matched random search global",
+      "occurrences": 1
+    },
+    {
+      "phrase": "greedy exact float exact quantized matched random search global union",
+      "occurrences": 1
+    },
+    {
+      "phrase": "exact float exact quantized matched random search global union l6",
+      "occurrences": 1
+    },
+    {
+      "phrase": "transformers 4 57 6 sentence transformers 3 4 1 qiskit",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4 57 6 sentence transformers 3 4 1 qiskit 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "57 6 sentence transformers 3 4 1 qiskit 0 46",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6 sentence transformers 3 4 1 qiskit 0 46 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "scifact 0 687833 0 698173 0 801111 0 433636 nfcorpus",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 687833 0 698173 0 801111 0 433636 nfcorpus 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "687833 0 698173 0 801111 0 433636 nfcorpus 0 368865",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 698173 0 801111 0 433636 nfcorpus 0 368865 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "698173 0 801111 0 433636 nfcorpus 0 368865 0 346506",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 801111 0 433636 nfcorpus 0 368865 0 346506 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "801111 0 433636 nfcorpus 0 368865 0 346506 0 152997",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 433636 nfcorpus 0 368865 0 346506 0 152997 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "433636 nfcorpus 0 368865 0 346506 0 152997 0 431771",
+      "occurrences": 1
+    },
+    {
+      "phrase": "nfcorpus 0 368865 0 346506 0 152997 0 431771 fiqa",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 368865 0 346506 0 152997 0 431771 fiqa 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "368865 0 346506 0 152997 0 431771 fiqa 0 357490",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 346506 0 152997 0 431771 fiqa 0 357490 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "346506 0 152997 0 431771 fiqa 0 357490 0 376939",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 152997 0 431771 fiqa 0 357490 0 376939 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "152997 0 431771 fiqa 0 357490 0 376939 0 434063",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 431771 fiqa 0 357490 0 376939 0 434063 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "431771 fiqa 0 357490 0 376939 0 434063 0 531244",
+      "occurrences": 1
+    },
+    {
+      "phrase": "preserved ndcg 5 and reduced redundancy by 8 23 but",
+      "occurrences": 1
+    },
+    {
+      "phrase": "5 r 8 red n 5 r 8 red n",
+      "occurrences": 1
+    },
+    {
+      "phrase": "r 8 red n 5 r 8 red n 5",
+      "occurrences": 1
+    },
+    {
+      "phrase": "8 red n 5 r 8 red n 5 r",
+      "occurrences": 1
+    },
+    {
+      "phrase": "red n 5 r 8 red n 5 r 8",
+      "occurrences": 1
+    },
+    {
+      "phrase": "cosine 0 6361 0 8111 0 4756 0 3181 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 6361 0 8111 0 4756 0 3181 0 1335",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6361 0 8111 0 4756 0 3181 0 1335 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 8111 0 4756 0 3181 0 1335 0 4398",
+      "occurrences": 1
+    },
+    {
+      "phrase": "8111 0 4756 0 3181 0 1335 0 4398 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4756 0 3181 0 1335 0 4398 0 3470",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4756 0 3181 0 1335 0 4398 0 3470 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 3181 0 1335 0 4398 0 3470 0 4153",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3181 0 1335 0 4398 0 3470 0 4153 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 1335 0 4398 0 3470 0 4153 0 5363",
+      "occurrences": 1
+    },
+    {
+      "phrase": "rrf 0 6677 0 8149 0 4727 0 3491 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 6677 0 8149 0 4727 0 3491 0 1394",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6677 0 8149 0 4727 0 3491 0 1394 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 8149 0 4727 0 3491 0 1394 0 4394",
+      "occurrences": 1
+    },
+    {
+      "phrase": "8149 0 4727 0 3491 0 1394 0 4394 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4727 0 3491 0 1394 0 4394 0 3509",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4727 0 3491 0 1394 0 4394 0 3509 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 3491 0 1394 0 4394 0 3509 0 4262",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3491 0 1394 0 4394 0 3509 0 4262 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 1394 0 4394 0 3509 0 4262 0 5327",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 6364 0 8111 0 4756 0 3181 0 1334",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6364 0 8111 0 4756 0 3181 0 1334 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 8111 0 4756 0 3181 0 1334 0 4398",
+      "occurrences": 1
+    },
+    {
+      "phrase": "8111 0 4756 0 3181 0 1334 0 4398 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4756 0 3181 0 1334 0 4398 0 3458",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4756 0 3181 0 1334 0 4398 0 3458 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 3181 0 1334 0 4398 0 3458 0 4150",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3181 0 1334 0 4398 0 3458 0 4150 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 1334 0 4398 0 3458 0 4150 0 5363",
+      "occurrences": 1
+    },
+    {
+      "phrase": "cosine guided gas 0 6311 0 7742 0 4490 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "guided gas 0 6311 0 7742 0 4490 0 3160",
+      "occurrences": 1
+    },
+    {
+      "phrase": "gas 0 6311 0 7742 0 4490 0 3160 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 6311 0 7742 0 4490 0 3160 0 1235",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6311 0 7742 0 4490 0 3160 0 1235 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 7742 0 4490 0 3160 0 1235 0 3996",
+      "occurrences": 1
+    },
+    {
+      "phrase": "7742 0 4490 0 3160 0 1235 0 3996 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4490 0 3160 0 1235 0 3996 0 3452",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4490 0 3160 0 1235 0 3996 0 3452 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 3160 0 1235 0 3996 0 3452 0 4093",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3160 0 1235 0 3996 0 3452 0 4093 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 1235 0 3996 0 3452 0 4093 0 5215",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1500 0 4447 0 3575 0 4341 0 5313 l6",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4447 0 3575 0 4341 0 5313 l6 mmr",
+      "occurrences": 1
+    },
+    {
+      "phrase": "base l6 guided gas 0 6878 0 8086 0 4480",
+      "occurrences": 1
+    },
+    {
+      "phrase": "l6 guided gas 0 6878 0 8086 0 4480 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "guided gas 0 6878 0 8086 0 4480 0 3689",
+      "occurrences": 1
+    },
+    {
+      "phrase": "gas 0 6878 0 8086 0 4480 0 3689 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 6878 0 8086 0 4480 0 3689 0 1501",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6878 0 8086 0 4480 0 3689 0 1501 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 8086 0 4480 0 3689 0 1501 0 4434",
+      "occurrences": 1
+    },
+    {
+      "phrase": "8086 0 4480 0 3689 0 1501 0 4434 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4480 0 3689 0 1501 0 4434 0 3575",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4480 0 3689 0 1501 0 4434 0 3575 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 3689 0 1501 0 4434 0 3575 0 4341",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3689 0 1501 0 4434 0 3575 0 4341 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 1501 0 4434 0 3575 0 4341 0 5312",
+      "occurrences": 1
+    },
+    {
+      "phrase": "matched greedy 0 6878 0 8011 0 4336 0 3689",
+      "occurrences": 1
+    },
+    {
+      "phrase": "greedy 0 6878 0 8011 0 4336 0 3689 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4318 0 3575 0 4341 0 5311 matched exact",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4318 0 3575 0 4341 0 5311 matched exact float",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 3575 0 4341 0 5311 matched exact float 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3575 0 4341 0 5311 matched exact float 0 6878",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4341 0 5311 matched exact float 0 6878 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4341 0 5311 matched exact float 0 6878 0 8011",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 5311 matched exact float 0 6878 0 8011 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "5311 matched exact float 0 6878 0 8011 0 4336",
+      "occurrences": 1
+    },
+    {
+      "phrase": "matched exact float 0 6878 0 8011 0 4336 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "exact float 0 6878 0 8011 0 4336 0 3689",
+      "occurrences": 1
+    },
+    {
+      "phrase": "float 0 6878 0 8011 0 4336 0 3689 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 3689 0 1530 0 4318 0 3575 0 4343",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3689 0 1530 0 4318 0 3575 0 4343 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 1530 0 4318 0 3575 0 4343 0 5309",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1530 0 4318 0 3575 0 4343 0 5309 matched",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4318 0 3575 0 4343 0 5309 matched exact",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4318 0 3575 0 4343 0 5309 matched exact integer",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 3575 0 4343 0 5309 matched exact integer 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3575 0 4343 0 5309 matched exact integer 0 6878",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4343 0 5309 matched exact integer 0 6878 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4343 0 5309 matched exact integer 0 6878 0 8011",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 5309 matched exact integer 0 6878 0 8011 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "5309 matched exact integer 0 6878 0 8011 0 4336",
+      "occurrences": 1
+    },
+    {
+      "phrase": "matched exact integer 0 6878 0 8011 0 4336 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "exact integer 0 6878 0 8011 0 4336 0 3689",
+      "occurrences": 1
+    },
+    {
+      "phrase": "integer 0 6878 0 8011 0 4336 0 3689 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4318 0 3575 0 4341 0 5311 matched random",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 6878 0 8011 0 4338 0 3689 0 1531",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6878 0 8011 0 4338 0 3689 0 1531 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 8011 0 4338 0 3689 0 1531 0 4320",
+      "occurrences": 1
+    },
+    {
+      "phrase": "8011 0 4338 0 3689 0 1531 0 4320 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4338 0 3689 0 1531 0 4320 0 3575",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4338 0 3689 0 1531 0 4320 0 3575 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 3689 0 1531 0 4320 0 3575 0 4341",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3689 0 1531 0 4320 0 3575 0 4341 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 1531 0 4320 0 3575 0 4341 0 5313",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1531 0 4320 0 3575 0 4341 0 5313 l2",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4320 0 3575 0 4341 0 5313 l2 dense",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4320 0 3575 0 4341 0 5313 l2 dense 15",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 3575 0 4341 0 5313 l2 dense 15 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3575 0 4341 0 5313 l2 dense 15 0 6431",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4341 0 5313 l2 dense 15 0 6431 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4341 0 5313 l2 dense 15 0 6431 0 8049",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 5313 l2 dense 15 0 6431 0 8049 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "5313 l2 dense 15 0 6431 0 8049 0 4642",
+      "occurrences": 1
+    },
+    {
+      "phrase": "l2 dense 15 0 6431 0 8049 0 4642 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "dense 15 0 6431 0 8049 0 4642 0 3509",
+      "occurrences": 1
+    },
+    {
+      "phrase": "15 0 6431 0 8049 0 4642 0 3509 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 6431 0 8049 0 4642 0 3509 0 1396",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6431 0 8049 0 4642 0 3509 0 1396 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 8049 0 4642 0 3509 0 1396 0 4486",
+      "occurrences": 1
+    },
+    {
+      "phrase": "8049 0 4642 0 3509 0 1396 0 4486 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4642 0 3509 0 1396 0 4486 0 3319",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4642 0 3509 0 1396 0 4486 0 3319 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 3509 0 1396 0 4486 0 3319 0 4217",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3509 0 1396 0 4486 0 3319 0 4217 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 1396 0 4486 0 3319 0 4217 0 5295",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1396 0 4486 0 3319 0 4217 0 5295 l6",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4486 0 3319 0 4217 0 5295 l6 dense",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4486 0 3319 0 4217 0 5295 l6 dense 15",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 3319 0 4217 0 5295 l6 dense 15 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3319 0 4217 0 5295 l6 dense 15 0 6790",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4217 0 5295 l6 dense 15 0 6790 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4217 0 5295 l6 dense 15 0 6790 0 8104",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 5295 l6 dense 15 0 6790 0 8104 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "5295 l6 dense 15 0 6790 0 8104 0 4655",
+      "occurrences": 1
+    },
+    {
+      "phrase": "l6 dense 15 0 6790 0 8104 0 4655 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "dense 15 0 6790 0 8104 0 4655 0 3621",
+      "occurrences": 1
+    },
+    {
+      "phrase": "15 0 6790 0 8104 0 4655 0 3621 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 6790 0 8104 0 4655 0 3621 0 1423",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6790 0 8104 0 4655 0 3621 0 1423 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 8104 0 4655 0 3621 0 1423 0 4537",
+      "occurrences": 1
+    },
+    {
+      "phrase": "8104 0 4655 0 3621 0 1423 0 4537 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4655 0 3621 0 1423 0 4537 0 3575",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4655 0 3621 0 1423 0 4537 0 3575 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 3621 0 1423 0 4537 0 3575 0 4341",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3621 0 1423 0 4537 0 3575 0 4341 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 1423 0 4537 0 3575 0 4341 0 5313",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1423 0 4537 0 3575 0 4341 0 5313 l2",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4537 0 3575 0 4341 0 5313 l2 dense",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4537 0 3575 0 4341 0 5313 l2 dense 64",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 3575 0 4341 0 5313 l2 dense 64 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3575 0 4341 0 5313 l2 dense 64 0 6321",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4341 0 5313 l2 dense 64 0 6321 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4341 0 5313 l2 dense 64 0 6321 0 7916",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 5313 l2 dense 64 0 6321 0 7916 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "5313 l2 dense 64 0 6321 0 7916 0 4329",
+      "occurrences": 1
+    },
+    {
+      "phrase": "l2 dense 64 0 6321 0 7916 0 4329 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "dense 64 0 6321 0 7916 0 4329 0 3481",
+      "occurrences": 1
+    },
+    {
+      "phrase": "64 0 6321 0 7916 0 4329 0 3481 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 6321 0 7916 0 4329 0 3481 0 1438",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6321 0 7916 0 4329 0 3481 0 1438 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 7916 0 4329 0 3481 0 1438 0 4468",
+      "occurrences": 1
+    },
+    {
+      "phrase": "7916 0 4329 0 3481 0 1438 0 4468 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4329 0 3481 0 1438 0 4468 0 2973",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4329 0 3481 0 1438 0 4468 0 2973 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 3481 0 1438 0 4468 0 2973 0 3918",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3481 0 1438 0 4468 0 2973 0 3918 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 1438 0 4468 0 2973 0 3918 0 4962",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1438 0 4468 0 2973 0 3918 0 4962 l6",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4468 0 2973 0 3918 0 4962 l6 dense",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4468 0 2973 0 3918 0 4962 l6 dense 64",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 2973 0 3918 0 4962 l6 dense 64 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "2973 0 3918 0 4962 l6 dense 64 0 6815",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 3918 0 4962 l6 dense 64 0 6815 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3918 0 4962 l6 dense 64 0 6815 0 8087",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4962 l6 dense 64 0 6815 0 8087 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4962 l6 dense 64 0 6815 0 8087 0 4379",
+      "occurrences": 1
+    },
+    {
+      "phrase": "l6 dense 64 0 6815 0 8087 0 4379 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "dense 64 0 6815 0 8087 0 4379 0 3670",
+      "occurrences": 1
+    },
+    {
+      "phrase": "64 0 6815 0 8087 0 4379 0 3670 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 6815 0 8087 0 4379 0 3670 0 1437",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6815 0 8087 0 4379 0 3670 0 1437 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 8087 0 4379 0 3670 0 1437 0 4586",
+      "occurrences": 1
+    },
+    {
+      "phrase": "8087 0 4379 0 3670 0 1437 0 4586 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4379 0 3670 0 1437 0 4586 0 3535",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4379 0 3670 0 1437 0 4586 0 3535 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 3670 0 1437 0 4586 0 3535 0 4160",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3670 0 1437 0 4586 0 3535 0 4160 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 1437 0 4586 0 3535 0 4160 0 5033",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 1530 0 4318 0 3575 0 4341 0 5312",
+      "occurrences": 1
+    },
+    {
+      "phrase": "cosine 33 3 48 3 24 5 32 9 79",
+      "occurrences": 1
+    },
+    {
+      "phrase": "33 3 48 3 24 5 32 9 79 9",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3 48 3 24 5 32 9 79 9 98",
+      "occurrences": 1
+    },
+    {
+      "phrase": "48 3 24 5 32 9 79 9 98 5",
+      "occurrences": 1
+    },
+    {
+      "phrase": "rrf 61 6 94 9 31 0 44 5 225",
+      "occurrences": 1
+    },
+    {
+      "phrase": "61 6 94 9 31 0 44 5 225 3",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6 94 9 31 0 44 5 225 3 328",
+      "occurrences": 1
+    },
+    {
+      "phrase": "94 9 31 0 44 5 225 3 328 3",
+      "occurrences": 1
+    },
+    {
+      "phrase": "38 2 313 6 25 2 281 6 84 3",
+      "occurrences": 1
+    },
+    {
+      "phrase": "2 313 6 25 2 281 6 84 3 231",
+      "occurrences": 1
+    },
+    {
+      "phrase": "313 6 25 2 281 6 84 3 231 9",
+      "occurrences": 1
+    },
+    {
+      "phrase": "cosine guided gas 42 3 56 8 33 7 42",
+      "occurrences": 1
+    },
+    {
+      "phrase": "guided gas 42 3 56 8 33 7 42 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "gas 42 3 56 8 33 7 42 0 84",
+      "occurrences": 1
+    },
+    {
+      "phrase": "42 3 56 8 33 7 42 0 84 1",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3 56 8 33 7 42 0 84 1 102",
+      "occurrences": 1
+    },
+    {
+      "phrase": "56 8 33 7 42 0 84 1 102 5",
+      "occurrences": 1
+    },
+    {
+      "phrase": "955 3 1085 4 851 9 901 4 650 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3 1085 4 851 9 901 4 650 0 821",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1085 4 851 9 901 4 650 0 821 1",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4 851 9 901 4 650 0 821 1 l6",
+      "occurrences": 1
+    },
+    {
+      "phrase": "851 9 901 4 650 0 821 1 l6 mmr",
+      "occurrences": 1
+    },
+    {
+      "phrase": "955 5 1085 7 852 1 901 6 650 1",
+      "occurrences": 1
+    },
+    {
+      "phrase": "5 1085 7 852 1 901 6 650 1 821",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1085 7 852 1 901 6 650 1 821 3",
+      "occurrences": 1
+    },
+    {
+      "phrase": "base l6 guided gas 963 2 1093 7 859 8",
+      "occurrences": 1
+    },
+    {
+      "phrase": "l6 guided gas 963 2 1093 7 859 8 909",
+      "occurrences": 1
+    },
+    {
+      "phrase": "guided gas 963 2 1093 7 859 8 909 1",
+      "occurrences": 1
+    },
+    {
+      "phrase": "gas 963 2 1093 7 859 8 909 1 653",
+      "occurrences": 1
+    },
+    {
+      "phrase": "963 2 1093 7 859 8 909 1 653 8",
+      "occurrences": 1
+    },
+    {
+      "phrase": "2 1093 7 859 8 909 1 653 8 826",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1093 7 859 8 909 1 653 8 826 7",
+      "occurrences": 1
+    },
+    {
+      "phrase": "matched greedy 1405 4 1670 7 1145 5 1479 6",
+      "occurrences": 1
+    },
+    {
+      "phrase": "greedy 1405 4 1670 7 1145 5 1479 6 650",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1405 4 1670 7 1145 5 1479 6 650 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4 1670 7 1145 5 1479 6 650 0 821",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1670 7 1145 5 1479 6 650 0 821 2",
+      "occurrences": 1
+    },
+    {
+      "phrase": "7 1145 5 1479 6 650 0 821 2 matched",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1145 5 1479 6 650 0 821 2 matched exact",
+      "occurrences": 1
+    },
+    {
+      "phrase": "5 1479 6 650 0 821 2 matched exact float",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1479 6 650 0 821 2 matched exact float 1405",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6 650 0 821 2 matched exact float 1405 2",
+      "occurrences": 1
+    },
+    {
+      "phrase": "650 0 821 2 matched exact float 1405 2 1670",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 821 2 matched exact float 1405 2 1670 6",
+      "occurrences": 1
+    },
+    {
+      "phrase": "821 2 matched exact float 1405 2 1670 6 1145",
+      "occurrences": 1
+    },
+    {
+      "phrase": "2 matched exact float 1405 2 1670 6 1145 3",
+      "occurrences": 1
+    },
+    {
+      "phrase": "matched exact float 1405 2 1670 6 1145 3 1479",
+      "occurrences": 1
+    },
+    {
+      "phrase": "exact float 1405 2 1670 6 1145 3 1479 3",
+      "occurrences": 1
+    },
+    {
+      "phrase": "float 1405 2 1670 6 1145 3 1479 3 651",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1405 2 1670 6 1145 3 1479 3 651 2",
+      "occurrences": 1
+    },
+    {
+      "phrase": "2 1670 6 1145 3 1479 3 651 2 822",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1670 6 1145 3 1479 3 651 2 822 5",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6 1145 3 1479 3 651 2 822 5 matched",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1145 3 1479 3 651 2 822 5 matched exact",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3 1479 3 651 2 822 5 matched exact integer",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1479 3 651 2 822 5 matched exact integer 1405",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3 651 2 822 5 matched exact integer 1405 2",
+      "occurrences": 1
+    },
+    {
+      "phrase": "651 2 822 5 matched exact integer 1405 2 1670",
+      "occurrences": 1
+    },
+    {
+      "phrase": "2 822 5 matched exact integer 1405 2 1670 6",
+      "occurrences": 1
+    },
+    {
+      "phrase": "822 5 matched exact integer 1405 2 1670 6 1145",
+      "occurrences": 1
+    },
+    {
+      "phrase": "5 matched exact integer 1405 2 1670 6 1145 3",
+      "occurrences": 1
+    },
+    {
+      "phrase": "matched exact integer 1405 2 1670 6 1145 3 1479",
+      "occurrences": 1
+    },
+    {
+      "phrase": "exact integer 1405 2 1670 6 1145 3 1479 3",
+      "occurrences": 1
+    },
+    {
+      "phrase": "integer 1405 2 1670 6 1145 3 1479 3 651",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1405 2 1670 6 1145 3 1479 3 651 1",
+      "occurrences": 1
+    },
+    {
+      "phrase": "2 1670 6 1145 3 1479 3 651 1 822",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1670 6 1145 3 1479 3 651 1 822 4",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6 1145 3 1479 3 651 1 822 4 matched",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1145 3 1479 3 651 1 822 4 matched random",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1405 2 1670 6 1145 4 1479 3 651 9",
+      "occurrences": 1
+    },
+    {
+      "phrase": "2 1670 6 1145 4 1479 3 651 9 824",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1670 6 1145 4 1479 3 651 9 824 8",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6 1145 4 1479 3 651 9 824 8 l2",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1145 4 1479 3 651 9 824 8 l2 dense",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4 1479 3 651 9 824 8 l2 dense 15",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1479 3 651 9 824 8 l2 dense 15 348",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3 651 9 824 8 l2 dense 15 348 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "651 9 824 8 l2 dense 15 348 0 403",
+      "occurrences": 1
+    },
+    {
+      "phrase": "9 824 8 l2 dense 15 348 0 403 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "824 8 l2 dense 15 348 0 403 0 310",
+      "occurrences": 1
+    },
+    {
+      "phrase": "8 l2 dense 15 348 0 403 0 310 5",
+      "occurrences": 1
+    },
+    {
+      "phrase": "l2 dense 15 348 0 403 0 310 5 331",
+      "occurrences": 1
+    },
+    {
+      "phrase": "dense 15 348 0 403 0 310 5 331 5",
+      "occurrences": 1
+    },
+    {
+      "phrase": "15 348 0 403 0 310 5 331 5 238",
+      "occurrences": 1
+    },
+    {
+      "phrase": "348 0 403 0 310 5 331 5 238 9",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 403 0 310 5 331 5 238 9 294",
+      "occurrences": 1
+    },
+    {
+      "phrase": "403 0 310 5 331 5 238 9 294 6",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 310 5 331 5 238 9 294 6 l6",
+      "occurrences": 1
+    },
+    {
+      "phrase": "310 5 331 5 238 9 294 6 l6 dense",
+      "occurrences": 1
+    },
+    {
+      "phrase": "5 331 5 238 9 294 6 l6 dense 15",
+      "occurrences": 1
+    },
+    {
+      "phrase": "331 5 238 9 294 6 l6 dense 15 915",
+      "occurrences": 1
+    },
+    {
+      "phrase": "5 238 9 294 6 l6 dense 15 915 8",
+      "occurrences": 1
+    },
+    {
+      "phrase": "238 9 294 6 l6 dense 15 915 8 1029",
+      "occurrences": 1
+    },
+    {
+      "phrase": "9 294 6 l6 dense 15 915 8 1029 2",
+      "occurrences": 1
+    },
+    {
+      "phrase": "294 6 l6 dense 15 915 8 1029 2 832",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6 l6 dense 15 915 8 1029 2 832 5",
+      "occurrences": 1
+    },
+    {
+      "phrase": "l6 dense 15 915 8 1029 2 832 5 882",
+      "occurrences": 1
+    },
+    {
+      "phrase": "dense 15 915 8 1029 2 832 5 882 5",
+      "occurrences": 1
+    },
+    {
+      "phrase": "15 915 8 1029 2 832 5 882 5 539",
+      "occurrences": 1
+    },
+    {
+      "phrase": "915 8 1029 2 832 5 882 5 539 6",
+      "occurrences": 1
+    },
+    {
+      "phrase": "8 1029 2 832 5 882 5 539 6 618",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1029 2 832 5 882 5 539 6 618 2",
+      "occurrences": 1
+    },
+    {
+      "phrase": "2 832 5 882 5 539 6 618 2 l2",
+      "occurrences": 1
+    },
+    {
+      "phrase": "832 5 882 5 539 6 618 2 l2 dense",
+      "occurrences": 1
+    },
+    {
+      "phrase": "5 882 5 539 6 618 2 l2 dense 64",
+      "occurrences": 1
+    },
+    {
+      "phrase": "882 5 539 6 618 2 l2 dense 64 1374",
+      "occurrences": 1
+    },
+    {
+      "phrase": "5 539 6 618 2 l2 dense 64 1374 7",
+      "occurrences": 1
+    },
+    {
+      "phrase": "539 6 618 2 l2 dense 64 1374 7 1562",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6 618 2 l2 dense 64 1374 7 1562 5",
+      "occurrences": 1
+    },
+    {
+      "phrase": "618 2 l2 dense 64 1374 7 1562 5 1242",
+      "occurrences": 1
+    },
+    {
+      "phrase": "2 l2 dense 64 1374 7 1562 5 1242 5",
+      "occurrences": 1
+    },
+    {
+      "phrase": "l2 dense 64 1374 7 1562 5 1242 5 1319",
+      "occurrences": 1
+    },
+    {
+      "phrase": "dense 64 1374 7 1562 5 1242 5 1319 6",
+      "occurrences": 1
+    },
+    {
+      "phrase": "64 1374 7 1562 5 1242 5 1319 6 763",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1374 7 1562 5 1242 5 1319 6 763 7",
+      "occurrences": 1
+    },
+    {
+      "phrase": "7 1562 5 1242 5 1319 6 763 7 912",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1562 5 1242 5 1319 6 763 7 912 2",
+      "occurrences": 1
+    },
+    {
+      "phrase": "5 1242 5 1319 6 763 7 912 2 l6",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1242 5 1319 6 763 7 912 2 l6 dense",
+      "occurrences": 1
+    },
+    {
+      "phrase": "5 1319 6 763 7 912 2 l6 dense 64",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1319 6 763 7 912 2 l6 dense 64 3799",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6 763 7 912 2 l6 dense 64 3799 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "763 7 912 2 l6 dense 64 3799 0 4322",
+      "occurrences": 1
+    },
+    {
+      "phrase": "7 912 2 l6 dense 64 3799 0 4322 2",
+      "occurrences": 1
+    },
+    {
+      "phrase": "912 2 l6 dense 64 3799 0 4322 2 3460",
+      "occurrences": 1
+    },
+    {
+      "phrase": "2 l6 dense 64 3799 0 4322 2 3460 8",
+      "occurrences": 1
+    },
+    {
+      "phrase": "l6 dense 64 3799 0 4322 2 3460 8 3630",
+      "occurrences": 1
+    },
+    {
+      "phrase": "dense 64 3799 0 4322 2 3460 8 3630 9",
+      "occurrences": 1
+    },
+    {
+      "phrase": "64 3799 0 4322 2 3460 8 3630 9 2037",
+      "occurrences": 1
+    },
+    {
+      "phrase": "3799 0 4322 2 3460 8 3630 9 2037 9",
+      "occurrences": 1
+    },
+    {
+      "phrase": "0 4322 2 3460 8 3630 9 2037 9 2437",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4322 2 3460 8 3630 9 2037 9 2437 9",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1406 5 1672 3 1146 8 1481 3 653 8",
+      "occurrences": 1
+    },
+    {
+      "phrase": "5 1672 3 1146 8 1481 3 653 8 826",
+      "occurrences": 1
+    },
+    {
+      "phrase": "1672 3 1146 8 1481 3 653 8 826 7",
+      "occurrences": 1
+    }
+  ],
+  "interpretation": "Diagnostic against this conference PDF only. This is neither an iThenticate score, a scientific-novelty percentage, nor certification of the journal's similarity threshold."
+}

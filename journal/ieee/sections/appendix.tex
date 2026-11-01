@@ -1,0 +1,34 @@
+\appendices
+\section{Detailed Quantization and Constraint Reasoning}\label{app:bounds}
+For the base, write every rounded coefficient as its exact scaled value plus an error in $[-1/2,1/2]$. The total absolute error of a fixed $k$-element set is no greater than
+\begin{equation}
+\frac{1}{2}\left(k+\binom{k}{2}\right)=\frac{k(k+1)}{4}.
+\end{equation}
+Division by $A_bk$ gives~\eqref{eq:base_quantization}. This is a worst-case bound; cancellation can make the actual error much smaller. It also applies to a fixed set rather than to the outputs of two different stochastic optimization trajectories.
+
+For refinement, let $e_A(S)=E_r(S)/(28A)-\red(S)$. Equation~\eqref{eq:refinement_bound} states $|e_A(S)|\leq1/(2A)$. Exact optimality in the encoded objective implies
+\begin{align}
+\red(S_A)+e_A(S_A)&\leq\red(S_\star)+e_A(S_\star),\\
+\red(S_A)-\red(S_\star)&\leq e_A(S_\star)-e_A(S_A)\leq1/A.
+\end{align}
+The comparison requires the same admissible domain. A quantized optimizer operating on a different pool, a different fixed head, or different score constraints is not covered by this comparison. A GAS output that does not attain the exact encoded optimum has an additional optimization gap.
+
+The score-count equivalence also clarifies ties. For the ascending triple $y_1\leq y_2\leq y_3$, $y_j\geq\theta_j$ holds exactly when at least $4-j$ of its values are at least $\theta_j$. If $y_j<\theta_j$, the first $j$ entries violate that threshold and only $3-j$ entries can meet it. The reverse implication follows by the same ordering argument. Applying this independently to each threshold proves~\eqref{eq:threshold_counts} without assuming distinct logits.
+
+\section{Native Validation Bound and Reporting Conventions}\label{app:validation}
+After applying the independent expected-state inverse, the ideal joint decision/workspace state is all zero. If $p_j=(1-\langle Z_j\rangle)/2$ denotes the probability that qubit $j$ is one, a union bound gives
+\begin{equation}
+1-|\langle 0\cdots0|\psi\rangle|^2\leq\sum_j p_j.
+\label{eq:validation_bound}
+\end{equation}
+A sum restricted to workspace qubits also bounds the probability of dirty workspace. Native validation checks this bound and the norm against $10^{-8}$ on the small instances actually simulated. For those circuits the check is phase-sensitive. It does not validate the 42 refused simulations or other instances that were not simulated.
+
+The saved legacy threshold analysis is retained in Table~\ref{tab:thresholds}. The no-marked percentage is computed over queries using their recorded cosine candidates, rather than treating seeds as independent events. The development outcomes use saved matched-sampling rankings; they are not a new threshold sweep on test judgments. Lowering a threshold can reduce empty marked sets while changing the induced ranking policy, so fallback rate alone is not an effectiveness criterion.
+
+\begin{table}[t]
+\centering\small\setlength{\tabcolsep}{3pt}
+\caption{Recorded legacy development thresholds. nDCG@5 comes from saved matched-sampling outcomes. No-marked percentages count development queries, with no new ranking or test tuning.}
+\label{tab:thresholds}\input{includes/thresholds}
+\end{table}
+
+The complete exports retain all twenty or twenty-seven measured methods, including controls omitted from compact manuscript tables. The query diagnostic CSV identifies each reference policy and candidate pool, and the seed CSV preserves request status and phase counts. A $10^{-12}$ tolerance is used consistently for numerical ties. The native resource CSV preserves the distinction between validated, memory-limited, unattempted, and synthetic cases. These reporting conventions prevent a missing measurement, a retained incumbent, and a successful quantum simulation from being represented as the same event.

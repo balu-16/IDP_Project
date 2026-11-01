@@ -1,0 +1,243 @@
+{
+  "observed_at_utc": "2026-10-25T05:24:11.935573+00:00",
+  "description": "Preserves the earlier observed external edit and explicitly records subsequent user-authorized authorship and reference updates against unchanged original snapshots.",
+  "previous_clean_check": "outside_folder_check_before_external_change.json",
+  "files": {
+    "docker-compose.yml": {
+      "initial_sha256": "273faee675b095bed00f9ea61fc012dcbe3a676de386a4f88347356906a654f5",
+      "observed_sha256": "684a8d7695f9d6ef1b3b185a1c75f30647c86a5ad0689ccdde4f167716d0d854",
+      "initial_metadata": [
+        829,
+        1789874170628884331
+      ],
+      "observed_metadata": [
+        830,
+        1792905529490984222
+      ],
+      "observed_diff": "HOST value changed from 0.0.0.0 to 0.0.0.0c; left untouched."
+    },
+    "new_paper/main.tex": {
+      "initial_sha256": "a90fda431201639b9f572992d326eaf5819ee331cac3b362153b5fa9cb0f7f60",
+      "initial_metadata": [
+        38452,
+        1792304121641076171
+      ],
+      "observed_sha256": "d4678950fbf6bb75345eaf84e2322b56b69fcf7859469501d496ed42c1460bb9",
+      "observed_metadata": [
+        41813,
+        1792992518574369568
+      ],
+      "reason": "User-authorized addition of thirteen references and the corresponding compilation, packaging and verification records.",
+      "before_task_sha256": "904f2cd8c637656d1b43f4229696947f150072e13c7c142414f2ab06d5ee4460",
+      "prior_observed_sha256": "904f2cd8c637656d1b43f4229696947f150072e13c7c142414f2ab06d5ee4460"
+    },
+    "new_paper/main.pdf": {
+      "initial_sha256": "219dc68a3d834d842b27d21e49a28762f1ea17335d4992962ebd7561286dae19",
+      "initial_metadata": [
+        106543,
+        1792304122856070735
+      ],
+      "observed_sha256": "8a51243274bd29676f1b336747932bbf1bac3d64494f478b4e1acee2f4dcfa70",
+      "observed_metadata": [
+        257315,
+        1792992519612007041
+      ],
+      "reason": "User-authorized addition of thirteen references and the corresponding compilation, packaging and verification records.",
+      "before_task_sha256": "1e2399861034a5e6ed19ed3c76e8c2ebbe9c9c9eb9247c796c3218fb2be01191",
+      "prior_observed_sha256": "1e2399861034a5e6ed19ed3c76e8c2ebbe9c9c9eb9247c796c3218fb2be01191"
+    },
+    "manuscript_support/README.md": {
+      "initial_sha256": "359aa8fd4223cce55a492da3c2dd21e5917c63cbadfe9367c5c029d0b6321d1a",
+      "initial_metadata": [
+        7029,
+        1792304058800698315
+      ],
+      "observed_sha256": "ffeff247c017e7fc6bcd5a158e83e028628724692dcdad4243032bc706457300",
+      "observed_metadata": [
+        7521,
+        1792992814465723203
+      ],
+      "reason": "User-authorized addition of thirteen references and the corresponding compilation, packaging and verification records.",
+      "before_task_sha256": "d0f7e6646196bcc6b90bb5ccd0a238c4ef9ce8fe9665a201638688473133bf7a",
+      "prior_observed_sha256": "d0f7e6646196bcc6b90bb5ccd0a238c4ef9ce8fe9665a201638688473133bf7a"
+    },
+    "manuscript_support/build_manuscript.py": {
+      "initial_sha256": "3e04f823ddc25040aeb094c24d8b8e801da6ec742ba79a246784896f8b0c3d41",
+      "initial_metadata": [
+        22224,
+        1792303912952016481
+      ],
+      "observed_sha256": "0b88f1c84c572fa47b100bd69eceda72718761380aea244aedb5de7c05fb39f2",
+      "observed_metadata": [
+        23545,
+        1792992168815724192
+      ],
+      "reason": "User-authorized addition of thirteen references and the corresponding compilation, packaging and verification records.",
+      "before_task_sha256": "a04ca72a2dd67ef812355e64e7159856c8e1818d6248bef4781a912061931dd2",
+      "prior_observed_sha256": "a04ca72a2dd67ef812355e64e7159856c8e1818d6248bef4781a912061931dd2"
+    },
+    "manuscript_support/reviewer_response.md": {
+      "initial_sha256": "b9331f883f07ca7f2673c2e47b2c5e1cd3eb1eb6bcd0cdf49a1f68cca02cfff8",
+      "initial_metadata": [
+        6054,
+        1792304122938771322
+      ],
+      "observed_sha256": "b9331f883f07ca7f2673c2e47b2c5e1cd3eb1eb6bcd0cdf49a1f68cca02cfff8",
+      "observed_metadata": [
+        6054,
+        1792992519685296742
+      ],
+      "reason": "User-authorized addition of thirteen references and the corresponding compilation, packaging and verification records.",
+      "before_task_sha256": "b9331f883f07ca7f2673c2e47b2c5e1cd3eb1eb6bcd0cdf49a1f68cca02cfff8",
+      "prior_observed_sha256": "b9331f883f07ca7f2673c2e47b2c5e1cd3eb1eb6bcd0cdf49a1f68cca02cfff8"
+    },
+    "manuscript_support/latex_source.zip": {
+      "initial_sha256": "709acf9babce76691997891a1ac8cffbb93c607ff43e4174af00f20d2d8e69fb",
+      "initial_metadata": [
+        91193,
+        1792304122957780189
+      ],
+      "observed_sha256": "a2076dba31e457eb0bfb4ce8b3c38d8a4b136ce2bf0b3c8913ca44ac5fd17a4a",
+      "observed_metadata": [
+        92215,
+        1792992519721006197
+      ],
+      "reason": "User-authorized addition of thirteen references and the corresponding compilation, packaging and verification records.",
+      "before_task_sha256": "f39ecd65cc0e082f7604d3a3f2ac278f2156ab1cda4c8d2ee914e1b43c965a7f",
+      "prior_observed_sha256": "f39ecd65cc0e082f7604d3a3f2ac278f2156ab1cda4c8d2ee914e1b43c965a7f"
+    },
+    "manuscript_support/records/provenance.json": {
+      "initial_sha256": "b8780d5648fb812f829cdeb8e888026cd1617d8d6dd8552bbbd6152832f4e172",
+      "initial_metadata": [
+        4194,
+        1792304122962685724
+      ],
+      "observed_sha256": "c47ba8ddd5b2ec2c9b28e1bdca6d7f87f7ff6a8c1325313b41d42d27094ed2c0",
+      "observed_metadata": [
+        4194,
+        1792992519730782018
+      ],
+      "reason": "User-authorized addition of thirteen references and the corresponding compilation, packaging and verification records.",
+      "before_task_sha256": "f25bd9eb2e79cc059fc4a80b82c6cd9aeaae626c9e4e0e49c9a797d41e8edf7f",
+      "prior_observed_sha256": "f25bd9eb2e79cc059fc4a80b82c6cd9aeaae626c9e4e0e49c9a797d41e8edf7f"
+    },
+    "manuscript_support/records/publication_checks.json": {
+      "initial_sha256": "a520f859d9be862b1cf250b54df732664a5e0b17306efd0aaec92371d036ebad",
+      "initial_metadata": [
+        3195,
+        1792304194430911723
+      ],
+      "observed_sha256": "72360b01e92c9b7231a23b6cd3ae6f7498cc92a93e7c557d81ac4f33d8204b35",
+      "observed_metadata": [
+        3186,
+        1792992814525225315
+      ],
+      "reason": "User-authorized addition of thirteen references and the corresponding compilation, packaging and verification records.",
+      "before_task_sha256": "828ab3bb2a14eea7ef9232263350314c237e19afbba88e1ddb9602b48004622f",
+      "prior_observed_sha256": "828ab3bb2a14eea7ef9232263350314c237e19afbba88e1ddb9602b48004622f"
+    },
+    "manuscript_support/records/visual_inspection.json": {
+      "initial_sha256": "bdc4688ce27cd6d4e82d8894e6ecd19a96b1a560787fe42c1a010a792b55b5b8",
+      "initial_metadata": [
+        1335,
+        1792304194430780751
+      ],
+      "observed_sha256": "a39b0a93f9a3ae7e19e2e2eb92b439e1fdf4e7b7bc7c7d09ce7a426b225c73e1",
+      "observed_metadata": [
+        1236,
+        1792992814524928374
+      ],
+      "reason": "User-authorized addition of thirteen references and the corresponding compilation, packaging and verification records.",
+      "before_task_sha256": "23bc9ae9cd0bb87229972508706250945ec3dc48afc36d16e64584b2ae8998de",
+      "prior_observed_sha256": "23bc9ae9cd0bb87229972508706250945ec3dc48afc36d16e64584b2ae8998de"
+    },
+    "manuscript_support/records/standalone_check.json": {
+      "initial_sha256": "c738d1f2ee629af20436386fa930facb9c88989aa43cd4f5d24ff18b87b305c4",
+      "initial_metadata": [
+        1734,
+        1792259527148205309
+      ],
+      "observed_sha256": "5e8dc1720bc8d2ed70f1824440643041255d725e514814de2bf12947bfdfc966",
+      "observed_metadata": [
+        368,
+        1792992647518818272
+      ],
+      "reason": "User-authorized addition of thirteen references and the corresponding compilation, packaging and verification records.",
+      "before_task_sha256": "d6643f74a643209dbfddfc21ce7017f1e045e2a6a56816ed12e8fca9524a8d3f",
+      "prior_observed_sha256": "d6643f74a643209dbfddfc21ce7017f1e045e2a6a56816ed12e8fca9524a8d3f"
+    },
+    "17. Financial Assistance Policy of SRM University - AP to UG and PG Students for Attending Conferences, Workshops and Competitions.pdf": {
+      "initial_sha256": null,
+      "observed_sha256": "5fb2f47e6802f1cef37e6c50862fe25c0c864832856ba392e0f380aa96195457",
+      "initial_metadata": null,
+      "observed_metadata": [
+        488229,
+        1792986893934481726
+      ],
+      "reason": "Existing user-provided financial-assistance form; retained unchanged."
+    },
+    "new_paper/README.md": {
+      "initial_sha256": "9f2f97d9c73308fc5e2a23ef396edb90c0c23473b3f1a8a2bc5ffeb2c8fc3747",
+      "initial_metadata": [
+        741,
+        1792303784083162452
+      ],
+      "observed_sha256": "a91cab6d7ed8810347bbeac6d6ca9b6a11e9ea723ad89fd5f0e74db2f91dbdc3",
+      "observed_metadata": [
+        741,
+        1792992518575714958
+      ],
+      "reason": "User-authorized addition of thirteen references and the corresponding compilation, packaging and verification records.",
+      "before_task_sha256": "9f2f97d9c73308fc5e2a23ef396edb90c0c23473b3f1a8a2bc5ffeb2c8fc3747"
+    },
+    "manuscript_support/records/bibliography_sources.json": {
+      "initial_sha256": "ac6e7daae947fd2826ef429312ed2b09dbb287b39624d8e6128d047c43b85949",
+      "initial_metadata": [
+        30997,
+        1792303560367318952
+      ],
+      "observed_sha256": "b6339799914b41abe600db573ce40bca2831aadff8318f12c8b3bbc15d36ecc5",
+      "observed_metadata": [
+        60002,
+        1792992518575524660
+      ],
+      "reason": "User-authorized addition of thirteen references and the corresponding compilation, packaging and verification records.",
+      "before_task_sha256": "ac6e7daae947fd2826ef429312ed2b09dbb287b39624d8e6128d047c43b85949"
+    },
+    "manuscript_support/records/requested_references.json": {
+      "initial_sha256": null,
+      "initial_metadata": null,
+      "observed_sha256": "15a077d24be07f4b664707c07cd2da387abb688268192ba1294e8c420e796cfc",
+      "observed_metadata": [
+        53364,
+        1792992518573293455
+      ],
+      "reason": "User-authorized addition of thirteen references and the corresponding compilation, packaging and verification records."
+    },
+    "manuscript_support/records/reference_update_checks.json": {
+      "initial_sha256": null,
+      "initial_metadata": null,
+      "observed_sha256": "b19c4d4c1c516766c82a12298b561e404022685b48ca441cbf2ea59317f5621a",
+      "observed_metadata": [
+        2548,
+        1792992814529665549
+      ],
+      "reason": "User-authorized addition of thirteen references and the corresponding compilation, packaging and verification records."
+    },
+    "new_paper/Pasted Image.png": {
+      "initial_sha256": null,
+      "initial_metadata": null,
+      "observed_sha256": "cce1e825289224b6934ad86a801f4acf1baa4d1add25a6ad1947b75e223dcc3a",
+      "observed_metadata": [
+        270892,
+        1792991632661877060
+      ],
+      "reason": "Existing user-provided image retained unchanged; unused images are preserved and are not compiler dependencies.",
+      "before_task_sha256": "cce1e825289224b6934ad86a801f4acf1baa4d1add25a6ad1947b75e223dcc3a"
+    }
+  },
+  "authorship_update_recorded_at_utc": "2026-10-26T05:03:27.664801+00:00",
+  "authorship_update_evidence": "authorship_update.json",
+  "reference_update_recorded_at_utc": "2026-10-26T05:33:34.520825+00:00",
+  "reference_update_evidence": "reference_update_checks.json"
+}

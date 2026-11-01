@@ -1,0 +1,16 @@
+% Correct intentional zero-width containers in the supplied class without
+% changing page geometry, fonts, colors, content placement, or class-file bytes.
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\@maketitle}{\noindent\box99}{\noindent\makebox[\titlewidth][l]{\box99}}{}{\PackageError{journal}{Abstract container patch failed}{}}
+\patchcmd{\@maketitle}{\noindent\box88}{\noindent\makebox[\titlewidth][l]{\box88}}{}{\PackageError{journal}{Keywords container patch failed}{}}
+\def\journal@oddfoot#1{\raisebox{#1}{\hbox to\textwidth{%
+{\footervolfont VOLUME\ \thevol, \theyear}\hfill{\footerpagefont\thepage}}}}
+\def\journal@evenfoot#1{\raisebox{#1}{\hbox to\textwidth{%
+{\footerpagefont\thepage}\hfill{\footervolfont VOLUME\ \thevol, \theyear}}}}
+\let\journal@headings\ps@headings
+\def\ps@headings{\journal@headings\def\@oddfoot{\journal@oddfoot{8pt}}\def\@evenfoot{\journal@evenfoot{8pt}}}
+\let\journal@titlepage\ps@titlepage
+\def\ps@titlepage{\journal@titlepage\def\@oddfoot{\journal@oddfoot{3pt}}\def\@evenfoot{\journal@evenfoot{3pt}}}
+\ps@headings
+\makeatother

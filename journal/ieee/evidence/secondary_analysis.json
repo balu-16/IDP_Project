@@ -1,0 +1,152 @@
+{
+  "scifact": {
+    "method": "gas_v3",
+    "reference": "gas_l6",
+    "queries": 300,
+    "coverage": {
+      "dense64": {
+        "coverage": 0.9243333333333333,
+        "ceiling8": 0.9243333333333333,
+        "size": 64.0,
+        "relevant": 1.0466666666666666
+      },
+      "shortlist15": {
+        "coverage": 0.8568888888888889,
+        "ceiling8": 0.8568888888888889,
+        "size": 15.0,
+        "relevant": 0.9666666666666667
+      },
+      "union": {
+        "coverage": 0.8903333333333334,
+        "ceiling8": 0.8903333333333334,
+        "size": 22.296666666666667,
+        "relevant": 1.0066666666666666
+      }
+    },
+    "no_relevant_in_shortlist": 40,
+    "recall_wins": 2,
+    "recall_losses": 5,
+    "redundancy_reduced_queries": 158,
+    "redundancy_increased_queries": 0,
+    "seed_variable_queries": 0,
+    "seed_recall_variable_queries": 0,
+    "mean_recall_seed_range": 0.0,
+    "max_recall_seed_range": 0.0,
+    "mean_redundancy_seed_range": 0.0,
+    "same_membership_requests": 710,
+    "mean_timing_components_ms": {
+      "retrieval_lexical_ms": 65.84506596072363,
+      "original_l6_ms": 905.243705620184,
+      "additional_l6_ms": 433.46923885983415,
+      "base_selector_ms": 7.839123319460971,
+      "refine_selector_ms": 1.5884791085651766,
+      "online_total_ms": 1413.985612868768,
+      "combined_selector_ms": 9.427602428026148
+    },
+    "mean_recall_delta": -0.0075,
+    "mean_redundancy_delta": -0.014394335540593588,
+    "mean_recall_lost_per_query": 0.014166666666666666,
+    "mean_recall_gained_per_query": 0.006666666666666667,
+    "worst_recall_delta": -1.0,
+    "best_recall_delta": 1.0,
+    "recall_ties": 293
+  },
+  "nfcorpus": {
+    "method": "gas_v3",
+    "reference": "gas_l6",
+    "queries": 323,
+    "coverage": {
+      "dense64": {
+        "coverage": 0.266620067222882,
+        "ceiling8": 0.23745644683016798,
+        "size": 64.0,
+        "relevant": 6.114551083591332
+      },
+      "shortlist15": {
+        "coverage": 0.17798613092445664,
+        "ceiling8": 0.1724889808721851,
+        "size": 15.0,
+        "relevant": 2.9690402476780187
+      },
+      "union": {
+        "coverage": 0.2027964221483483,
+        "ceiling8": 0.1942250169380004,
+        "size": 20.294117647058822,
+        "relevant": 3.674922600619195
+      }
+    },
+    "no_relevant_in_shortlist": 91,
+    "recall_wins": 15,
+    "recall_losses": 13,
+    "redundancy_reduced_queries": 135,
+    "redundancy_increased_queries": 0,
+    "seed_variable_queries": 29,
+    "seed_recall_variable_queries": 3,
+    "mean_recall_seed_range": 0.00037852461558786197,
+    "max_recall_seed_range": 0.1,
+    "mean_redundancy_seed_range": 0.00231558853458268,
+    "same_membership_requests": 957,
+    "mean_timing_components_ms": {
+      "retrieval_lexical_ms": 33.324426736810786,
+      "original_l6_ms": 756.4453790898705,
+      "additional_l6_ms": 262.4043485665095,
+      "base_selector_ms": 7.9324080495523495,
+      "refine_selector_ms": 1.387392745672072,
+      "online_total_ms": 1061.4939551884154,
+      "combined_selector_ms": 9.319800795224422
+    },
+    "mean_recall_delta": 0.0029283238693036642,
+    "mean_redundancy_delta": -0.011649104795897041,
+    "mean_recall_lost_per_query": 0.0009299235184890404,
+    "mean_recall_gained_per_query": 0.0038582473877927046,
+    "worst_recall_delta": -0.049999999999999996,
+    "best_recall_delta": 0.33333333333333337,
+    "recall_ties": 295
+  },
+  "fiqa": {
+    "method": "gas_l6",
+    "reference": "l6_only",
+    "queries": 648,
+    "coverage": {
+      "dense64": {
+        "coverage": 0.6488896434498287,
+        "ceiling8": 0.6483004178606031,
+        "size": 64.0,
+        "relevant": 1.603395061728395
+      },
+      "shortlist15": {
+        "coverage": 0.48238707879911585,
+        "ceiling8": 0.48238707879911585,
+        "size": 15.0,
+        "relevant": 1.1558641975308641
+      }
+    },
+    "no_relevant_in_shortlist": 203,
+    "recall_wins": 0,
+    "recall_losses": 0,
+    "redundancy_reduced_queries": 6,
+    "redundancy_increased_queries": 1,
+    "seed_variable_queries": 7,
+    "seed_recall_variable_queries": 0,
+    "mean_recall_seed_range": 0.0,
+    "max_recall_seed_range": 0.0,
+    "mean_redundancy_seed_range": 0.0002647588282137958,
+    "same_membership_requests": 3225,
+    "mean_timing_components_ms": {
+      "retrieval_lexical_ms": 229.00120772520032,
+      "original_l6_ms": 429.1067992870203,
+      "additional_l6_ms": 0.0,
+      "base_selector_ms": 4.059794414219882,
+      "refine_selector_ms": 0.0,
+      "online_total_ms": 662.1678014264406,
+      "combined_selector_ms": 4.059794414219882
+    },
+    "mean_recall_delta": 0.0,
+    "mean_redundancy_delta": -0.00010499542150225983,
+    "mean_recall_lost_per_query": 0.0,
+    "mean_recall_gained_per_query": 0.0,
+    "worst_recall_delta": 0.0,
+    "best_recall_delta": 0.0,
+    "recall_ties": 648
+  }
+}

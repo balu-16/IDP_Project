@@ -1,0 +1,20 @@
+{
+  "robertson2009bm25": {
+    "corrected": {
+      "volume": "3",
+      "number": "4",
+      "pages": "333--389"
+    },
+    "primary_source": "https://www.staff.city.ac.uk/~sbrp622/pubs.html",
+    "paper_pdf": "https://www.ccs.neu.edu/home/vip/teach/IRcourse/IR_surveys/robertson_foundations.pdf",
+    "reason": "DOI deposit incorrectly supplies volume 4, numbers 1\u20132, pages 1\u2013174"
+  },
+  "reimers2019sentencebert": {
+    "corrected": {
+      "pages": "3982--3992"
+    },
+    "primary_source": "https://aclanthology.org/D19-1410/",
+    "reason": "DOI deposit incorrectly supplies pages 3980\u20133990"
+  },
+  "venue_formatting": "Use actual book title rather than series title for proceedings; decode HTML entities; omit journal trademark glyphs; retain DOI metadata and display DOI through the standard note field supported by IEEEtran.bst."
+}

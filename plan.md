@@ -1,5 +1,23 @@
 # Grover evidence selection: dataset evaluation and paper revision plan
 
+## Workspace cache cleanup — 25 October 2026
+
+The user authorized removal of all project-local caches and downloaded dataset
+archives, including saved corpus embeddings and partial encoding shards. The
+source datasets, sealed experiment records, source snapshots, stop decisions,
+application documents/vector database, installed dependency code and paper
+artifacts are retained. The inventory and verification report are in
+`journal/ieee/evidence/workspace_cleanup.json` and its checksummed compressed
+inventory.
+
+Cache-preservation statements and encoded-chunk progress below describe the
+historical state before this cleanup. Model downloads and corpus embeddings
+must be restored/rebuilt and revalidated before affected studies can resume;
+archive-dependent checks require the original archives to be downloaded again.
+No download, encoding, benchmark or study restart is part of this cleanup.
+TREC-COVID remains deferred, and the failed SCIDOCS stopping decision remains
+in force. The quantum folder still contains only the faculty-review plan.
+
 ## Current status — 18 October 2026 (Asia/Kolkata)
 
 **FiQA, the queued application checks, and the independent resource study have

@@ -1,0 +1,45 @@
+{
+  "method": "Restore required package files into the isolated TEXMFHOME; the package manager metadata download stalled.",
+  "files": [
+    {
+      "package": "algorithms",
+      "source_url": "https://ctan.math.illinois.edu/systems/texlive/tlnet/archive/algorithms.tar.xz",
+      "archive_sha256": "24981ccfbd8c00c622fe9090a11a524d714ad42e294459ae5fde7e46e97f2919"
+    },
+    {
+      "package": "xurl",
+      "source_url": "https://ctan.math.illinois.edu/systems/texlive/tlnet/archive/xurl.tar.xz",
+      "archive_sha256": "b08e894cb7063f06a980e61506064ecbfa1b373b7fdc49b4c82bd80c15aaed23"
+    },
+    {
+      "file": "tex/latex/cite/cite.sty",
+      "source": "retained Tectonic bundle cache",
+      "sha256": "56979b7c69ae65bdb52de5bcd540625cae6dd70119e767db438a4826991910ea"
+    },
+    {
+      "file": "tex/latex/float/float.sty",
+      "source": "retained Tectonic bundle cache",
+      "sha256": "be4a09ab7ded44b4ce97ba20a3a3efbb061d186327d5db61f8de6a3cab5019aa"
+    },
+    {
+      "file": "fonts/tfm/public/courier/pcrr8t.tfm",
+      "source": "retained Tectonic bundle cache",
+      "sha256": "ff10f6e3c6db08b91086a61c2e0430696dafd6ae344e7b084347ccbabe81627a"
+    },
+    {
+      "file": "fonts/tfm/public/courier/pcrr8r.tfm",
+      "source": "retained Tectonic bundle cache",
+      "sha256": "013a6ef55bb5ee9768300df0f4a4d67660fc82b03085b1af358e053da1e21ca7"
+    },
+    {
+      "file": "fonts/vf/public/courier/pcrr8t.vf",
+      "source": "retained Tectonic bundle cache",
+      "sha256": "7574c2a353c9db35377bd33dac05fbb97be81e4a69dcdc5386c88dbd7def242c"
+    },
+    {
+      "file": "fonts/type1/public/courier/ucrr8a.pfb",
+      "source": "retained Tectonic bundle cache",
+      "sha256": "8816758f882b18a97a2fcdd4e496b881cd7726b8612648cbfb1c9de2d9853029"
+    }
+  ]
+}

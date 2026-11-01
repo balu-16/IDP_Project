@@ -1,0 +1,10 @@
+{
+  "distribution": "TinyTeX-1 / TeX Live",
+  "release": "v2026.10",
+  "url": "https://github.com/rstudio/tinytex-releases/releases/download/v2026.10/TinyTeX-1-linux-x86_64-v2026.10.tar.xz",
+  "archive_sha256": "4d519d6236ee6798e3ec0d8e2093d1fda01aeb267aa22c2a5586d76bcfce6566",
+  "archive_roots": [
+    ".TinyTeX"
+  ],
+  "reason": "Unmodified ieeeaccess spotcolor requires pdfLaTeX PDF primitives; Tectonic is incompatible."
+}

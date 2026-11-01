@@ -174,7 +174,10 @@ def check_upload_text(value, location):
 def bibliography_checks(tex):
     entries = re.findall(r"\\bibitem\{([^}]+)\}(.*?)(?=\n\\bibitem|\n\\end\{thebibliography\})", tex, re.S)
     keys = [key for key, _ in entries]
-    require(len(keys) == len(set(keys)) == 32, "Expected 32 unique references")
+    metadata_path = RECORDS / "bibliography_sources.json"
+    metadata = json.loads(metadata_path.read_text())
+    require(len(keys) == len(set(keys)) == metadata["target_reference_count"],
+            "Reference count disagrees with the bibliography verification record")
     body = tex.split(r"\begin{thebibliography}", 1)[0]
     expanded = re.sub(r"\\resultinput\{([^}]+)\}",
                       lambda m: (INCLUDES / m.group(1)).read_text(), body)
@@ -186,16 +189,19 @@ def bibliography_checks(tex):
                 cited.append(key)
     require(set(cited) == set(keys), "Missing or uncited bibliography entries")
     require(cited == keys, "References must follow first-citation order")
-    metadata_path = RECORDS / "bibliography_sources.json"
-    metadata = json.loads(metadata_path.read_text())
-    require(metadata["target_reference_count"] == 32 and len(metadata["new_sources"]) == 14,
+    require(len(metadata["new_sources"]) == metadata["new_reference_count"],
             "Bibliography verification metadata is incomplete")
+    requested = json.loads((RECORDS / "requested_references.json").read_text())
+    require(set(requested["required_keys"]) == set(metadata["required_source_keys"])
+            and set(requested["required_keys"]) <= set(keys),
+            "A requested reference is missing")
     by_key = dict(entries)
     for key, item in metadata["new_sources"].items():
         require(key in by_key and hashlib.sha256(by_key[key].strip().encode()).hexdigest() == item["bibitem_sha256"],
                 f"Verified reference changed: {key}")
     return {"entries": len(keys), "unique_cited_entries": len(cited),
-            "first_citation_order": True, "verified_additions": 14,
+            "first_citation_order": True, "verified_additions": len(metadata["new_sources"]),
+            "requested_references_present": len(requested["required_keys"]),
             "source_record_sha256": sha(metadata_path), "ordered_keys": keys}
 
 
@@ -220,6 +226,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--export",action="store_true",help="First regenerate verified inputs (saved rankings only)")
     parser.add_argument("--check-metrics",action="store_true",help="With --export, recheck saved rankings through trec_eval")
+    parser.add_argument("--pdflatex", help="Use this pdfLaTeX executable instead of the local Tectonic compiler")
     args=parser.parse_args()
     if args.check_metrics and not args.export:
         parser.error("--check-metrics requires --export; it checks existing rankings only")
@@ -251,7 +258,10 @@ def main():
     require(not re.search(r"\\section\*?\{Acknowledg(?:e)?ments?\}", tex, re.I),
             "The removed acknowledgement section must not be restored")
     bibliography = bibliography_checks(tex)
-    require({path.name for path in PAPER.iterdir()}=={"main.tex","main.pdf","IEEEtran.cls","README.md","includes"},
+    required_files = {"main.tex", "main.pdf", "IEEEtran.cls", "README.md", "includes"}
+    extra_files = [path for path in PAPER.iterdir() if path.name not in required_files]
+    require(required_files <= {path.name for path in PAPER.iterdir()}
+            and all(path.is_file() and path.suffix.lower() in {".png", ".jpg", ".jpeg"} for path in extra_files),
             "The upload folder contains unexpected files")
     require(all(path.is_file() and path.suffix==".tex" for path in INCLUDES.iterdir()),
             "Only LaTeX fragments belong in includes/")
@@ -262,11 +272,23 @@ def main():
     require(all(r"\ref{"+label+"}" in tex for label in labels),"Uncited figure/table")
     proofs=mathematical_checks()
     OUTPUT.mkdir(parents=True,exist_ok=True)
-    process=subprocess.run([str(ROOT/"build/tools/tectonic"),"--keep-logs","--keep-intermediates","--outdir",str(OUTPUT),str(source)],
-                           cwd=PAPER,text=True,capture_output=True)
-    (OUTPUT/"build_output.txt").write_text(process.stdout+process.stderr)
+    if args.pdflatex:
+        command = [args.pdflatex, "-interaction=nonstopmode", "-halt-on-error", "-file-line-error",
+                   "-output-directory=" + str(OUTPUT), source.name]
+        output = []
+        for _ in range(3):
+            process = subprocess.run(command, cwd=PAPER, text=True, capture_output=True)
+            output.append(process.stdout + process.stderr)
+            if process.returncode:
+                break
+        build_output = "\n".join(output)
+    else:
+        process=subprocess.run([str(ROOT/"build/tools/tectonic"),"--keep-logs","--keep-intermediates","--outdir",str(OUTPUT),str(source)],
+                               cwd=PAPER,text=True,capture_output=True)
+        build_output = process.stdout + process.stderr
+    (OUTPUT/"build_output.txt").write_text(build_output)
     if process.returncode:
-        print((process.stdout+process.stderr)[-6000:])
+        print(build_output[-6000:])
     else:
         print(f"LaTeX completed; complete diagnostics: {OUTPUT / 'build_output.txt'}")
     require(process.returncode==0,"LaTeX build failed; see build_output.txt")

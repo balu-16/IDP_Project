@@ -1,23 +1,22 @@
 {
-  "inspected_utc": "2026-10-18T06:16:34.427773+00:00",
+  "inspected_utc": "2026-10-26T05:33:34.520825+00:00",
   "pdf": "new_paper/main.pdf",
-  "pdf_sha256": "219dc68a3d834d842b27d21e49a28762f1ea17335d4992962ebd7561286dae19",
+  "pdf_sha256": "8a51243274bd29676f1b336747932bbf1bac3d64494f478b4e1acee2f4dcfa70",
+  "previous_pdf_sha256": "1e2399861034a5e6ed19ed3c76e8c2ebbe9c9c9eb9247c796c3218fb2be01191",
   "pages": 8,
-  "method": "Direct inspection of final pages 5\u20138 at 110 dpi, including corrected page-6 spacing; pages 1\u20134 verified pixel-identical to prior inspected renderings.",
-  "render_directory": "build/paragraph_spacing",
+  "method": "Direct inspection of all eight pages in adjacent-page previews after the reference update; conclusion and bibliography flow without clipping.",
+  "render_dpi": 100.8,
   "page_image_sha256": {
-    "1": "bf6e016d75521afe26dcd960c8440827d96fd529f0c6f7175e16bdd5a242e80e",
-    "2": "07f83c4122655d45a2602b449da26471158dc7172cd9c1d3d3d41be2910faaf7",
-    "3": "0c7ee43ea21626eb17879fe4badf9680272b968e18598f3668acfd99435b0c64",
-    "4": "80d11513b2808a71a71ac8f74dc2209e8056323beaff0cde49c2c2eee105328d",
-    "5": "af00c62459435a352c8d08e0d1409d77d0e7e2f54f6faaa1b5a4d33e8fda1543",
-    "6": "2d11736e0601d204ee0680e9131c10ee3f1092107a0c33dfedaa538d2900852d",
-    "7": "f1e871ae7b758700af8910d2f6e29cbe7ecb52d58001c5f9db0414eb1a6973c5",
-    "8": "5b6b976229c4463f3b946d6cd6086e209151bd8498b72222415091688c77e82d"
+    "1": "591fe7c5c9cad4bf65da16320c587d36f35bfaddb29acb3b051654e3a9f6304f",
+    "2": "12bbc5a234b40a49f3be759197fd2170a9149a0b09df6da485c92a81dbe69631",
+    "3": "2539c6fafc65946e8d21824f1a49a5dea7fab7b777a066e7b06eeb2f7d1ce79e",
+    "4": "d9ef06c522c1131d8aa219e25e2c4880eedc4b6f6c5ba777a4f85636f8bef76e",
+    "5": "763dac75167111dcd5d5177abe87f03bfe3ca198b5e8a68abed70f273481ae4f",
+    "6": "cddb99d2dec84a94dd1c09e27aaa60856d16e13cf5582c86a650d3029945a717",
+    "7": "6294a415b65fdcdba530396d8cc6b7f32a869f54669e8b3ade7f55e977bf3063",
+    "8": "424ccc7c8a75f9a3acea2e9fa38182c85be056ac7b61cbca593718980c92f176"
   },
   "no_visible_clipping_or_overlap": true,
   "all_figures_and_tables_legible": true,
-  "page_6_paragraph_spacing_corrected": true,
-  "previous_pdf_sha256": "f31f1dc6f1d2655b30260279b808722af1bce4f6da7fd8907db764b0611496a8",
-  "standalone_check": "paragraph_spacing_checks.json"
+  "standalone_check": "standalone_check.json"
 }

@@ -3,7 +3,7 @@ services:
     build:
       context: ./backend
     environment:
-      HOST: 0.0.0.0
+      HOST: 0.0.0.0c
       PORT: 8000
       CHROMA_DB_PATH: /app/chroma_db
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}

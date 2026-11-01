@@ -1,0 +1,230 @@
+{
+  "conference2026": {
+    "author": "Bala Rakesh Gundapaneni and Abdul Basith Syed and Jagadeeshbabu Borru and Naga Sravanthi Puppala",
+    "title": "{Qubit Chat: A Controlled Evaluation of Grover-Inspired Reranking for Document Retrieval}",
+    "year": "2026",
+    "note": "Accepted for the 6th International Conference on Evolutionary Computing and Mobile Sustainable Networks (ICECMSN); conference manuscript, awaiting publication"
+  },
+  "lewis2020retrieval": {
+    "author": "Patrick Lewis and Ethan Perez and Aleksandra Piktus and Fabio Petroni and Vladimir Karpukhin and Naman Goyal and Heinrich K{\\\"u}ttler and Mike Lewis and Wen-tau Yih and Tim Rockt{\\\"a}schel and Sebastian Riedel and Douwe Kiela",
+    "title": "{Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks}",
+    "booktitle": "Advances in Neural Information Processing Systems",
+    "volume": "33",
+    "pages": "9459--9474",
+    "year": "2020",
+    "url": "https://proceedings.neurips.cc/paper/2020/hash/6b493230205f780e1bc26945df7481e5-Abstract.html"
+  },
+  "wang2020minilm": {
+    "author": "Wenhui Wang and Furu Wei and Li Dong and Hangbo Bao and Nan Yang and Ming Zhou",
+    "title": "{MiniLM: Deep Self-Attention Distillation for Task-Agnostic Compression of Pre-Trained Transformers}",
+    "booktitle": "Advances in Neural Information Processing Systems",
+    "volume": "33",
+    "pages": "5776--5788",
+    "year": "2020",
+    "url": "https://arxiv.org/abs/2002.10957"
+  },
+  "thakur2021beir": {
+    "author": "Nandan Thakur and Nils Reimers and Andreas R{\\\"u}ckl{\\'e} and Abhishek Srivastava and Iryna Gurevych",
+    "title": "{BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models}",
+    "booktitle": "Proceedings of the Neural Information Processing Systems Datasets and Benchmarks Track",
+    "year": "2021",
+    "url": "https://arxiv.org/abs/2104.08663"
+  },
+  "boyer1998tight": {
+    "author": "Michel Boyer and Gilles Brassard and Peter H{\\o}yer and Alain Tapp",
+    "title": "{Tight Bounds on Quantum Searching}",
+    "journal": "Fortschritte der Physik",
+    "volume": "46",
+    "number": "4--5",
+    "pages": "493--505",
+    "year": "1998",
+    "url": "https://arxiv.org/abs/quant-ph/9605034"
+  },
+  "durr1996minimum": {
+    "author": "Christoph D{\\\"u}rr and Peter H{\\o}yer",
+    "title": "{A Quantum Algorithm for Finding the Minimum}",
+    "year": "1996",
+    "howpublished": "arXiv:quant-ph/9607014",
+    "url": "https://arxiv.org/abs/quant-ph/9607014"
+  },
+  "nogueira2019bert": {
+    "author": "Rodrigo Nogueira and Kyunghyun Cho",
+    "title": "{Passage Re-ranking with BERT}",
+    "year": "2019",
+    "howpublished": "arXiv:1901.04085",
+    "url": "https://arxiv.org/abs/1901.04085"
+  },
+  "bajaj2016msmarco": {
+    "author": "Palash Bajaj and others",
+    "title": "{MS MARCO: A Human Generated MAchine Reading COmprehension Dataset}",
+    "year": "2016",
+    "howpublished": "arXiv:1611.09268",
+    "url": "https://arxiv.org/abs/1611.09268"
+  },
+  "javadi2024qiskit": {
+    "author": "Ali Javadi-Abhari and others",
+    "title": "{Quantum Computing with Qiskit}",
+    "year": "2024",
+    "howpublished": "arXiv:2405.08810",
+    "url": "https://arxiv.org/abs/2405.08810"
+  },
+  "holm1979multiple": {
+    "author": "Sture Holm",
+    "title": "{A Simple Sequentially Rejective Multiple Test Procedure}",
+    "journal": "Scandinavian Journal of Statistics",
+    "volume": "6",
+    "number": "2",
+    "pages": "65--70",
+    "year": "1979",
+    "url": "https://www.jstor.org/stable/4615733"
+  },
+  "minilm_model": {
+    "author": "{Sentence Transformers}",
+    "title": "{all-MiniLM-L6-v2 Model Card}",
+    "howpublished": "Hugging Face",
+    "url": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2",
+    "note": "Accessed: Oct. 24, 2026"
+  },
+  "crossencoder_models": {
+    "author": "{Sentence Transformers}",
+    "title": "{MS MARCO MiniLM Cross-Encoder Model Cards}",
+    "howpublished": "Hugging Face",
+    "url": "https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2",
+    "note": "L2 control: https://huggingface.co/cross-encoder/ms-marco-MiniLM-L2-v2. Accessed: Oct. 24, 2026"
+  },
+  "trec_eval": {
+    "author": "{National Institute of Standards and Technology}",
+    "title": "{trec\\_eval}",
+    "url": "https://github.com/usnistgov/trec_eval",
+    "note": "Accessed: Oct. 24, 2026"
+  },
+  "openai_assistance": {
+    "author": "{OpenAI}",
+    "title": "{Codex}",
+    "url": "https://openai.com/codex/",
+    "note": "Software used for manuscript drafting and analysis-code assistance. Accessed: Oct. 24, 2026"
+  },
+  "puppala2023trust": {
+    "author": "Puppala, Naga Sravanthi and Manoharan, R",
+    "title": "{Trust model to identify reputed miners in blockchain pool mining}",
+    "year": "2023",
+    "booktitle": "Proc. Int. Conf. Signal Process., Comput., Electron., Power Telecommun. (IConSCEPT)",
+    "pages": "1--6",
+    "doi": "10.1109/iconscept57958.2023.10170616",
+    "note": "doi: \\nolinkurl{10.1109/iconscept57958.2023.10170616}"
+  },
+  "puppala2023cluster": {
+    "author": "Puppala, Naga Sravanthi and Manoharan, R",
+    "title": "{Cluster-based trust evaluation of blockchain miners in pool mining}",
+    "year": "2023",
+    "booktitle": "Proc. 2nd Int. Conf. Adv. Comput. Intell. Commun. (ICACIC)",
+    "pages": "1--6",
+    "doi": "10.1109/icacic59454.2023.10435217",
+    "note": "doi: \\nolinkurl{10.1109/icacic59454.2023.10435217}"
+  },
+  "puppala2024vikor": {
+    "author": "Puppala, Naga Sravanthi and Manoharan, R",
+    "title": "{Optimizing pool mining performance: a VIKOR-based model for identifying reputed miners in blockchain networks}",
+    "year": "2024",
+    "journal": "Concurrency and Computation: Practice and Experience",
+    "volume": "36",
+    "number": "21",
+    "pages": "e8211",
+    "doi": "10.1002/cpe.8211",
+    "note": "doi: \\nolinkurl{10.1002/cpe.8211}"
+  },
+  "puppala2024reputation": {
+    "author": "Puppala, Naga Sravanthi",
+    "title": "{Mitigating malicious activities in blockchain mining: the role of reputation-based protocol}",
+    "year": "2025",
+    "journal": "Security and Privacy",
+    "volume": "8",
+    "number": "4",
+    "pages": "e70052",
+    "doi": "10.1002/spy2.70052",
+    "note": "doi: \\nolinkurl{10.1002/spy2.70052}"
+  },
+  "puppala2025consensus": {
+    "author": "Puppala, Naga Sravanthi and Manoharan, R",
+    "title": "{Enhancing mining pool performance and security through optimized cluster-trust consensus mechanism in blockchain networks}",
+    "year": "2025",
+    "journal": "Concurrency and Computation: Practice and Experience",
+    "volume": "37",
+    "number": "9--11",
+    "pages": "e70077",
+    "doi": "10.1002/cpe.70077",
+    "note": "doi: \\nolinkurl{10.1002/cpe.70077}"
+  },
+  "puppala2024smnst": {
+    "author": "Puppala, Naga Sravanthi and Morampudi, Mahesh Kumar and Suggala, Ravi Kumar and Swaroop, A. H. L.",
+    "title": "{Strategic miner selection for optimizing block generation time in PoW-based blockchain pool mining using SMNST framework}",
+    "year": "2024",
+    "booktitle": "Proc. OITS Int. Conf. Inf. Technol. (OCIT)",
+    "pages": "690--695",
+    "doi": "10.1109/ocit65031.2024.00125",
+    "note": "doi: \\nolinkurl{10.1109/ocit65031.2024.00125}"
+  },
+  "puppala2024svm": {
+    "author": "Battina, Srinuvas Kumar and Suggala, Ravi Kumar and Dangeti, Srinivasa Rao and Kumar, Meriga Kiran and Vadrevu, Pavan Kumar and Puppala, Naga Sravanthi",
+    "title": "{Secure pool mining through SVM-based miner classification and computation validation in blockchain networks}",
+    "year": "2024",
+    "booktitle": "Proc. OITS Int. Conf. Inf. Technol. (OCIT)",
+    "pages": "554--559",
+    "doi": "10.1109/ocit65031.2024.00102",
+    "note": "doi: \\nolinkurl{10.1109/ocit65031.2024.00102}"
+  },
+  "puppala2025marine": {
+    "author": "Sai, Pyneni Likith and Venkat, Kadamati Giri and Puppala, Naga Sravanthi and Shankar, Thota Mohan Ravi and Lanka, Lasya Priya Valli Anjani and Bharadwaja, Tunuguntla",
+    "title": "{Detecting marine plastic waste using aerial and satellite images: a multimodal fusion approach}",
+    "year": "2025",
+    "booktitle": "Proc. 1st Int. Conf. Data Sci. Intell. Netw. Comput. (ICDSINC)",
+    "pages": "42--47",
+    "doi": "10.1109/icdsinc66221.2025.11448230",
+    "note": "doi: \\nolinkurl{10.1109/icdsinc66221.2025.11448230}"
+  },
+  "sravanthi2026incident": {
+    "author": "Sravanthi, Puppala Naga and Vardhan, Pitta Venkata Leela and Byraju, Guna Vardhan and Annamneedu, Sravya",
+    "title": "{Incident-aware reinforcement learning for automated blockchain smart contract vulnerability detection and repair}",
+    "year": "2026",
+    "booktitle": "Proc. 9th Int. Conf. Comput. Methodol. Commun. (ICCMC)",
+    "pages": "871--877",
+    "doi": "10.1109/iccmc69250.2026.11625095",
+    "note": "doi: \\nolinkurl{10.1109/iccmc69250.2026.11625095}"
+  },
+  "sravanthi2025fraud": {
+    "author": "Bhimineni, Sumana and Susmitha, Chimirala Surya and Korukonda, Hemsundhar and Kandimalla, Eshwar Sai and Puppala, Naga Sravanthi",
+    "title": "{Fraud detection in financial transactions: a rule-based and machine learning approach}",
+    "year": "2025",
+    "booktitle": "Proc. Int. Conf. Emerg. Trends Signal Process. Comput. Intell. (ICCSPCI)",
+    "pages": "1--7",
+    "doi": "10.1109/iccspci68199.2025.11451569",
+    "note": "doi: \\nolinkurl{10.1109/iccspci68199.2025.11451569}"
+  },
+  "sravanthi2025plant": {
+    "author": "Chikkala, Sri Harsha Vardhan and Tumma, Triyek Reddy and Sravanthi, Puppala Naga and Paila, Lohith Venkata Simhachalam",
+    "title": "{Hybrid deep learning pipeline with CNN-based feature embeddings and dimensionality reduction for plant disease detection}",
+    "year": "2025",
+    "booktitle": "Proc. 1st Int. Conf. Data Sci. Intell. Netw. Comput. (ICDSINC)",
+    "pages": "735--740",
+    "doi": "10.1109/icdsinc66221.2025.11448138",
+    "note": "doi: \\nolinkurl{10.1109/icdsinc66221.2025.11448138}"
+  },
+  "sravanthi2025traffic": {
+    "author": "Varshithachowdary, Ganga and Yasaswini, Manam and Meghana, Mahipathi and Puppala, Naga Sravanthi",
+    "title": "{A hybrid machine learning and deep learning approach for traffic volume classification and forecasting}",
+    "year": "2025",
+    "booktitle": "Proc. 1st Int. Conf. Data Sci. Intell. Netw. Comput. (ICDSINC)",
+    "pages": "58--63",
+    "doi": "10.1109/icdsinc66221.2025.11448208",
+    "note": "doi: \\nolinkurl{10.1109/icdsinc66221.2025.11448208}"
+  },
+  "sravanthi2026harvest": {
+    "author": "Puppala, Naga Sravanthi and Rohith, Uppala Venkata Sri Siva Sai and Moganti, Reethu Priya and Chebiyyam, Sri Koumudhi",
+    "title": "{Visionary harvest: integrating custom blur layers into VGG19 for obscured edible classification}",
+    "year": "2026",
+    "booktitle": "Proc. 9th Int. Conf. Comput. Methodol. Commun. (ICCMC)",
+    "pages": "1548--1553",
+    "doi": "10.1109/iccmc69250.2026.11625194",
+    "note": "doi: \\nolinkurl{10.1109/iccmc69250.2026.11625194}"
+  }
+}

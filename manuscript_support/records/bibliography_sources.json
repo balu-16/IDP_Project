@@ -1,9 +1,9 @@
 {
   "schema": "manuscript-bibliography-sources-v1",
-  "verified_utc": "2026-10-18T06:06:00.366728+00:00",
+  "verified_utc": "2026-10-26T05:28:38.572418+00:00",
   "original_reference_count": 18,
-  "target_reference_count": 32,
-  "new_reference_count": 14,
+  "target_reference_count": 40,
+  "new_reference_count": 22,
   "all_new_sources_have_contextual_citations": true,
   "new_sources": {
     "wadden2020scifact": {
@@ -344,94 +344,6 @@
       },
       "verification_method": "Publisher-deposited DOI metadata via Crossref; primary record and citation context reviewed."
     },
-    "bajaj2016msmarco": {
-      "purpose": "Cross-encoder training-task provenance",
-      "primary_source": "https://arxiv.org/abs/1611.09268",
-      "bibitem": "P. Bajaj \\textit{et al.}, ``MS MARCO: A human generated machine reading comprehension dataset,'' arXiv:1611.09268, 2016.",
-      "bibitem_sha256": "eda93fe45b3b259df8e5b061cae8eeb91a805d74bf4bc65fcc7eddffc2609f66",
-      "verification_method": "Primary publisher/author record inspected via web; title, authors, year and applicable venue/pages verified.",
-      "year_note": "2016 follows the dataset maintainer citation recommendation; the author list follows the expanded arXiv record.",
-      "additional_source": "https://microsoft.github.io/msmarco/Datasets"
-    },
-    "devlin2019bert": {
-      "purpose": "Contextual encoder foundation",
-      "primary_source": "https://aclanthology.org/N19-1423/",
-      "bibitem": "J. Devlin, M.-W. Chang, K. Lee, and K. Toutanova, ``BERT: Pre-training of deep bidirectional transformers for language understanding,'' in \\textit{Proc. NAACL-HLT}, 2019, pp. 4171--4186, doi: 10.18653/v1/N19-1423.",
-      "bibitem_sha256": "65b29d7ab7e73dfb028db883031a42993ae00ccc7e56ec219672a54e65db7585",
-      "publisher_registered_metadata": {
-        "doi": "10.18653/v1/n19-1423",
-        "title": [
-          "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding"
-        ],
-        "authors": [
-          {
-            "given": "Jacob",
-            "family": "Devlin",
-            "sequence": "first",
-            "affiliation": [],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          },
-          {
-            "given": "Ming-Wei",
-            "family": "Chang",
-            "sequence": "additional",
-            "affiliation": [],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          },
-          {
-            "given": "Kenton",
-            "family": "Lee",
-            "sequence": "additional",
-            "affiliation": [],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          },
-          {
-            "given": "Kristina",
-            "family": "Toutanova",
-            "sequence": "additional",
-            "affiliation": [],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          }
-        ],
-        "container": [
-          "Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers)"
-        ],
-        "volume": null,
-        "issue": null,
-        "page": "4171-4186",
-        "article-number": null,
-        "published": {
-          "date-parts": [
-            [
-              2019
-            ]
-          ]
-        },
-        "source_url": "https://api.crossref.org/works/10.18653%2Fv1%2FN19-1423",
-        "publisher": "Association for Computational Linguistics"
-      },
-      "verification_method": "Publisher-deposited DOI metadata via Crossref; primary record and citation context reviewed."
-    },
     "wang2020minilm": {
       "purpose": "Distilled transformer model family",
       "primary_source": "https://proceedings.neurips.cc/paper/2020/hash/3f5ee243547dee91fbd053c1c4a845aa-Abstract.html",
@@ -439,277 +351,6 @@
       "bibitem_sha256": "3cb9278f6e5e6522ffffa5d6e364a477460dd6d22e54d867a35a1b27490209a4",
       "verification_method": "Primary publisher/author record inspected via web; title, authors, year and applicable venue/pages verified.",
       "publisher_bibtex": "@inproceedings{NEURIPS2020_3f5ee243,\n author = {Wang, Wenhui and Wei, Furu and Dong, Li and Bao, Hangbo and Yang, Nan and Zhou, Ming},\n booktitle = {Advances in Neural Information Processing Systems},\n editor = {H. Larochelle and M. Ranzato and R. Hadsell and M.F. Balcan and H. Lin},\n pages = {5776--5788},\n publisher = {Curran Associates, Inc.},\n title = {MiniLM: Deep Self-Attention Distillation for Task-Agnostic Compression of Pre-Trained Transformers},\n url = {https://proceedings.neurips.cc/paper_files/paper/2020/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf},\n volume = {33},\n year = {2020}\n}\n"
-    },
-    "karpukhin2020dpr": {
-      "purpose": "Related dual-encoder architecture",
-      "primary_source": "https://aclanthology.org/2020.emnlp-main.550/",
-      "bibitem": "V. Karpukhin \\textit{et al.}, ``Dense passage retrieval for open-domain question answering,'' in \\textit{Proc. EMNLP}, 2020, pp. 6769--6781, doi: 10.18653/v1/2020.emnlp-main.550.",
-      "bibitem_sha256": "1a0703db9e8d2cddfba12a5f4546e35ac7e1a7483d0c700b7ec2e2efc7f320df",
-      "publisher_registered_metadata": {
-        "doi": "10.18653/v1/2020.emnlp-main.550",
-        "title": [
-          "Dense Passage Retrieval for Open-Domain Question Answering"
-        ],
-        "authors": [
-          {
-            "given": "Vladimir",
-            "family": "Karpukhin",
-            "sequence": "first",
-            "affiliation": [],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          },
-          {
-            "given": "Barlas",
-            "family": "Oguz",
-            "sequence": "additional",
-            "affiliation": [],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          },
-          {
-            "given": "Sewon",
-            "family": "Min",
-            "sequence": "additional",
-            "affiliation": [],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          },
-          {
-            "given": "Patrick",
-            "family": "Lewis",
-            "sequence": "additional",
-            "affiliation": [],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          },
-          {
-            "given": "Ledell",
-            "family": "Wu",
-            "sequence": "additional",
-            "affiliation": [],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          },
-          {
-            "given": "Sergey",
-            "family": "Edunov",
-            "sequence": "additional",
-            "affiliation": [],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          },
-          {
-            "given": "Danqi",
-            "family": "Chen",
-            "sequence": "additional",
-            "affiliation": [],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          },
-          {
-            "given": "Wen-tau",
-            "family": "Yih",
-            "sequence": "additional",
-            "affiliation": [],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          }
-        ],
-        "container": [
-          "Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)"
-        ],
-        "volume": null,
-        "issue": null,
-        "page": "6769-6781",
-        "article-number": null,
-        "published": {
-          "date-parts": [
-            [
-              2020
-            ]
-          ]
-        },
-        "source_url": "https://api.crossref.org/works/10.18653%2Fv1%2F2020.emnlp-main.550",
-        "publisher": "Association for Computational Linguistics"
-      },
-      "verification_method": "Publisher-deposited DOI metadata via Crossref; primary record and citation context reviewed."
-    },
-    "khattab2020colbert": {
-      "purpose": "Related late-interaction architecture",
-      "primary_source": "https://arxiv.org/abs/2004.12832",
-      "bibitem": "O. Khattab and M. Zaharia, ``ColBERT: Efficient and effective passage search via contextualized late interaction over BERT,'' in \\textit{Proc. 43rd Int. ACM SIGIR Conf.}, 2020, pp. 39--48, doi: 10.1145/3397271.3401075.",
-      "bibitem_sha256": "807cc909841cc0fc8aa8727e2adf43feb06393db4dcedcc9bf2725d0b8ab299b",
-      "publisher_registered_metadata": {
-        "doi": "10.1145/3397271.3401075",
-        "title": [
-          "ColBERT"
-        ],
-        "authors": [
-          {
-            "given": "Omar",
-            "family": "Khattab",
-            "sequence": "first",
-            "affiliation": [
-              {
-                "name": "Stanford University, Stanford, CA, USA"
-              }
-            ],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          },
-          {
-            "given": "Matei",
-            "family": "Zaharia",
-            "sequence": "additional",
-            "affiliation": [
-              {
-                "name": "Stanford University, Stanford, CA, USA"
-              }
-            ],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          }
-        ],
-        "container": [
-          "Proceedings of the 43rd International ACM SIGIR Conference on Research and Development in Information Retrieval"
-        ],
-        "volume": null,
-        "issue": null,
-        "page": "39-48",
-        "article-number": null,
-        "published": {
-          "date-parts": [
-            [
-              2020,
-              7,
-              25
-            ]
-          ]
-        },
-        "source_url": "https://api.crossref.org/works/10.1145%2F3397271.3401075",
-        "publisher": "ACM"
-      },
-      "verification_method": "Publisher-deposited DOI metadata via Crossref; primary record and citation context reviewed."
-    },
-    "nogueira2020seq2seq": {
-      "purpose": "Related sequence-to-sequence ranking architecture",
-      "primary_source": "https://aclanthology.org/2020.findings-emnlp.63/",
-      "bibitem": "R. Nogueira, Z. Jiang, R. Pradeep, and J. Lin, ``Document ranking with a pretrained sequence-to-sequence model,'' in \\textit{Findings of EMNLP}, 2020, pp. 708--718, doi: 10.18653/v1/2020.findings-emnlp.63.",
-      "bibitem_sha256": "d180c8df2388d2ad3ec6e753869ded1d40a2a67e5bc1c5ee02e95b4f15d31de2",
-      "publisher_registered_metadata": {
-        "doi": "10.18653/v1/2020.findings-emnlp.63",
-        "title": [
-          "Document Ranking with a Pretrained Sequence-to-Sequence Model"
-        ],
-        "authors": [
-          {
-            "given": "Rodrigo",
-            "family": "Nogueira",
-            "sequence": "first",
-            "affiliation": [],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          },
-          {
-            "given": "Zhiying",
-            "family": "Jiang",
-            "sequence": "additional",
-            "affiliation": [],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          },
-          {
-            "given": "Ronak",
-            "family": "Pradeep",
-            "sequence": "additional",
-            "affiliation": [],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          },
-          {
-            "given": "Jimmy",
-            "family": "Lin",
-            "sequence": "additional",
-            "affiliation": [],
-            "role": [
-              {
-                "vocabulary": "crossref",
-                "role": "author"
-              }
-            ]
-          }
-        ],
-        "container": [
-          "Findings of the Association for Computational Linguistics: EMNLP 2020"
-        ],
-        "volume": null,
-        "issue": null,
-        "page": "708-718",
-        "article-number": null,
-        "published": {
-          "date-parts": [
-            [
-              2020
-            ]
-          ]
-        },
-        "source_url": "https://api.crossref.org/works/10.18653%2Fv1%2F2020.findings-emnlp.63",
-        "publisher": "Association for Computational Linguistics"
-      },
-      "verification_method": "Publisher-deposited DOI metadata via Crossref; primary record and citation context reviewed."
     },
     "jarvelin2002gain": {
       "purpose": "Discounted cumulative-gain evaluation",
@@ -915,6 +556,1198 @@
         "publisher": "American Physical Society (APS)"
       },
       "verification_method": "Publisher-deposited DOI metadata via Crossref; primary record and citation context reviewed."
+    },
+    "puppala2023trust": {
+      "purpose": "Trust scoring for selecting blockchain miners.",
+      "primary_source": "https://doi.org/10.1109/iconscept57958.2023.10170616",
+      "bibitem": "N. S. Puppala, and R. Manoharan, ``Trust model to identify reputed miners in blockchain pool mining,'' in \\textit{Proc. Int. Conf. Signal Process., Comput., Electron., Power Telecommun. (IConSCEPT)}, 2023, pp. 1--6, doi: \\nolinkurl{10.1109/iconscept57958.2023.10170616}.",
+      "bibitem_sha256": "2073be18eaf29f4cc8e2bb5478d8e8b97f44f5fe2770c4e29510704818f7f52d",
+      "publisher_registered_metadata": {
+        "DOI": "10.1109/iconscept57958.2023.10170616",
+        "author": [
+          {
+            "given": "Naga Sravanthi",
+            "family": "Puppala",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "Puducherry Technological University,Computer Science &#x0026; Engineering,Puducherry,India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "R",
+            "family": "Manoharan.",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Puducherry Technological University,Computer Science &#x0026; Engineering,Puducherry,India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "title": [
+          "Trust Model to Identify Reputed Miners in Blockchain Pool Mining"
+        ],
+        "container-title": [
+          "2023 International Conference on Signal Processing, Computation, Electronics, Power and Telecommunication (IConSCEPT)"
+        ],
+        "type": "proceedings-article",
+        "published": {
+          "date-parts": [
+            [
+              2023,
+              5,
+              25
+            ]
+          ]
+        },
+        "page": "1-6"
+      },
+      "verification_method": "Publisher-deposited Crossref DOI metadata; author order, title, date, venue and pages retained."
+    },
+    "puppala2023cluster": {
+      "purpose": "Cluster-based miner trust evaluation.",
+      "primary_source": "https://doi.org/10.1109/icacic59454.2023.10435217",
+      "bibitem": "N. S. Puppala, and R. Manoharan, ``Cluster-based trust evaluation of blockchain miners in pool mining,'' in \\textit{Proc. 2nd Int. Conf. Adv. Comput. Intell. Commun. (ICACIC)}, 2023, pp. 1--6, doi: \\nolinkurl{10.1109/icacic59454.2023.10435217}.",
+      "bibitem_sha256": "50288d439b737199a4a3bde94cfee7e16ea51aa69454b45a47b5ffdabecd56fd",
+      "publisher_registered_metadata": {
+        "DOI": "10.1109/icacic59454.2023.10435217",
+        "author": [
+          {
+            "given": "Naga Sravanthi",
+            "family": "Puppala",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "Puducherry Technological University,Computer Science and Engineering,Puducherry,India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "R",
+            "family": "Manoharan",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Puducherry Technological University,Computer Science and Engineering,Puducherry,India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "title": [
+          "Cluster-based Trust Evaluation of Blockchain Miners in Pool Mining"
+        ],
+        "container-title": [
+          "2023 Second International Conference on Advances in Computational Intelligence and Communication (ICACIC)"
+        ],
+        "type": "proceedings-article",
+        "published": {
+          "date-parts": [
+            [
+              2023,
+              12,
+              7
+            ]
+          ]
+        },
+        "page": "1-6"
+      },
+      "verification_method": "Publisher-deposited Crossref DOI metadata; author order, title, date, venue and pages retained."
+    },
+    "puppala2024vikor": {
+      "purpose": "Multi-criteria ranking for mining-pool selection.",
+      "primary_source": "https://doi.org/10.1002/cpe.8211",
+      "bibitem": "N. S. Puppala, and R. Manoharan, ``Optimizing pool mining performance: a VIKOR-based model for identifying reputed miners in blockchain networks,'' \\textit{Concurrency and Computation: Practice and Experience}, vol. 36, no. 21, Art. no. e8211, 2024, doi: \\nolinkurl{10.1002/cpe.8211}.",
+      "bibitem_sha256": "c6228c72b8df9b4e96d3055fa998982346719923e5bedc42b53774346c113fc9",
+      "publisher_registered_metadata": {
+        "DOI": "10.1002/cpe.8211",
+        "author": [
+          {
+            "ORCID": "https://orcid.org/0009-0006-3255-2194",
+            "authenticated-orcid": false,
+            "given": "Naga Sravanthi",
+            "family": "Puppala",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "Computer Science and Engineering Puducherry Technological University  Puducherry India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "R.",
+            "family": "Manoharan",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Computer Science and Engineering Puducherry Technological University  Puducherry India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "title": [
+          "Optimizing pool mining performance: A <scp>VIKOR</scp>\u2010based model for identifying reputed miners in blockchain networks"
+        ],
+        "container-title": [
+          "Concurrency and Computation: Practice and Experience"
+        ],
+        "type": "journal-article",
+        "published": {
+          "date-parts": [
+            [
+              2024,
+              6,
+              23
+            ]
+          ]
+        },
+        "volume": "36",
+        "issue": "21",
+        "article-number": "e8211"
+      },
+      "verification_method": "Publisher-deposited Crossref DOI metadata; author order, title, date, venue and pages retained."
+    },
+    "puppala2024reputation": {
+      "purpose": "Reputation-based mining security.",
+      "primary_source": "https://doi.org/10.1002/spy2.70052",
+      "bibitem": "N. S. Puppala, ``Mitigating malicious activities in blockchain mining: the role of reputation-based protocol,'' \\textit{Security and Privacy}, vol. 8, no. 4, Art. no. e70052, 2025, doi: \\nolinkurl{10.1002/spy2.70052}.",
+      "bibitem_sha256": "e89a2ecbfd8b20b28e91500244e041847ec0be3a9f3ae8afb989506585b5b70f",
+      "publisher_registered_metadata": {
+        "DOI": "10.1002/spy2.70052",
+        "author": [
+          {
+            "ORCID": "https://orcid.org/0009-0006-3255-2194",
+            "authenticated-orcid": false,
+            "given": "Naga Sravanthi",
+            "family": "Puppala",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "Department of Computer Science and Engineering, School of Engineering and Applied Sciences SRM University, AP  Amaravathi India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "title": [
+          "Mitigating Malicious Activities in Blockchain Mining: The Role of Reputation\u2010Based Protocol"
+        ],
+        "container-title": [
+          "SECURITY AND PRIVACY"
+        ],
+        "type": "journal-article",
+        "published": {
+          "date-parts": [
+            [
+              2025,
+              6
+            ]
+          ]
+        },
+        "volume": "8",
+        "issue": "4",
+        "article-number": "e70052"
+      },
+      "verification_method": "Publisher-deposited Crossref DOI metadata; author order, title, date, venue and pages retained."
+    },
+    "puppala2025consensus": {
+      "purpose": "Cluster-trust pool consensus.",
+      "primary_source": "https://doi.org/10.1002/cpe.70077",
+      "bibitem": "N. S. Puppala, and R. Manoharan, ``Enhancing mining pool performance and security through optimized cluster-trust consensus mechanism in blockchain networks,'' \\textit{Concurrency and Computation: Practice and Experience}, vol. 37, no. 9--11, Art. no. e70077, 2025, doi: \\nolinkurl{10.1002/cpe.70077}.",
+      "bibitem_sha256": "24de4737e8ff96f0da8d7a2eb367d4ea2a2d9f80acd2d1584e680d2c1b46b350",
+      "publisher_registered_metadata": {
+        "DOI": "10.1002/cpe.70077",
+        "author": [
+          {
+            "ORCID": "https://orcid.org/0009-0006-3255-2194",
+            "authenticated-orcid": false,
+            "given": "Naga Sravanthi",
+            "family": "Puppala",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "Computer Science and Engineering Puducherry Technological University  Puducherry India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "R.",
+            "family": "Manoharan",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Computer Science and Engineering Puducherry Technological University  Puducherry India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "title": [
+          "Enhancing Mining Pool Performance and Security Through Optimized Cluster\u2010Trust Consensus Mechanism in Blockchain Networks"
+        ],
+        "container-title": [
+          "Concurrency and Computation: Practice and Experience"
+        ],
+        "type": "journal-article",
+        "published": {
+          "date-parts": [
+            [
+              2025,
+              4,
+              22
+            ]
+          ]
+        },
+        "volume": "37",
+        "issue": "9-11",
+        "article-number": "e70077"
+      },
+      "verification_method": "Publisher-deposited Crossref DOI metadata; author order, title, date, venue and pages retained."
+    },
+    "puppala2024smnst": {
+      "purpose": "Task-specific miner selection.",
+      "primary_source": "https://doi.org/10.1109/ocit65031.2024.00125",
+      "bibitem": "N. S. Puppala, M. K. Morampudi, R. K. Suggala, and A. H. L. Swaroop, ``Strategic miner selection for optimizing block generation time in PoW-based blockchain pool mining using SMNST framework,'' in \\textit{Proc. OITS Int. Conf. Inf. Technol. (OCIT)}, 2024, pp. 690--695, doi: \\nolinkurl{10.1109/ocit65031.2024.00125}.",
+      "bibitem_sha256": "6ea03a27d61ef2402e5fd3e94826c5f693add7c8f50bdb8fbbbbcad817b52577",
+      "publisher_registered_metadata": {
+        "DOI": "10.1109/ocit65031.2024.00125",
+        "author": [
+          {
+            "given": "Naga Sravanthi",
+            "family": "Puppala",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "School of Engineering and Applied Sciences, SRM University AP,Department of Computer Science and Engineering,Amaravati,India,522240"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Mahesh Kumar",
+            "family": "Morampudi",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "School of Engineering and Applied Sciences, SRM University AP,Department of Computer Science and Engineering,Amaravati,India,522240"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Ravi Kumar",
+            "family": "Suggala",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Shri Vishnu Engineering College for Women,Department of Information Technology,Bhimavaram,India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "AHL",
+            "family": "Swaroop",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Seshadri Rao Gudlavalleru Engineering College,Department of Civil Engineering,Gudlavalleru,India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "title": [
+          "Strategic Miner Selection for Optimizing Block Generation Time in PoW-Based Blockchain Pool Mining Using SMNST Framework"
+        ],
+        "container-title": [
+          "2024 OITS International Conference on Information Technology (OCIT)"
+        ],
+        "type": "proceedings-article",
+        "published": {
+          "date-parts": [
+            [
+              2024,
+              12,
+              12
+            ]
+          ]
+        },
+        "page": "690-695"
+      },
+      "verification_method": "Publisher-deposited Crossref DOI metadata; author order, title, date, venue and pages retained."
+    },
+    "puppala2024svm": {
+      "purpose": "SVM-based miner classification.",
+      "primary_source": "https://doi.org/10.1109/ocit65031.2024.00102",
+      "bibitem": "S. K. Battina \\textit{et al.}, ``Secure pool mining through SVM-based miner classification and computation validation in blockchain networks,'' in \\textit{Proc. OITS Int. Conf. Inf. Technol. (OCIT)}, 2024, pp. 554--559, doi: \\nolinkurl{10.1109/ocit65031.2024.00102}.",
+      "bibitem_sha256": "fdd8453a1cbab4aa03f98e1f15ebaac15cb377a21cb773236eb30523562b0af7",
+      "publisher_registered_metadata": {
+        "DOI": "10.1109/ocit65031.2024.00102",
+        "author": [
+          {
+            "given": "Srinuvas Kumar",
+            "family": "Battina",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "SR Gudlavalleru Engineering College, Gudlavalleru, AP,Information Technology,Seshadri Rao Knowledge Village,India,521356"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Ravi Kumar",
+            "family": "Suggala",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Shri Vishnu Engineering College for Women,Department of Information Technology,Bhimavaram,India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Srinivasa Rao",
+            "family": "Dangeti",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Shri Vishnu Engineering College for Women,Department of Information Technology,Bhimavaram,India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Meriga Kiran",
+            "family": "Kumar",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Lakireddy Bali Reddy College of Engineering,Department of Computer Science and Engineering,Mylavaram,India,521230"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Pavan Kumar",
+            "family": "Vadrevu",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "Shri Vishnu Engineering College for Women,Department of Information Technology,Bhimavaram,India"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Naga Sravanthi",
+            "family": "Puppala",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "School of Engineering and Applied Sciences, SRM University AP,Department of Computer Science and Engineering,Amaravati,India,522240"
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "title": [
+          "Secure Pool Mining Through SVM-Based Miner Classification and Computation Validation in Blockchain Networks"
+        ],
+        "container-title": [
+          "2024 OITS International Conference on Information Technology (OCIT)"
+        ],
+        "type": "proceedings-article",
+        "published": {
+          "date-parts": [
+            [
+              2024,
+              12,
+              12
+            ]
+          ]
+        },
+        "page": "554-559"
+      },
+      "verification_method": "Publisher-deposited Crossref DOI metadata; author order, title, date, venue and pages retained."
+    },
+    "puppala2025marine": {
+      "purpose": "Multimodal image classification application context.",
+      "primary_source": "https://doi.org/10.1109/icdsinc66221.2025.11448230",
+      "bibitem": "P. L. Sai \\textit{et al.}, ``Detecting marine plastic waste using aerial and satellite images: a multimodal fusion approach,'' in \\textit{Proc. 1st Int. Conf. Data Sci. Intell. Netw. Comput. (ICDSINC)}, 2025, pp. 42--47, doi: \\nolinkurl{10.1109/icdsinc66221.2025.11448230}.",
+      "bibitem_sha256": "764693de74263736e710325cc65b649426c1725ced198ddaeac8343e260daaae",
+      "publisher_registered_metadata": {
+        "DOI": "10.1109/icdsinc66221.2025.11448230",
+        "author": [
+          {
+            "given": "Pyneni.Likith",
+            "family": "Sai",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "SRM University AP,Department of Computer Science and Technology,Guntur,India"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Kadamati.Giri",
+            "family": "Venkat",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University AP,Department of Computer Science and Technology,Guntur,India"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Naga Sravanthi",
+            "family": "Puppala",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University AP,Department of Computer Science and Technology,Guntur,India"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Thota.Mohan Ravi",
+            "family": "Shankar",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University AP,Department of Computer Science and Technology,Guntur,India"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Lasya Priya Valli Anjani",
+            "family": "Lanka",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University AP,Department of Computer Science and Technology,Guntur,India"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Tunuguntla.",
+            "family": "Bharadwaja",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University AP,Department of Computer Science and Technology,Guntur,India"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ],
+        "title": [
+          "Detecting Marine Plastic Waste Using Aerial and Satellite Images: A Multimodal Fusion Approach"
+        ],
+        "container-title": [
+          "2025 1st International Conference on Data Science and Intelligent Network Computing (ICDSINC)"
+        ],
+        "type": "proceedings-article",
+        "published": {
+          "date-parts": [
+            [
+              2025,
+              12,
+              9
+            ]
+          ]
+        },
+        "page": "42-47"
+      },
+      "verification_method": "Publisher-deposited Crossref DOI metadata; author order, title, date, venue and pages retained."
+    },
+    "sravanthi2026incident": {
+      "purpose": "Smart-contract vulnerability detection and repair.",
+      "primary_source": "https://doi.org/10.1109/iccmc69250.2026.11625095",
+      "bibitem": "P. N. Sravanthi, P. V. L. Vardhan, G. V. Byraju, and S. Annamneedu, ``Incident-aware reinforcement learning for automated blockchain smart contract vulnerability detection and repair,'' in \\textit{Proc. 9th Int. Conf. Comput. Methodol. Commun. (ICCMC)}, 2026, pp. 871--877, doi: \\nolinkurl{10.1109/iccmc69250.2026.11625095}.",
+      "bibitem_sha256": "d3d8e12ab0aabb13e35484e90207421e58879d91867ec81b3b3f0511e3350532",
+      "publisher_registered_metadata": {
+        "DOI": "10.1109/iccmc69250.2026.11625095",
+        "author": [
+          {
+            "given": "Puppala Naga",
+            "family": "Sravanthi",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "SRM University",
+                "place": [
+                  "Amaravati, AP, India"
+                ],
+                "department": [
+                  "Department of Computer Science and Engineering"
+                ]
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Pitta Venkata Leela",
+            "family": "Vardhan",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University",
+                "place": [
+                  "Amaravati, AP, India"
+                ],
+                "department": [
+                  "Department of Computer Science and Engineering"
+                ]
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Guna Vardhan",
+            "family": "Byraju",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University",
+                "place": [
+                  "Amaravati, AP, India"
+                ],
+                "department": [
+                  "Department of Computer Science and Engineering"
+                ]
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Sravya",
+            "family": "Annamneedu",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University",
+                "place": [
+                  "Amaravati, AP, India"
+                ],
+                "department": [
+                  "Department of Computer Science and Engineering"
+                ]
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "title": [
+          "Incident-Aware Reinforcement Learning for Automated Blockchain Smart Contract Vulnerability Detection and Repair"
+        ],
+        "container-title": [
+          "2026 9th International Conference on Computing Methodologies and Communication (ICCMC)"
+        ],
+        "type": "proceedings-article",
+        "published": {
+          "date-parts": [
+            [
+              2026,
+              7
+            ]
+          ]
+        },
+        "page": "871-877"
+      },
+      "verification_method": "Publisher-deposited Crossref DOI metadata; author order, title, date, venue and pages retained."
+    },
+    "sravanthi2025fraud": {
+      "purpose": "Rule-based and machine-learning fraud detection.",
+      "primary_source": "https://doi.org/10.1109/iccspci68199.2025.11451569",
+      "bibitem": "S. Bhimineni \\textit{et al.}, ``Fraud detection in financial transactions: a rule-based and machine learning approach,'' in \\textit{Proc. Int. Conf. Emerg. Trends Signal Process. Comput. Intell. (ICCSPCI)}, 2025, pp. 1--7, doi: \\nolinkurl{10.1109/iccspci68199.2025.11451569}.",
+      "bibitem_sha256": "8ffc053640712e7683e72ec3d3aec4271ca09debe4255f0b2f85ab677594c36e",
+      "publisher_registered_metadata": {
+        "DOI": "10.1109/iccspci68199.2025.11451569",
+        "author": [
+          {
+            "given": "Sumana",
+            "family": "Bhimineni",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "SRM University AP,Department of Computer Science and Engineering,Andhra Pradesh,India"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Chimirala Surya",
+            "family": "Susmitha",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University AP,Department of Computer Science and Engineering,Andhra Pradesh,India"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Hemsundhar",
+            "family": "Korukonda",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University AP,Department of Computer Science and Engineering,Andhra Pradesh,India"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Eshwar Sai",
+            "family": "Kandimalla",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University AP,Department of Computer Science and Engineering,Andhra Pradesh,India"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Naga Sravanthi",
+            "family": "Puppala",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University AP,Department of Computer Science and Engineering,Andhra Pradesh,India"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ],
+        "title": [
+          "Fraud Detection in Financial Transactions: A Rule-Based and Machine Learning Approach"
+        ],
+        "container-title": [
+          "2025 International Conference on Emerging Trends in Signal Processing &amp;amp; Computational Intelligence (ICCSPCI)"
+        ],
+        "type": "proceedings-article",
+        "published": {
+          "date-parts": [
+            [
+              2025,
+              12,
+              3
+            ]
+          ]
+        },
+        "page": "1-7"
+      },
+      "verification_method": "Publisher-deposited Crossref DOI metadata; author order, title, date, venue and pages retained."
+    },
+    "sravanthi2025plant": {
+      "purpose": "CNN embeddings and dimensionality reduction application context.",
+      "primary_source": "https://doi.org/10.1109/icdsinc66221.2025.11448138",
+      "bibitem": "S. H. V. Chikkala, T. R. Tumma, P. N. Sravanthi, and L. V. S. Paila, ``Hybrid deep learning pipeline with CNN-based feature embeddings and dimensionality reduction for plant disease detection,'' in \\textit{Proc. 1st Int. Conf. Data Sci. Intell. Netw. Comput. (ICDSINC)}, 2025, pp. 735--740, doi: \\nolinkurl{10.1109/icdsinc66221.2025.11448138}.",
+      "bibitem_sha256": "a4f9191687ad506edd7e3332f689e7f709fcb2ab7d9c18748004279fb73f2903",
+      "publisher_registered_metadata": {
+        "DOI": "10.1109/icdsinc66221.2025.11448138",
+        "author": [
+          {
+            "given": "Sri Harsha Vardhan",
+            "family": "Chikkala",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "SRM University AP, India,Department of CSE,Andhra Pradesh,India,522240"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Triyek Reddy",
+            "family": "Tumma",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University AP, India,Department of CSE,Andhra Pradesh,India,522240"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Puppala Naga",
+            "family": "Sravanthi",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University AP, India,Department of CSE,Andhra Pradesh,India,522240"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Lohith Venkata Simhachalam",
+            "family": "Paila",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University AP, India,Department of CSE,Andhra Pradesh,India,522240"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ],
+        "title": [
+          "Hybrid Deep Learning Pipeline with CNN-Based Feature Embeddings and Dimensionality Reduction for Plant Disease Detection"
+        ],
+        "container-title": [
+          "2025 1st International Conference on Data Science and Intelligent Network Computing (ICDSINC)"
+        ],
+        "type": "proceedings-article",
+        "published": {
+          "date-parts": [
+            [
+              2025,
+              12,
+              9
+            ]
+          ]
+        },
+        "page": "735-740"
+      },
+      "verification_method": "Publisher-deposited Crossref DOI metadata; author order, title, date, venue and pages retained."
+    },
+    "sravanthi2025traffic": {
+      "purpose": "Hybrid learning for traffic classification and forecasting.",
+      "primary_source": "https://doi.org/10.1109/icdsinc66221.2025.11448208",
+      "bibitem": "G. Varshithachowdary, M. Yasaswini, M. Meghana, and N. S. Puppala, ``A hybrid machine learning and deep learning approach for traffic volume classification and forecasting,'' in \\textit{Proc. 1st Int. Conf. Data Sci. Intell. Netw. Comput. (ICDSINC)}, 2025, pp. 58--63, doi: \\nolinkurl{10.1109/icdsinc66221.2025.11448208}.",
+      "bibitem_sha256": "a984c7f7f503b1c87d5056312e5eee5e3ddaf04bff318b5ada7a64752b931865",
+      "publisher_registered_metadata": {
+        "DOI": "10.1109/icdsinc66221.2025.11448208",
+        "author": [
+          {
+            "given": "Ganga",
+            "family": "Varshithachowdary",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "SRM University-AP,Department of CSE,Andhra Pradesh,India,522240"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Manam",
+            "family": "Yasaswini",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University-AP,Department of CSE,Andhra Pradesh,India,522240"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Mahipathi",
+            "family": "Meghana",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University-AP,Department of CSE,Andhra Pradesh,India,522240"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          },
+          {
+            "given": "Naga Sravanthi",
+            "family": "Puppala",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University,School of Engineering and Applied Sciences,Department of Computer Science and Engineering,Amaravathi,AP,India,522240"
+              }
+            ],
+            "role": [
+              {
+                "role": "author",
+                "vocabulary": "crossref"
+              }
+            ]
+          }
+        ],
+        "title": [
+          "A Hybrid Machine Learning and Deep Learning Approach for Traffic Volume Classification and Forecasting"
+        ],
+        "container-title": [
+          "2025 1st International Conference on Data Science and Intelligent Network Computing (ICDSINC)"
+        ],
+        "type": "proceedings-article",
+        "published": {
+          "date-parts": [
+            [
+              2025,
+              12,
+              9
+            ]
+          ]
+        },
+        "page": "58-63"
+      },
+      "verification_method": "Publisher-deposited Crossref DOI metadata; author order, title, date, venue and pages retained."
+    },
+    "sravanthi2026harvest": {
+      "purpose": "VGG19-based obscured-fruit classification application context.",
+      "primary_source": "https://doi.org/10.1109/iccmc69250.2026.11625194",
+      "bibitem": "N. S. Puppala, U. V. S. S. S. Rohith, R. P. Moganti, and S. K. Chebiyyam, ``Visionary harvest: integrating custom blur layers into VGG19 for obscured edible classification,'' in \\textit{Proc. 9th Int. Conf. Comput. Methodol. Commun. (ICCMC)}, 2026, pp. 1548--1553, doi: \\nolinkurl{10.1109/iccmc69250.2026.11625194}.",
+      "bibitem_sha256": "8fb5c24f321bf6ab669315048a092326f095e5090069abe01d3f3202dde71696",
+      "publisher_registered_metadata": {
+        "DOI": "10.1109/iccmc69250.2026.11625194",
+        "author": [
+          {
+            "given": "Naga Sravanthi",
+            "family": "Puppala",
+            "sequence": "first",
+            "affiliation": [
+              {
+                "name": "SRM University",
+                "place": [
+                  "Amaravati, AP, India"
+                ],
+                "department": [
+                  "Department of Computer Science and Engineering"
+                ]
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Uppala Venkata Sri Siva Sai",
+            "family": "Rohith",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University",
+                "place": [
+                  "Amaravati, AP, India"
+                ],
+                "department": [
+                  "Department of Computer Science and Engineering"
+                ]
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Reethu Priya",
+            "family": "Moganti",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University",
+                "place": [
+                  "Amaravati, AP, India"
+                ],
+                "department": [
+                  "Department of Computer Science and Engineering"
+                ]
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "given": "Sri Koumudhi",
+            "family": "Chebiyyam",
+            "sequence": "additional",
+            "affiliation": [
+              {
+                "name": "SRM University",
+                "place": [
+                  "Amaravati, AP, India"
+                ],
+                "department": [
+                  "Department of Computer Science and Engineering"
+                ]
+              }
+            ],
+            "role": [
+              {
+                "vocabulary": "crossref",
+                "role": "author"
+              }
+            ]
+          }
+        ],
+        "title": [
+          "Visionary Harvest: Integrating Custom Blur Layers into VGG19 for Obscured Edible Classification"
+        ],
+        "container-title": [
+          "2026 9th International Conference on Computing Methodologies and Communication (ICCMC)"
+        ],
+        "type": "proceedings-article",
+        "published": {
+          "date-parts": [
+            [
+              2026,
+              7
+            ]
+          ]
+        },
+        "page": "1548-1553"
+      },
+      "verification_method": "Publisher-deposited Crossref DOI metadata; author order, title, date, venue and pages retained."
     }
-  }
+  },
+  "required_source_keys": [
+    "puppala2023trust",
+    "puppala2023cluster",
+    "puppala2024vikor",
+    "puppala2024reputation",
+    "puppala2025consensus",
+    "puppala2024smnst",
+    "puppala2024svm",
+    "puppala2025marine",
+    "sravanthi2026incident",
+    "sravanthi2025fraud",
+    "sravanthi2025plant",
+    "sravanthi2025traffic",
+    "sravanthi2026harvest"
+  ],
+  "removed_context_references": [
+    "devlin2019bert",
+    "bajaj2016msmarco",
+    "karpukhin2020dpr",
+    "khattab2020colbert",
+    "nogueira2020seq2seq"
+  ]
 }

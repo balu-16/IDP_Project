@@ -1,0 +1,17 @@
+{
+  "norimoto2024": {
+    "url": "https://inspirehep.net/files/68d5994464368da5217b692575524955",
+    "sha256": "ee35b7b33a573b622087332e1d8a13672ef712e85aaceff70c886e5285dad621",
+    "downloaded": true
+  },
+  "ominato2024": {
+    "url": "https://inspirehep.net/files/425f4adac6dad984ce152bd2aee5c2bd",
+    "sha256": "05ef1d15417c00df90a652f478c5ec5e4a0ef795e437c58fd45f54411f5bbaf7",
+    "downloaded": true
+  },
+  "elkiran2026": {
+    "url": "https://openaccess.izu.edu.tr/bitstreams/1d86a835-3fa9-46ed-a896-ccdd53833a2e/download",
+    "sha256": "d1e00fde487ac224cbd05d7e600b3b9a8749166141e2d776e727e1021a405f5b",
+    "downloaded": true
+  }
+}

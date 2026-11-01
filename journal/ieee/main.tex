@@ -1,0 +1,55 @@
+\documentclass[nolineno]{ieeeaccess}
+% Publisher class, styles, fonts and graphics in template/assets are unmodified.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{textcomp}
+\usepackage{xurl}
+\usepackage[hidelinks,bookmarks=false]{hyperref}
+\usepackage{array}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\urlstyle{same}
+\DeclareUrlCommand\path{\urlstyle{same}}
+\input{template_compat}
+\graphicspath{{figures/}{template/assets/}}
+\hypersetup{pdftitle={Grover-Inspired Evidence Selection for Document Retrieval: Relevance Constraints, Failure Analysis, and Resource Accounting},pdfauthor={Bala Rakesh Gundapaneni; Abdul Basith Syed; Jagadeeshbabu Borru; Naga Sravanthi Puppala}}
+\newcommand{\red}{\mathcal{R}}
+\newcommand{\pool}{\mathcal{C}}
+\newcommand{\eps}{\varepsilon}
+\newtheorem{proposition}{Proposition}
+\input{includes/numbers}
+\begin{document}
+\history{Manuscript prepared for submission to IEEE Access, October 24, 2026.}
+\doi{Not assigned; submission manuscript}
+\vol{--}\year{2026}
+\title{Grover-Inspired Evidence Selection for Document Retrieval: Relevance Constraints, Failure Analysis, and Resource Accounting}
+\author{\uppercase{Bala Rakesh Gundapaneni}\authorrefmark{1}, \uppercase{Abdul Basith Syed}\authorrefmark{1}, \uppercase{Jagadeeshbabu Borru}\authorrefmark{1}, and \uppercase{Naga Sravanthi Puppala}\authorrefmark{1}}
+\address[1]{Department of Computer Science and Engineering, SRM University AP, Andhra Pradesh 522502, India}
+\corresp{Corresponding author: Naga Sravanthi Puppala (e-mail: nagasravanthi.p@srmap.edu.in).}
+\markboth{Grover-Inspired Evidence Selection for Document Retrieval}{Grover-Inspired Evidence Selection for Document Retrieval}
+\begin{abstract}
+Selecting a fixed number of documents requires more than identifying relevant passages: the selected passages should also be useful together. This article examines a Grover-inspired selection pipeline that combines classical retrieval, cross-encoder relevance scores, and ideal amplitude amplification simulated on a central processing unit. A base selector chooses eight documents from fifteen candidates. A constrained refinement preserves the first five results and searches an expanded pool for a less redundant three-document tail. We synthesize completed evaluations over 1,271 test queries from scientific, nutrition-related, and financial collections, and extend their analysis without collecting new benchmark rankings. The reported normalized discounted cumulative gain at rank five is \scifactNdcg{} on SciFact, \nfcorpusNdcg{} on NFCorpus, and \fiqaNdcg{} on FiQA. Refinement decreases mean redundancy by \scifactRedReduction{} and \nfcorpusRedReduction{} percent on the first two collections, while relative recall changes by \scifactRecallChange{} and +\nfcorpusRecallChange{} percent. FiQA retains the earlier base configuration; its separate refinement failure remains disclosed. Candidate-coverage bounds, query-level losses, seed stability, and request-level costs reveal effects that aggregate metrics can hide. Matched greedy and exact refiners attain the same reported aggregate quality, and neural inference dominates measured online time. A separate completed resource study characterizes reversible constraints and coefficient precision, including explicit simulation limits. The evidence supports a constrained relevance--redundancy tradeoff and reproducible resource accounting; it establishes no physical quantum acceleration or improvement in generated answers.
+\end{abstract}
+\begin{keywords}
+Amplitude amplification, cross-encoders, document retrieval, evidence selection, quantum algorithm simulation, reproducibility.
+\end{keywords}
+\maketitle
+\raggedbottom
+\input{sections/introduction}
+\input{sections/related_work}
+\input{sections/formulation}
+\input{sections/method}
+\input{sections/protocol}
+\input{sections/results}
+\input{sections/diagnostics}
+\input{sections/resources}
+\input{sections/discussion}
+\input{sections/appendix}
+\section*{Acknowledgment}
+OpenAI Codex assisted with drafting and restructuring the abstract, Sections~I--X, and Appendices~A--B; producing the journal-specific analysis code and Figs.~1--7; and checking LaTeX. The experimental measurements predate this manuscript preparation.
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\input{sections/biographies}
+\end{document}

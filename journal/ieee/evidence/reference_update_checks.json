@@ -1,0 +1,64 @@
+{
+  "schema": "requested-reference-update-v1",
+  "checked_at_utc": "2026-10-26T05:33:34.520825+00:00",
+  "required_reference_keys": [
+    "puppala2023trust",
+    "puppala2023cluster",
+    "puppala2024vikor",
+    "puppala2024reputation",
+    "puppala2025consensus",
+    "puppala2024smnst",
+    "puppala2024svm",
+    "puppala2025marine",
+    "sravanthi2026incident",
+    "sravanthi2025fraud",
+    "sravanthi2025plant",
+    "sravanthi2025traffic",
+    "sravanthi2026harvest"
+  ],
+  "required_reference_count": 13,
+  "publisher_metadata_verified": true,
+  "fraud_paper_resolved_doi": "10.1109/iccspci68199.2025.11451569",
+  "metadata_and_corrections": "manuscript_support/records/requested_references.json",
+  "removed_conference_background_references": [
+    "devlin2019bert",
+    "bajaj2016msmarco",
+    "karpukhin2020dpr",
+    "khattab2020colbert",
+    "nogueira2020seq2seq"
+  ],
+  "conference_reference_count": 40,
+  "journal_reference_count": 53,
+  "method_results_figures_and_numerical_fragments_unchanged": true,
+  "new_experiments_or_model_inference": false,
+  "author_list_unchanged": true,
+  "template_fonts_and_page_geometry_unchanged": true,
+  "historical_archives_unchanged": true,
+  "original_acceptance_letter_unchanged": true,
+  "user_provided_image_unchanged": true,
+  "artifacts": {
+    "conference": {
+      "pages": 8,
+      "all_13_dois_in_pdf": true,
+      "author_metadata": "Bala Rakesh Gundapaneni; Abdul Basith Syed; Jagadeeshbabu Borru; Naga Sravanthi Puppala",
+      "source_sha256": "d4678950fbf6bb75345eaf84e2322b56b69fcf7859469501d496ed42c1460bb9",
+      "pdf_sha256": "8a51243274bd29676f1b336747932bbf1bac3d64494f478b4e1acee2f4dcfa70",
+      "source_archive_sha256": "a2076dba31e457eb0bfb4ce8b3c38d8a4b136ce2bf0b3c8913ca44ac5fd17a4a",
+      "standalone_compiled": true,
+      "standalone_page_pixels_match": true,
+      "visual_review_complete": true
+    },
+    "journal": {
+      "pages": 20,
+      "all_13_dois_in_pdf": true,
+      "author_metadata": "Bala Rakesh Gundapaneni; Abdul Basith Syed; Jagadeeshbabu Borru; Naga Sravanthi Puppala",
+      "source_sha256": "7c6067f821bd5b697bc66e74ac08eed649da72f94feea0d8b07f66ed839e2226",
+      "pdf_sha256": "ab3a38aaf5558f6c02fe85f203d26973ebd7a288627fb7e659b13c899c9241bf",
+      "source_archive_sha256": "54a1745b925426e9b4d9a9bbe1660f77ef62fad6c1d3a59e8d2fc8f7181a2ed9",
+      "standalone_compiled": true,
+      "standalone_page_pixels_match": true,
+      "visual_review_complete": true
+    },
+    "method_results_figures_and_numerical_fragments_unchanged": true
+  }
+}
