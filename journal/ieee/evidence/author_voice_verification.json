@@ -1,0 +1,91 @@
+{
+  "baseline_commit": null,
+  "baseline_directory": "/tmp/ieee-author-baseline-x6b51tva/ieee",
+  "original_pdf_sha256": "c361cf6f60ee5a0fb7b981544cd5bdaecbe6a1e0db5c55057bfab590501f81ef",
+  "revised_pdf_sha256": "b595ead476c4552570ae43c1ba44bc4b9c1bc209e9fdba308b2dd8a2b8d708b2",
+  "checks": "Exact ordered comparisons of citation/reference/label commands, protected environments, and inline math; per-file LaTeX-macro and numeric-literal counts; unchanged main document outside abstract; byte comparisons of bibliography, template, tables and figures.",
+  "sentence_method": "Approximate share of original editable sentences without an exact normalized match after revision; protected environments are excluded. This is not a similarity or AI-detection score.",
+  "counts": {
+    "commands": 140,
+    "protected_environments": 46,
+    "inline_math": 119,
+    "equation_environments": 17,
+    "align_environments": 5,
+    "table_environments": 13,
+    "figure_environments": 7,
+    "proposition_environments": 2,
+    "IEEEproof_environments": 2,
+    "includes_files": 12,
+    "figures_files": 7,
+    "template/assets_files": 47
+  },
+  "section_changes": {
+    "Abstract": {
+      "original_sentences": 11,
+      "unchanged_exact_sentences": 1,
+      "estimated_percent_changed": 91
+    },
+    "Detailed Quantization and Constraint Reasoning": {
+      "original_sentences": 14,
+      "unchanged_exact_sentences": 14,
+      "estimated_percent_changed": 0
+    },
+    "Native Validation Bound and Reporting Conventions": {
+      "original_sentences": 13,
+      "unchanged_exact_sentences": 13,
+      "estimated_percent_changed": 0
+    },
+    "Journal Extension: Coverage, Failure, and Cost Diagnostics": {
+      "original_sentences": 62,
+      "unchanged_exact_sentences": 13,
+      "estimated_percent_changed": 79
+    },
+    "Discussion, Limitations, and Reproducibility": {
+      "original_sentences": 55,
+      "unchanged_exact_sentences": 3,
+      "estimated_percent_changed": 95
+    },
+    "Conclusion": {
+      "original_sentences": 8,
+      "unchanged_exact_sentences": 1,
+      "estimated_percent_changed": 88
+    },
+    "Problem Formulation and System Boundaries": {
+      "original_sentences": 31,
+      "unchanged_exact_sentences": 6,
+      "estimated_percent_changed": 81
+    },
+    "Introduction": {
+      "original_sentences": 40,
+      "unchanged_exact_sentences": 1,
+      "estimated_percent_changed": 98
+    },
+    "Relevance-Guided Subset Search": {
+      "original_sentences": 60,
+      "unchanged_exact_sentences": 16,
+      "estimated_percent_changed": 73
+    },
+    "Data and Experimental Protocol": {
+      "original_sentences": 67,
+      "unchanged_exact_sentences": 22,
+      "estimated_percent_changed": 67
+    },
+    "Related Work": {
+      "original_sentences": 42,
+      "unchanged_exact_sentences": 0,
+      "estimated_percent_changed": 100
+    },
+    "Recorded Resource Study and Precision Sensitivity": {
+      "original_sentences": 48,
+      "unchanged_exact_sentences": 16,
+      "estimated_percent_changed": 67
+    },
+    "Recorded Retrieval Results": {
+      "original_sentences": 48,
+      "unchanged_exact_sentences": 1,
+      "estimated_percent_changed": 98
+    }
+  },
+  "conference_prose_overlap": null,
+  "issues": []
+}

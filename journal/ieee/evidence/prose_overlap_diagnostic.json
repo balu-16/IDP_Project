@@ -1,13 +1,13 @@
 {
   "source": "new_paper/main.pdf",
   "conference_sha256": "8a51243274bd29676f1b336747932bbf1bac3d64494f478b4e1acee2f4dcfa70",
-  "journal_pdf_sha256": "f4eee34e13d3d27516503ed350fa23e1f46e6eb9a2adfdf103705ab455a4ad41",
+  "journal_pdf_sha256": "b595ead476c4552570ae43c1ba44bc4b9c1bc209e9fdba308b2dd8a2b8d708b2",
   "normalization": "PDF content order; lowercase ASCII alphanumeric tokens after Unicode NFKC and line-hyphen repair; text before REFERENCES, including tables, headers and equations.",
   "exact_phrase_words": 10,
   "conference_body_tokens": 5408,
-  "journal_body_tokens": 12729,
-  "journal_tokens_in_shared_phrases": 723,
-  "covered_fraction": 0.056799434362479376,
+  "journal_body_tokens": 11830,
+  "journal_tokens_in_shared_phrases": 705,
+  "covered_fraction": 0.05959425190194421,
   "shared_phrases": [
     {
       "phrase": "0 6878 0 8011 0 4336 0 3689 0 1530",
@@ -130,50 +130,6 @@
       "occurrences": 1
     },
     {
-      "phrase": "task specific decision pipelines also appear in blockchain mining trust",
-      "occurrences": 1
-    },
-    {
-      "phrase": "specific decision pipelines also appear in blockchain mining trust scoring",
-      "occurrences": 1
-    },
-    {
-      "phrase": "these studies provide application context their tasks and reported results",
-      "occurrences": 1
-    },
-    {
-      "phrase": "studies provide application context their tasks and reported results are",
-      "occurrences": 1
-    },
-    {
-      "phrase": "provide application context their tasks and reported results are separate",
-      "occurrences": 1
-    },
-    {
-      "phrase": "application context their tasks and reported results are separate from",
-      "occurrences": 1
-    },
-    {
-      "phrase": "context their tasks and reported results are separate from our",
-      "occurrences": 1
-    },
-    {
-      "phrase": "their tasks and reported results are separate from our documentretrieval",
-      "occurrences": 1
-    },
-    {
-      "phrase": "tasks and reported results are separate from our documentretrieval evaluation",
-      "occurrences": 1
-    },
-    {
-      "phrase": "and reported results are separate from our documentretrieval evaluation iii",
-      "occurrences": 1
-    },
-    {
-      "phrase": "the reproduced hybrid score is hi 1 1 ci 1",
-      "occurrences": 1
-    },
-    {
       "phrase": "z j t z j t0 j 1 2 3",
       "occurrences": 1
     },
@@ -183,6 +139,14 @@
     },
     {
       "phrase": "t z j t0 j 1 2 3 10 12",
+      "occurrences": 1
+    },
+    {
+      "phrase": "prepares the uniform state applies that many steps and measures",
+      "occurrences": 1
+    },
+    {
+      "phrase": "a refined request can use up to 128 phase calls",
       "occurrences": 1
     },
     {
@@ -247,22 +211,6 @@
     },
     {
       "phrase": "exact float exact quantized matched random search global union l6",
-      "occurrences": 1
-    },
-    {
-      "phrase": "transformers 4 57 6 sentence transformers 3 4 1 qiskit",
-      "occurrences": 1
-    },
-    {
-      "phrase": "4 57 6 sentence transformers 3 4 1 qiskit 0",
-      "occurrences": 1
-    },
-    {
-      "phrase": "57 6 sentence transformers 3 4 1 qiskit 0 46",
-      "occurrences": 1
-    },
-    {
-      "phrase": "6 sentence transformers 3 4 1 qiskit 0 46 0",
       "occurrences": 1
     },
     {
@@ -335,6 +283,22 @@
     },
     {
       "phrase": "431771 fiqa 0 357490 0 376939 0 434063 0 531244",
+      "occurrences": 1
+    },
+    {
+      "phrase": "transformers 4 57 6 sentence transformers 3 4 1 qiskit",
+      "occurrences": 1
+    },
+    {
+      "phrase": "4 57 6 sentence transformers 3 4 1 qiskit 0",
+      "occurrences": 1
+    },
+    {
+      "phrase": "57 6 sentence transformers 3 4 1 qiskit 0 46",
+      "occurrences": 1
+    },
+    {
+      "phrase": "6 sentence transformers 3 4 1 qiskit 0 46 0",
       "occurrences": 1
     },
     {

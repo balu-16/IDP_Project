@@ -82,7 +82,21 @@ def compile_source(source,output,log_prefix,env=None):
     return output/(source.stem+'.pdf')
 
 
-def check_originals(*, record=True):
+def snapshot_outside_additions():
+    """Bind pre-existing additions without accepting later outside changes."""
+    before=set(json.loads((JOURNAL/'evidence/original_files_metadata.json').read_text()))
+    additions={}
+    for base,dirs,files in os.walk(ROOT):
+        dirs[:]=[d for d in dirs if d not in {'.git','.venv','node_modules','journal'}]
+        for filename in files:
+            path=Path(base)/filename
+            name=str(path.relative_to(ROOT))
+            if name not in before and path.is_file():
+                additions[name]=sha(path)
+    return additions
+
+
+def check_originals(*, record=True, allowed_additions=None):
     originals=json.loads((JOURNAL/'evidence/original_files_sha256.json').read_text())
     changed=[name for name,digest in originals.items() if (sha(ROOT/name) if (ROOT/name).is_file() else None)!=digest]
     metadata=json.loads((JOURNAL/'evidence/original_files_metadata.json').read_text())
@@ -135,11 +149,23 @@ def check_originals(*, record=True):
                         and protected[name].get('sha256')==change['before_sha256']
                         and path.is_file() and sha(path)==change['after_sha256']):
                     cleanup_modified.add(name)
+    allowed_additions=allowed_additions or {}
+    verified_additions=[]
+    changed_additions=[]
+    for name,digest in allowed_additions.items():
+        path=ROOT/name
+        if name in result['outside_journal_added_files'] and path.is_file() and sha(path)==digest:
+            verified_additions.append(name)
+        else:
+            changed_additions.append(name)
     unexpected={key:[name for name in names if name not in recognized
                     and not (key=='outside_journal_removed_files' and name in cleanup_removed)
+                    and not (key=='outside_journal_added_files' and name in verified_additions)
                     and not (key in {'tracked_hash_changes','outside_journal_metadata_changes'} and name in cleanup_modified)]
                 for key,names in result.items()}
+    unexpected['preexisting_additions_changed']=sorted(changed_additions)
     result['recognized_concurrent_edits']=recognized
+    result['recognized_preexisting_additions']={name:allowed_additions[name] for name in sorted(verified_additions)}
     result['recognized_workspace_cleanup_removals']=sorted(set(result['outside_journal_removed_files']) & cleanup_removed)
     result['recognized_workspace_cleanup_modifications']=sorted(set(changed+altered) & cleanup_modified)
     result['unexpected_differences']=unexpected
@@ -234,7 +260,10 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--refresh-evidence',action='store_true',help='Reverify saved runs and regenerate analyses; never collect benchmarks')
     parser.add_argument('--standalone',action='store_true',help='Also compile the source ZIP in an isolated subdirectory')
+    parser.add_argument('--preserve-existing-additions',action='store_true',help='Snapshot existing outside files added since the original audit and verify they stay unchanged')
     args=parser.parse_args()
+    additions=snapshot_outside_additions() if args.preserve_existing_additions else {}
+    check_originals(record=False,allowed_additions=additions)
     prepare_workspace()
     if not (JOURNAL/'tools/.TinyTeX/bin/x86_64-linux/pdflatex').exists():run([sys.executable,JOURNAL/'scripts/bootstrap_tex.py'],'tex_bootstrap.log')
     if args.refresh_evidence:run([sys.executable,'-B',JOURNAL/'scripts/export_evidence.py'],'export.log')
@@ -253,7 +282,7 @@ def main():
         standalone_text=run(['pdftotext','-layout',standalone,'-'],'standalone_pdf_text.txt')
         assert original_text==standalone_text,'Standalone PDF text differs'
         (JOURNAL/'evidence/standalone_check.json').write_text(json.dumps({'compiled':True,'extracted_text_matches':True,'source_archive_sha256':sha(JOURNAL/'latex_source.zip')},indent=2)+'\n')
-    check_originals()
+    check_originals(allowed_additions=additions)
     if checks['issues']:raise SystemExit(2)
 
 

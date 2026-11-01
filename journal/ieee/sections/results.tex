@@ -1,6 +1,6 @@
 \section{Recorded Retrieval Results}\label{sec:results}
 \subsection{Effectiveness under the declared configurations}
-Table~\ref{tab:headline} reports the selected full-test policies. The values come from the completed studies; no new journal experiments were collected. The reported nDCG@5 values are \scifactNdcg{}, \nfcorpusNdcg{}, and \fiqaNdcg{} on SciFact, NFCorpus, and FiQA, respectively. In the first two rows, nDCG@5 is tied to the matched base by prefix preservation. FiQA's row instead reports the earlier fifteen-candidate base selector. The configuration label is therefore necessary to interpret the result.
+Table~\ref{tab:headline} reports the selected full-test policies from the completed experiments; the journal analysis collects no new experiments. The nDCG@5 values are \scifactNdcg{} for SciFact, \nfcorpusNdcg{} for NFCorpus, and \fiqaNdcg{} for FiQA. For the first two, prefix preservation fixes nDCG@5 at the matched-base value. FiQA uses the earlier fifteen-candidate base selector, so its row represents a different configuration.
 
 \begin{table}[t]
 \centering\small\setlength{\tabcolsep}{3pt}
@@ -8,12 +8,12 @@ Table~\ref{tab:headline} reports the selected full-test policies. The values com
 \label{tab:headline}\input{includes/headline}
 \end{table}
 
-Relative to matched base selection, SciFact refinement reduces mean redundancy by \scifactRedReduction\% and changes mean Recall@8 by \scifactRecallChange\% relative. NFCorpus reduces redundancy by \nfcorpusRedReduction\% with a +\nfcorpusRecallChange\% relative recall change. The recall changes have different signs across domains. The refinement therefore cannot be described as a general recall improvement, even though the same prefix metric is preserved on both collections.
+Relative to the matched base, SciFact refinement reduces mean redundancy by \scifactRedReduction\% and changes Recall@8 by \scifactRecallChange\% relative. NFCorpus has a \nfcorpusRedReduction\% redundancy reduction and a +\nfcorpusRecallChange\% relative recall change. Both preserve the prefix metric, but recall moves in opposite directions. The refinement is not a general recall improvement.
 
-The FiQA base reaches Recall@8 of \fiqaRecall{} and redundancy of \fiqaRedundancy{}. It matches the reported nDCG@5 and recall of its same-shortlist L6-only control. A later, separately completed 648-query FiQA refinement follow-up preserved nDCG@5 and reduced redundancy by \fiqaFollowupRedReduction\%, but lost \fiqaFollowupRecallLoss\% relative recall. That result failed the frozen 98\% recall-retention gate and was not retuned into a passing result. We retain the prior manuscript's disclosure of this failure without substituting its redundancy value into the earlier base row.
+The FiQA base reaches Recall@8 of \fiqaRecall{} and redundancy of \fiqaRedundancy{}; its nDCG@5 and recall match the same-shortlist L6-only control. A later, separately completed 648-query refinement follow-up preserved nDCG@5 and reduced redundancy by \fiqaFollowupRedReduction\%, but lost \fiqaFollowupRecallLoss\% relative recall. It failed the frozen 98\% recall-retention gate and was not retuned to pass. The failed result is disclosed separately rather than mixed into the earlier base row.
 
 \subsection{Classical and neural comparisons}
-Table~\ref{tab:comparators} places the reported policy alongside the declared controls. The cross-encoder shortlist distinctions matter: L6-only uses hybrid fifteen, while the dense-fifteen neural control uses the fifteen highest dense-scoring parents. Differences between those rows include candidate construction. Dense-sixty-four neural reranking additionally exposes the relevance model to more candidates and incurs the corresponding inference cost.
+The controls in Table~\ref{tab:comparators} do not all see the same candidates. L6-only uses hybrid fifteen, while the dense-fifteen neural control receives the fifteen highest dense-scoring parents. Differences between them therefore include candidate construction. Dense-sixty-four reranking gives the relevance model more candidates and incurs the corresponding inference cost.
 
 \begin{table*}[t]
 \centering\small\setlength{\tabcolsep}{4pt}
@@ -21,9 +21,9 @@ Table~\ref{tab:comparators} places the reported policy alongside the declared co
 \label{tab:comparators}\input{includes/comparators}
 \end{table*}
 
-Matched greedy and exact-float refiners have the same aggregate nDCG@5, nDCG@8, Recall@8, and redundancy as constrained GAS on the SciFact and NFCorpus tests. This agreement shows that the measured quality of those outputs does not depend on the Grover search mechanism. The constrained objective and the available candidates explain a benefit that several optimizers can realize.
+For SciFact and NFCorpus, matched greedy and exact-float refiners attain the same aggregate nDCG@5, nDCG@8, Recall@8, and redundancy as constrained GAS. The reported benefit can therefore be obtained by several optimizers under these candidates and constraints. In these tests, the measured aggregate quality is also reached without the Grover search mechanism.
 
-Table~\ref{tab:expanded} further separates candidate expansion, prefix retention, and constrained set optimization. Global union-L6 permits complete reordering. Protected-prefix union-L6 preserves the head but chooses the tail by neural relevance. The constrained optimizers additionally optimize pair redundancy under the score thresholds. These controls address different sources of change; grouping them under one generic ``reranking'' label would obscure the mechanism being evaluated.
+Table~\ref{tab:expanded} helps separate expansion from the choices made afterward. Global union-L6 can reorder the entire output. Protected-prefix union-L6 retains the head and selects the tail by neural relevance, while constrained optimizers also minimize pair redundancy under the score thresholds. Calling all of these policies ``reranking'' would obscure which part changed.
 
 \begin{table*}[t]
 \centering\small\setlength{\tabcolsep}{4pt}
@@ -31,7 +31,7 @@ Table~\ref{tab:expanded} further separates candidate expansion, prefix retention
 \label{tab:expanded}\input{includes/expanded_controls}
 \end{table*}
 
-The observed tradeoffs are visualized in Fig.~\ref{fig:tradeoffs}. Some inexpensive or less relevance-focused policies have lower redundancy while also having lower recall. The graph contains measured operating points, not a tuned Pareto frontier or a proof of dominance over every possible setting. In particular, the zero-diversity MMR point does not represent the complete range of MMR operating choices.
+Figure~\ref{fig:tradeoffs} shows the resulting operating points. Some inexpensive or less relevance-focused policies have lower redundancy and lower recall. These are observed points, not a tuned Pareto frontier or proof of dominance over all settings. In particular, the zero-diversity MMR point does not represent the full range of MMR choices.
 
 \begin{figure*}[t]
 \centering\includegraphics[width=\textwidth]{observed_tradeoffs.pdf}
@@ -40,7 +40,7 @@ The observed tradeoffs are visualized in Fig.~\ref{fig:tradeoffs}. Some inexpens
 \end{figure*}
 
 \subsection{Paired uncertainty and interpretation}
-Table~\ref{tab:statistics} reproduces paired differences against the base for the protected datasets. SciFact's recall interval includes both a loss and a gain, while its mean is negative. NFCorpus's positive recall interval is pointwise; the recorded raw probability does not produce a rejection after the complete Holm family is considered. The distinction between a displayed interval and a familywise testing decision must remain explicit.
+Table~\ref{tab:statistics} gives paired differences against the base for the protected datasets. SciFact's mean recall difference is negative, and its interval spans loss and gain. NFCorpus has a positive pointwise recall interval, but the recorded raw probability does not lead to rejection under the full Holm family. The interval and familywise decision address different questions.
 
 \begin{table*}[t]
 \centering\small
@@ -48,12 +48,12 @@ Table~\ref{tab:statistics} reproduces paired differences against the base for th
 \label{tab:statistics}\input{includes/statistics}
 \end{table*}
 
-The empirical 98\% mean-recall gate is not a statistical noninferiority test, and an interval containing zero does not establish equivalence. Stronger inferential claims would require a justified noninferiority margin, a prospective analysis, and data whose role in method development is appropriately controlled. The present evidence supports the recorded descriptive gate outcomes and the stated paired comparisons.
+The empirical 98\% mean-recall gate is descriptive; it is not a statistical noninferiority test. Nor does an interval containing zero establish equivalence. Stronger inference would require a justified noninferiority margin, prospective analysis, and appropriate control of the data's role in development. We report the recorded gate outcomes and paired comparisons within those limits.
 
-The FiQA statistical audit also illustrates why floating-point conventions matter. Averaging five identical seeded scores can produce a difference of approximately one unit in the last place relative to a deterministic control. A significance test must not promote that numerical artifact into evidence of a retrieval improvement. The recorded $10^{-12}$ tie policy addresses this problem while leaving rankings and reported raw means intact.
+The FiQA audit also exposed a numerical issue. Averaging five identical seeded scores can differ from a deterministic control by approximately one unit in the last place; a significance test should not treat that artifact as a retrieval gain. The recorded $10^{-12}$ tie policy addresses it without changing rankings or reported raw means.
 
 \subsection{Latency and optimization outcomes}
-Complete online median and P95 times appear in Table~\ref{tab:latency}. Expanded-pool inference increases complete latency relative to the matched base. A small refinement time does not make the two-stage pipeline equally inexpensive. Comparisons with dense-sixty-four rerankers involve both cost and candidate opportunity and should not be reduced to a universal speed claim.
+Complete online median and P95 times appear in Table~\ref{tab:latency}. Refinement itself is small, but expanded-pool inference makes the full two-stage pipeline slower than the matched base. Dense-sixty-four rerankers differ in candidate opportunity as well as cost, so the comparison does not support a universal speed claim.
 
 \begin{table*}[t]
 \centering\small\setlength{\tabcolsep}{6pt}
@@ -61,7 +61,7 @@ Complete online median and P95 times appear in Table~\ref{tab:latency}. Expanded
 \label{tab:latency}\input{includes/latency}
 \end{table*}
 
-Table~\ref{tab:search} distinguishes logical work from outcome quality. An exact objective hit is evaluated against the corresponding exact float-redundancy optimum for refinement and the exact integer optimum for the base. Such a hit certifies neither maximum judged recall nor maximum nDCG. Budget exhaustion, a trivial basis, and an unchanged incumbent are meaningful outcomes retained in the request denominator.
+Table~\ref{tab:search} separates search work from retrieval quality. An exact objective hit is measured against the corresponding exact float-redundancy optimum for refinement and the exact integer optimum for the base. Neither certifies maximum judged recall or nDCG. Budget exhaustion, a trivial basis, and an unchanged incumbent remain in the request denominator.
 
 \begin{table*}[t]
 \centering\small
@@ -69,4 +69,4 @@ Table~\ref{tab:search} distinguishes logical work from outcome quality. An exact
 \label{tab:search}\input{includes/search}
 \end{table*}
 
-The work counts document this implementation's behavior. They cannot establish physical acceleration: the CPU simulator prepares the complete objective array, and classical methods can inspect that array directly. The objective assumptions and measured cost boundaries remain explicit.
+The counts describe this implementation rather than physical acceleration. Because the CPU simulator prepares the full objective array, classical methods can inspect it directly. The objective assumptions and measured cost boundaries remain part of the comparison.

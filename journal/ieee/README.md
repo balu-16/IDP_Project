@@ -1,8 +1,8 @@
 # IEEE Access journal manuscript
 
-Main deliverables: [main.pdf](main.pdf), [main.tex](main.tex), [references.bib](references.bib), vector figures in `figures/`, and the self-contained [LaTeX source ZIP](latex_source.zip). See [VERIFICATION.md](VERIFICATION.md) and [AUTHOR_REVIEW.md](AUTHOR_REVIEW.md).
+Main deliverables: [main.pdf](main.pdf), [main.tex](main.tex), [references.bib](references.bib), vector figures in `figures/`, and the self-contained [LaTeX source ZIP](latex_source.zip). See [AUTHOR_VOICE_CHANGELOG.md](AUTHOR_VOICE_CHANGELOG.md), [VERIFICATION.md](VERIFICATION.md), and [AUTHOR_REVIEW.md](AUTHOR_REVIEW.md). The earlier prose revision is recorded in [REVISION_CHANGELOG.md](REVISION_CHANGELOG.md).
 
-The current manuscript is 20 pages with 52 cited references, including all 13 requested application papers. Publisher metadata and the resolved fraud-paper DOI are retained in `../../manuscript_support/records/requested_references.json`; `evidence/reference_update_checks.json` records the earlier reference update; the latest build and visual records are in `evidence/publication_checks.json` and `evidence/visual_inspection.json`.
+The current manuscript is 19 pages with 52 cited references, including all 13 requested application papers. Publisher metadata and the resolved fraud-paper DOI are retained in `../../manuscript_support/records/requested_references.json`; `evidence/reference_update_checks.json` records the earlier reference update; the latest build and visual records are in `evidence/publication_checks.json` and `evidence/visual_inspection.json`.
 
 This manuscript uses the completed SciFact (300 queries), NFCorpus (323 queries), and earlier FiQA base (648 queries) runs selected by the project source mapping. Negative follow-up outcomes remain disclosed. No new benchmark rankings, neural inference, circuit experiments or retuning were performed for this journal artifact.
 
@@ -11,13 +11,13 @@ This manuscript uses the completed SciFact (300 queries), NFCorpus (323 queries)
 Run these commands from the **project root**:
 
 ```sh
-backend/.venv/bin/python -B journal/ieee/scripts/build.py --standalone
+backend/.venv/bin/python -B journal/ieee/scripts/build.py --standalone --preserve-existing-additions
 python3 -B journal/ieee/scripts/review_artifact.py
 python3 -B journal/ieee/scripts/clean.py --dry-run
 python3 -B journal/ieee/scripts/clean.py
 ```
 
-The first command recreates temporary directories and, if absent, downloads the pinned TinyTeX compiler into this paper's `tools/` directory. Extra TeX packages are installed only in that local distribution. Configuration, temporary files and caches stay within `journal/ieee/`. Rebuilding after cleanup therefore requires network access. The source ZIP can also be compiled with pdfLaTeX/BibTeX on Overleaf without Python or experiment data; see [SOURCE_README.md](SOURCE_README.md).
+The first command recreates temporary directories and, if absent, downloads the pinned TinyTeX compiler into this paper's `tools/` directory. Extra TeX packages are installed only in that local distribution. Configuration, temporary files and caches stay within `journal/ieee/`. The preservation option snapshots files added outside the journal since the original audit, then verifies their hashes after the build; it does not relax the checks on original files. Rebuilding after cleanup therefore requires network access. The source ZIP can also be compiled with pdfLaTeX/BibTeX on Overleaf without Python or experiment data; see [SOURCE_README.md](SOURCE_README.md).
 
 The second command requires system Python with PyMuPDF. It checks the standalone PDF page by page against the main PDF and writes temporary page previews. An identical rendering retains the existing visual review even if a rebuild changes PDF timestamps. A changed rendering requires a fresh page inspection and review record before cleanup. The cleanup commands list/remove those previews, build outputs, caches, tools, downloaded reference-paper copies and duplicate figure PNGs. Required template images, vector figures, sources, final PDF, source ZIP and scientific/verification evidence are retained. Cleanup records its inventory before deleting files and is safe to repeat.
 
@@ -43,7 +43,7 @@ backend/.venv/bin/python -B journal/ieee/scripts/export_evidence.py --refresh-an
 
 Omit `--refresh-analysis` for full saved-run provenance/metric verification. Neither mode collects experiments or reruns models. To redraw figures after a deliberate analysis change, use `backend/.venv/bin/python -B journal/ieee/scripts/make_figures.py`, then build, review and clean. Relocation and cleanup preserve the existing figure bytes and scientific values.
 
-`evidence/reorganization_inventory.json` records files before relocation/cleanup. `cleanup_inventory.json` records removed files. `reorganization_comparison.json` binds the relocated paper to the previously inspected PDF. Page-image hashes remain in the compact review records after their temporary PNG files are removed.
+`evidence/reorganization_inventory.json` records files before relocation/cleanup. `cleanup_inventory.json` records removed files. `reorganization_comparison.json` documents the earlier relocated PDF before the current prose revision. Current page-image hashes remain in the compact review records after their temporary PNG files are removed.
 
 ## Source and author status
 

@@ -1,12 +1,12 @@
 \section{Recorded Resource Study and Precision Sensitivity}\label{sec:resources}
 \subsection{Compact simulation and native circuits solve different accounting tasks}
-The compact selector represents only fixed-cardinality subsets. Its complex128 amplitude array uses $16F$ bytes, where $F=\binom{15}{8}$ for the base or $F=\binom{M}{3}$ for refinement. This allocation excludes stored coefficients, energies, candidate features, and process memory. A full $\nu$-qubit statevector would instead require $16\,2^\nu$ bytes for amplitudes alone. Neither expression measures total system memory.
+The compact selector stores amplitudes only for subsets of the required size. Its complex128 array occupies $16F$ bytes, with $F=\binom{15}{8}$ for the base and $F=\binom{M}{3}$ for refinement. Stored coefficients, energies, candidate features, and process memory are additional. A full $\nu$-qubit statevector would require $16\,2^\nu$ bytes for amplitudes alone. Neither expression measures total system memory.
 
-Compact simulation enumerates basis energies before amplification, so its objective evaluations must be counted separately from incumbent checks, measured trials, and logical phase calls. The recorded convention assigns two reversible objective calls to a phase operation for compute and uncompute. Constraint evaluation, state preparation, reflection, and physical data access would add work to an actual circuit execution. A logical query count does not capture all of these costs.
+Compact simulation enumerates basis energies before amplification. Those objective evaluations are separate from incumbent checks, measured trials, and logical phase calls. The recorded convention assigns two reversible objective calls to a phase operation for compute and uncompute. Actual circuit execution would add constraint evaluation, state preparation, reflection, and physical data access; logical queries alone leave those costs out.
 
-The native study uses 32 saved training queries per collection, drawn from the confirmation samples. It evaluates five compact-search seeds, tail pools of 3, 5, 8, 12, 16, or 20 candidates, and pair precisions of 4, 8, 12, or 16 bits. Its 178 completed tasks include 80 native synthesis cells. Actual pool availability is retained: a requested size unavailable for a real query is not silently replaced by a smaller pool. Artificial stress instances at the specified larger sizes are labeled separately.
+The native study uses 32 saved training queries per collection from the confirmation samples. It evaluates five compact-search seeds, tail pools of 3, 5, 8, 12, 16, or 20 candidates, and pair precisions of 4, 8, 12, or 16 bits. Of the 178 completed tasks, 80 are native synthesis cells. When a requested pool size is unavailable for a real query, it is not silently replaced by a smaller pool. Artificial stress instances at the specified larger sizes are labeled separately.
 
-The study was completed before this journal manuscript. It provides neither new relevance judgments nor another full-test evaluation. Its controlled subpools retain the original tail, and native representatives are the first two eligible frozen seed-zero queries for a dataset/pool, when available. The representatives remain fixed across precisions. Comparisons across pool sizes may nevertheless involve different eligible queries, so growth curves describe the measured cells rather than a random population scaling law.
+This study was completed before the manuscript and adds neither relevance judgments nor another full-test evaluation. Each controlled subpool retains the original tail. Native representatives, when available, are the first two eligible frozen seed-zero queries for a dataset/pool; they stay fixed across precisions. Pool sizes can still involve different eligible queries, so the growth curves describe measured cells rather than a random-population scaling law.
 
 \subsection{Reversible constraint and objective registers}
 Writing $x_i\in\{0,1\}$ for a remaining tail candidate, the integer refinement objective has the polynomial form
@@ -14,16 +14,16 @@ Writing $x_i\in\{0,1\}$ for a remaining tail candidate, the integer refinement o
 E(x)=C_H+\sum_i\alpha_i x_i+\sum_{i<j}\alpha_{ij}x_ix_j,
 \label{eq:native_polynomial}
 \end{equation}
-where $C_H$ contains fixed head--head terms, $\alpha_i$ sums rounded head--candidate terms, and $\alpha_{ij}$ represents a rounded candidate pair. The oracle evaluates signed improvement relative to the incumbent and marks only states with cardinality three and all three threshold-count conditions in~\eqref{eq:threshold_counts}.
+Here $C_H$ contains fixed head--head terms, $\alpha_i$ sums rounded head--candidate terms, and $\alpha_{ij}$ is a rounded candidate-pair term. The oracle evaluates signed improvement from the incumbent and marks only states of cardinality three that satisfy all three threshold-count conditions in~\eqref{eq:threshold_counts}.
 
 The register allocation comprises $M$ decision qubits, $w$ signed-value qubits, $c=\lceil\log_2(M+1)\rceil$ counter qubits, $c-1$ comparator workspace qubits, and four constraint flags. Thus,
 \begin{equation}
 \nu=M+w+2c+3.
 \label{eq:logical_width}
 \end{equation}
-The signed width must bound the objective difference on all bit strings, including states with invalid cardinality. Designing $w$ from valid three-element subsets alone could permit overflow on states the circuit must process before rejecting them. The implementation bounds the full polynomial domain and includes every workspace register in the reported total.
+Signed width must accommodate objective differences on every bit string, including those with invalid cardinality. Choosing $w$ from valid three-element subsets alone could permit overflow before invalid states are rejected. The implementation bounds the full polynomial domain and counts every workspace register in the reported total.
 
-The oracle computes objective and constraints, conditionally applies the phase, and reverses the computation. The same counter and comparison workspace can be reused for successive threshold checks, while their flags are retained until phase marking. This structure explains both the logical-width formula and why a compact classical basis dimension is not an interchangeable qubit count.
+The oracle computes the objective and constraints, applies the phase conditionally, then uncomputes. Counter and comparison workspace can be reused across threshold checks, but their flags must be retained until phase marking. This register structure determines the logical-width formula; the compact classical basis dimension is not an interchangeable qubit count.
 
 \begin{table}[t]
 \centering\small\setlength{\tabcolsep}{3pt}
@@ -31,7 +31,7 @@ The oracle computes objective and constraints, conditionally applies the phase, 
 \label{tab:native}\input{includes/native_resources}
 \end{table}
 
-Table~\ref{tab:native} summarizes the measured cells. Figure~\ref{fig:native} includes all four precision levels and distinguishes real samples from artificial stress cases. Synthesis uses the unrestricted $u,\mathrm{cx}$ basis, optimization level one, and transpiler seed zero. These are logical resources without coupling-map routing, device calibration, or error correction. The gate count therefore cannot be described as the cost of execution on a particular processor.
+The measured cells are summarized in Table~\ref{tab:native}; Figure~\ref{fig:native} shows all four precision levels and separates real samples from artificial stress cases. Synthesis uses the unrestricted $u,\mathrm{cx}$ basis, optimization level one, and transpiler seed zero. The results are logical resources without coupling-map routing, device calibration, or error correction, so the gate count is not an execution cost for a particular processor.
 
 \begin{figure*}[t]
 \centering\includegraphics[width=\textwidth]{native_resources.pdf}
@@ -40,7 +40,7 @@ Table~\ref{tab:native} summarizes the measured cells. Figure~\ref{fig:native} in
 \end{figure*}
 
 \subsection{Precision and search error}
-The coefficient bound in~\eqref{eq:refinement_bound} decreases with $b$. The observed GAS output can nevertheless have a larger gap to the exact float optimum because a finite search budget need not find the exact integer optimum. Figure~\ref{fig:precision} separates this empirical search outcome from a statement about coefficient approximation. The saved float gap is the output redundancy minus the exact admissible float optimum for that instance; the quantized gap uses the exact encoded optimum.
+The coefficient bound in~\eqref{eq:refinement_bound} shrinks with $b$, but the GAS output may still be farther from the exact float optimum when a finite search budget misses the exact integer optimum. Figure~\ref{fig:precision} separates the empirical search outcome from coefficient approximation. The saved float gap is output redundancy minus the exact admissible float optimum; the quantized gap uses the exact encoded optimum.
 
 \begin{figure*}[t]
 \centering\includegraphics[width=\textwidth]{precision_gaps.pdf}
@@ -48,11 +48,11 @@ The coefficient bound in~\eqref{eq:refinement_bound} decreases with $b$. The obs
 \label{fig:precision}
 \end{figure*}
 
-Greater precision may distinguish more objective values while increasing signed arithmetic width and circuit work. It does not necessarily yield a monotone improvement in a stochastic, budget-limited output. Nor does a smaller optimization gap imply improved judged relevance: the objective still penalizes pair similarity subject to estimated-score constraints. This is why the primary paper reports retrieval metrics, exact objective controls, and resources together.
+More precision can separate objective values at the cost of wider signed arithmetic and more circuit work. A stochastic output with a fixed budget need not improve monotonically as precision increases. Nor does a smaller optimization gap imply better judged relevance: the objective still penalizes pair similarity under estimated-score constraints. We report retrieval metrics, exact objective controls, and resources together for that reason.
 
 \subsection{Validation coverage and explicit limits}
-Complete-iteration synthesis, including generic fixed-weight preparation and reflection, is limited to at most eight decision qubits. Native validation simulation is limited to at most five decisions. Six complete iterations passed phase-sensitive validation; 42 other simulation attempts were refused by the conservative memory guard. These refusals mark the limits of the simulations; they do not demonstrate successful execution of larger circuits. Separate small two-bit toy checks exercise nontrivial five-decision marking and reflection.
+Complete-iteration synthesis includes generic fixed-weight preparation and reflection for at most eight decision qubits. Native validation simulation covers at most five decisions. Six complete iterations passed phase-sensitive validation; a conservative memory guard refused 42 other simulation attempts. Those refusals are limits, not successful executions of larger circuits. Separate small two-bit toy checks exercise nontrivial five-decision marking and reflection.
 
-The native simulator uses a noiseless matrix-product-state method with zero configurable truncation threshold, maximum bond dimension 128, and a $10^{-8}$ probability tolerance. An independently constructed expected-state inverse followed by local $Z$ expectations bounds state mismatch and workspace leakage. Every circuit worker has 120-second and 2\,GiB limits. Larger native simulations, a noise sweep, hardware routing, and physical execution remain unperformed.
+Native validation uses a noiseless matrix-product-state simulator with zero configurable truncation threshold, maximum bond dimension 128, and probability tolerance $10^{-8}$. An independently constructed inverse circuit for the expected state is followed by local $Z$ expectations, which bound state mismatch and workspace leakage. Each circuit worker has 120-second and 2\,GiB limits. Larger native simulations, a noise sweep, hardware routing, and physical execution were not performed.
 
-Construction, transpilation, native validation, compact selection, allocation profiling, and complete-pipeline timing have different boundaries. Per-method allocation profiling is a separate replay excluded from selector timing, while the fresh worker's process RSS covers its complete grid. Keeping these boundaries separate prevents an allocation replay from inflating one reported time while a costly prerequisite disappears from another.
+Construction, transpilation, native validation, compact selection, allocation profiling, and full-pipeline timing cover different work. Per-method allocation profiling is a separate replay and is excluded from selector timing; the fresh worker's process RSS covers its complete grid. These boundaries prevent the replay from inflating one time while an expensive prerequisite is omitted from another.

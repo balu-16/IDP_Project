@@ -1,40 +1,40 @@
 \section{Relevance-Guided Subset Search}\label{sec:method}
 \subsection{Hybrid candidate construction}
-All subsequent hybrid candidate calculations are restricted to the dense top-64 pool. Within this pool, let $c_{\max}=\max_i c_i$ and $b_{\max}=\max_i b_i$. The reproduced hybrid score is
+The hybrid shortlist is drawn from the dense top-64 pool. Within that pool, let $c_{\max}=\max_i c_i$ and $b_{\max}=\max_i b_i$. The reproduced score is
 \begin{equation}
 h_i=(1-\beta)\frac{1+c_i}{1+c_{\max}}+\beta\frac{b_i}{b_{\max}}.
 \label{eq:hybrid}
 \end{equation}
-When lexical scores are negligible, only the dense component is used. If its denominator is negligible, the dense component becomes $(1+c_i)/2$. The numerical tolerance is $10^{-12}$. Hybrid score and then document ID determine the top-fifteen shortlist. This is score fusion over an already retrieved pool, not a quantum search over the document collection.
+When lexical scores are negligible, only the dense component is used; when its denominator is negligible, that component becomes $(1+c_i)/2$. The numerical tolerance is $10^{-12}$. Hybrid score determines the top-fifteen shortlist, with document ID breaking ties. Thus fusion operates on an already retrieved pool, rather than searching the collection quantum mechanically.
 
-Raw cross-encoder logits remain separate from hybrid scores and dense cosine. Within the original fifteen, normalized relevance is
+Hybrid scores and dense cosine do not replace the raw cross-encoder logits. For the original fifteen candidates, normalized relevance is
 \begin{equation}
 r_i=\frac{z_i-z_{\min}}{z_{\max}-z_{\min}},
 \label{eq:normalized_relevance}
 \end{equation}
-with $r_i=0.5$ when the range is negligible. Negative logits are allowed. This normalization affects the optimization coefficients, while final relevance ordering uses the original logits. Its scale is local to a shortlist; comparing a normalized value between different pools as if it were a calibrated probability would be unwarranted.
+with $r_i=0.5$ when the range is negligible. Negative logits are permitted. The normalized values supply optimization coefficients; the final relevance order uses raw logits. Since normalization is local to a shortlist, its values are not calibrated probabilities that can be compared across pools.
 
 \subsection{Base objective and integer encoding}
-For $|S|=k=8$, the base utility is
+For $|S|=k=8$, we define base utility as
 \begin{equation}
 U(S)=\frac{1}{k}\sum_{i\in S}r_i-\lambda\red(S).
 \label{eq:base_utility}
 \end{equation}
-Both terms use classical features. With $A_b=2^8-1=255$, define rounded coefficients
+Both terms depend on classical features. Using $A_b=2^8-1=255$, the rounded coefficients are
 \begin{align}
 a_i&=\operatorname{round}(A_b r_i),\\
 a_{ij}&=\operatorname{round}\!\left(\frac{2A_b\lambda}{k-1}d_{ij}\right),\\
 E_b(S)&=-\sum_{i\in S}a_i+\sum_{\{i,j\}\subset S}a_{ij}.
 \label{eq:base_energy}
 \end{align}
-The implementation uses ties-to-even rounding. Lower integer energy is preferred. The raw-L6 top eight initialize the incumbent, and selected outputs are ordered by descending raw logit with document-ID tie resolution.
+Lower integer energy is preferred, and rounding uses ties to even. The raw-L6 top eight initialize the incumbent. Selected outputs are ordered by descending raw logit, with document ID resolving ties.
 
-Without rounding, $-E_b(S)/(A_bk)$ equals~\eqref{eq:base_utility}. There are $k$ unary coefficients and $\binom{k}{2}$ pair coefficients, each rounded with error at most one half. Consequently,
+Without rounding, $-E_b(S)/(A_bk)$ equals~\eqref{eq:base_utility}. Each of the $k$ unary coefficients and $\binom{k}{2}$ pair coefficients has rounding error of at most one half. It follows that
 \begin{equation}
 \left|\frac{-E_b(S)}{A_bk}-U(S)\right|\leq\frac{k+1}{4A_b}.
 \label{eq:base_quantization}
 \end{equation}
-This is a coefficient-approximation statement for a fixed set. It does not bound the relevance model's error or the difference between utility and judged retrieval effectiveness. At $\lambda=0$, the raw-relevance incumbent already maximizes the relevance-only utility; the implementation retains it rather than using equal quantized energies to justify arbitrary changes in membership.
+This bound applies to coefficient approximation for a fixed set. It says nothing about relevance-model error or the gap between utility and judged effectiveness. At $\lambda=0$, the raw-relevance incumbent already maximizes relevance-only utility, so the implementation retains it rather than changing membership when quantized energies tie.
 
 \subsection{Protected-prefix refinement}
 Let the seed-specific base ranking be $(s_1,\ldots,s_8)$, its ordered head be $H=(s_1,\ldots,s_5)$, and its original tail be $T_0=\{s_6,s_7,s_8\}$. Construct an expanded candidate union
@@ -42,30 +42,30 @@ Let the seed-specific base ranking be $(s_1,\ldots,s_8)$, its ordered head be $H
 \pool_{\cup}=\bigcup_{\beta\in\{0,0.25,0.5\}}\operatorname{Top}_{15}(h_{\beta};\pool_{64}).
 \label{eq:union}
 \end{equation}
-The union contains the original shortlist and has at most 45 parents. Original-shortlist logits are retained exactly; additional inference scores only newly introduced candidates. This avoids redefining the baseline through an incidental change in inference batching.
+The union contains the original shortlist and at most 45 parents. We retain the original-shortlist logits and score only newly introduced candidates. This avoids changing the baseline through a different inference-batching context.
 
 The refinement searches $T\subseteq\pool_{\cup}\setminus H$ with $|T|=3$. Sort the tail logits in ascending order, denoted $z_{(1)}(T)\leq z_{(2)}(T)\leq z_{(3)}(T)$. Admissibility requires
 \begin{equation}
 z_{(j)}(T)\geq z_{(j)}(T_0)-\eps,\quad j\in\{1,2,3\},\quad\eps=10^{-12}.
 \label{eq:tail_constraint}
 \end{equation}
-The rule is a positionwise condition on sorted score values, not a requirement to retain each original tail document. Candidates below the smallest permissible score are removed before the subset basis is constructed. If $M$ candidates survive, the cardinality basis has $\binom{M}{3}$ states, some of which can still violate the remaining score conditions.
+The constraint compares sorted score values, not document identities: an original tail document may be replaced. Candidates below the smallest permissible score are removed before constructing the subset basis. If $M$ candidates remain, its cardinality basis has $\binom{M}{3}$ states, some of which may still fail the other score conditions.
 
 For fixed thresholds $\theta_j=z_{(j)}(T_0)-\eps$, condition~\eqref{eq:tail_constraint} is equivalently expressed by
 \begin{equation}
 \sum_{i\in T}\mathbf{1}\{z_i\geq\theta_j\}\geq4-j,\qquad j=1,2,3.
 \label{eq:threshold_counts}
 \end{equation}
-To see this, an ascending tail has its $j$th value at or above $\theta_j$ exactly when at least its largest $4-j$ values meet that threshold. Inclusive comparisons handle repeated logits. The count form is useful for reversible implementation, while the sorted form is convenient for interpreting admissibility.
+In an ascending tail, the $j$th value reaches $\theta_j$ exactly when at least the largest $4-j$ values reach that threshold. The inclusive comparison handles repeated logits. This count form suits reversible implementation; the sorted form makes admissibility easier to interpret.
 
 The refinement minimizes $\red(H\cup T)$. With $A_r=2^{16}-1$, its integer objective is
 \begin{equation}
 E_r(H\cup T)=\sum_{\{i,j\}\subset H\cup T}\operatorname{round}(A_r d_{ij}).
 \label{eq:refinement_energy}
 \end{equation}
-The full measure includes head--head, head--tail, and tail--tail terms. Head--head terms are constant during refinement but remain included in the reported redundancy. The oracle marks admissible states whose integer energy is strictly below the incumbent energy. A measured update is accepted only if its true, unrounded redundancy improves by more than $\eps$.
+Reported redundancy includes head--head, head--tail, and tail--tail terms, even though the head--head contribution is constant during refinement. The oracle marks admissible states whose integer energy is strictly below the incumbent's. The controller accepts a measured update only if true, unrounded redundancy improves by more than $\eps$.
 
-The output is the original ordered head followed by the selected tail sorted by raw L6 logit. This intentionally prioritizes prefix preservation over a global re-sort: an additional candidate with a high logit does not displace a protected head document. The separate global union-L6 control evaluates a different ordering rule.
+We return the original head in its existing order, followed by the selected tail sorted on raw L6 logits. A high-logit new candidate therefore cannot displace a protected head document. Global union-L6 serves as the control with a different ordering rule.
 
 \subsection{What the constraints guarantee}
 \begin{proposition}[Protected ranking metric]\label{prop:prefix}
@@ -82,7 +82,7 @@ The original tail is admissible and survives the score prefilter. Every accepted
 Each sorted original-tail score meets its own bound in~\eqref{eq:tail_constraint}, including ties within the tolerance. Its documents therefore survive the smallest-threshold prefilter and supply a cardinality-feasible initial state. The controller replaces that state only with a valid measured tail of size three disjoint from the protected head and with strictly lower true redundancy. Induction over accepted updates proves the claim. If the search ends without improvement, its feasible incumbent is still returned.
 \end{IEEEproof}
 
-These properties do not guarantee a strict reduction for every query. A trivial remaining basis, an optimal incumbent, or a failed sampled improvement may leave the original set unchanged. Nor do they guarantee recall. A relevant original-tail document can be replaced by an irrelevant document that receives a higher cross-encoder score and has lower pair similarity. Such a replacement satisfies the neural-score constraints while reducing the number of judged-relevant documents returned. Section~\ref{sec:diagnostics} shows that this failure mode is present in the saved results.
+The set can remain unchanged if the remaining basis is trivial, the incumbent is optimal, or sampling does not find an improvement. The guarantees also leave recall unprotected. An irrelevant candidate can have a higher cross-encoder score and lower pair similarity than a relevant original-tail document. Replacing the latter satisfies the neural-score constraints but reduces the number of judged-relevant outputs. This failure appears in the saved results in Section~\ref{sec:diagnostics}.
 
 For general pair precision $b$, the refinement scale is $A=2^b-1$. Rounding each of the 28 pair coefficients yields
 \begin{equation}
@@ -94,7 +94,7 @@ For exact integer minimizer $S_A$ and exact float minimizer $S_\star$ over the s
 \red(S_A)-\red(S_\star)\leq\frac{1}{A}.
 \label{eq:exact_regret}
 \end{equation}
-The distinction between the exact encoded optimum and the budgeted GAS output is indispensable. Equation~\eqref{eq:exact_regret} does not bound the latter's search error. At sixteen bits the per-set approximation bound is about $7.63\times10^{-6}$; increasing precision cannot correct a misjudged relevance score.
+The budgeted GAS output need not be the exact encoded optimum. Equation~\eqref{eq:exact_regret} therefore does not bound its search error. At sixteen bits, the per-set approximation bound is about $7.63\times10^{-6}$; greater precision cannot correct a relevance score that misjudges a document.
 
 \subsection{Ideal amplitude amplification and stopping rules}
 The base cardinality basis contains $F_b=\binom{15}{8}=6{,}435$ states. Refinement uses $F_r=\binom{M}{3}$ states. Write $|u\rangle=F^{-1/2}\sum_x|x\rangle$ for the uniform state on the corresponding cardinality basis. An oracle and reflection step are
@@ -103,9 +103,9 @@ O_\tau|x\rangle&=(-1)^{[x\text{ admissible}\,\land\,E(x)<\tau]}|x\rangle,\\
 G_\tau&=(2|u\rangle\langle u|-I)O_\tau.
 \label{eq:amplification}
 \end{align}
-The compact simulator performs the sign changes and the reflection about the mean explicitly. Measurement draws a state according to squared amplitudes. These are ideal quantum-search operations represented and executed on a classical CPU. The controller does not use a precomputed optimum or a marked-state count to choose an ideal rotation number.
+The compact simulator executes the sign changes and reflection about the mean explicitly, then draws a state according to squared amplitudes. These ideal quantum-search operations run on a classical CPU. The controller does not choose an ideal rotation number from a precomputed optimum or marked-state count.
 
-Each stage begins with its feasible incumbent and sampling window $m=1$. A trial draws an integer from zero through $\lceil m\rceil-1$, respecting the remaining phase budget, prepares the uniform state, applies the sampled number of steps, and measures. A strict accepted improvement resets the window; otherwise the window grows by a factor of 1.2, capped at $\sqrt F$. Recorded limits are 64 phase calls, 32 trials, and a cooperative 15-second time limit for each stage and seed. Base and refinement have separate budgets, so a refined request may use up to 128 phase calls.
+Each stage starts from a feasible incumbent with sampling window $m=1$. Within the remaining phase budget, a trial draws an integer from zero to $\lceil m\rceil-1$, prepares the uniform state, applies that many steps, and measures. A strict accepted improvement resets the window; otherwise it grows by 1.2 up to $\sqrt F$. For each stage and seed, the recorded limits are 64 phase calls, 32 trials, and a cooperative 15-second time limit. Base and refinement use separate budgets, so a refined request can use up to 128 phase calls.
 
 \begin{table*}[t]
 \centering\small
@@ -132,4 +132,4 @@ Each stage begins with its feasible incumbent and sampling window $m=1$. A trial
 \end{minipage}
 \end{table*}
 
-Table~\ref{tab:algorithm} exposes an important implementation cost: the compact simulator evaluates the complete basis before amplification. The controller's phase-call allowance is therefore only one accounting unit. Exact enumeration can inspect the same prepared objective array without amplitude simulation. This prevents a low logical phase count from being interpreted as evidence of lower wall-clock work for the implemented selector.
+Table~\ref{tab:algorithm} exposes a cost outside the phase-call allowance: the compact simulator evaluates every basis state before amplification. Exact enumeration can inspect that same prepared objective array without simulating amplitudes. A low logical phase count consequently does not establish lower wall-clock work for this selector.

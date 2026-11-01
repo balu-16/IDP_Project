@@ -1,35 +1,35 @@
 \section{Problem Formulation and System Boundaries}\label{sec:formulation}
 \subsection{From documents to a limited evidence budget}
-Let $q$ denote a query and $D$ a collection of parent documents. Preprocessing splits each document into one or more chunks. Dense retrieval scores a parent using its best-matching chunk, which also supplies the representative passage for relevance inference. The distinction matters because judgments apply to parent documents, whereas the model sees bounded passages. A relevant parent does not make every one of its chunks relevant.
+Let $q$ denote a query and $D$ a collection of parent documents. Preprocessing splits each parent into one or more chunks. The best-matching chunk supplies both the parent's dense-retrieval score and its representative passage for relevance inference. Judgments apply to the parent, however; a relevant document need not have relevant content in every chunk.
 
-Write $\pool_{64}(q)$ for the dense top-64 parents, $\pool_{15}(q)$ for the frozen hybrid shortlist, and $S$ for a selected set of $k=8$ distinct parents. A ranking $\pi(S)$ orders these parents for evaluation. The evidence budget constrains $|S|$ rather than the number of tokens in a generated answer. No answer generator is invoked by the reported retrieval benchmark.
+Write $\pool_{64}(q)$ for the dense top-64 parents, $\pool_{15}(q)$ for the frozen hybrid shortlist, and $S$ for a selected set of $k=8$ distinct parents. Evaluation orders the selected parents using a ranking $\pi(S)$. The evidence budget limits $|S|$, not the token count of a generated answer; the reported retrieval benchmark invokes no answer generator.
 
-For each candidate $i$, the classical feature pipeline supplies query cosine $c_i$, lexical score $b_i$, a normalized representative vector $v_i$, and cross-encoder logit $z_i$. Define
+For candidate $i$, the classical pipeline produces query cosine $c_i$, lexical score $b_i$, normalized representative vector $v_i$, and cross-encoder logit $z_i$. Let
 \begin{equation}
 d_{ij}=\min\{1,\max\{0,v_i^\top v_j\}\},\qquad i\ne j.
 \label{eq:pair_similarity}
 \end{equation}
-The set redundancy measure is
+We measure set redundancy as
 \begin{equation}
 \red(S)=\frac{1}{\binom{k}{2}}\sum_{\{i,j\}\subset S}d_{ij}.
 \label{eq:redundancy}
 \end{equation}
-This measure lies between zero and one and represents mean clipped cosine, not the percentage of duplicate documents. Negative cosine values are clipped to zero; a zero penalty does not establish that two passages are semantically independent.
+The measure ranges from zero to one. It is the mean clipped cosine, not a percentage of duplicate documents. Negative cosine is clipped to zero, so a zero penalty does not establish that passages are semantically independent.
 
-The base selector maximizes a relevance--redundancy utility. The refinement instead minimizes redundancy subject to a protected prefix and neural-score conditions. These are different optimization questions. Neither is directly an optimization of the unknown test judgments. Judgments are used only after rankings have been saved, including in the journal's retrospective diagnostics.
+The base selector maximizes a relevance--redundancy utility. Refinement poses a different problem: minimize redundancy while satisfying protected-prefix and neural-score conditions. Neither directly optimizes the unknown test judgments. We use judgments after saving rankings, including in the retrospective journal diagnostics.
 
 \subsection{Candidate opportunity and a recall ceiling}
-For a query with nonempty set $J_q$ of positively judged relevant parents and any candidate pool $C$, define judged coverage and a cardinality-aware recall ceiling as
+For a query with a nonempty set $J_q$ of positively judged relevant parents and a candidate pool $C$, we define judged coverage and a cardinality-aware recall ceiling by
 \begin{align}
 \operatorname{Cov}(C,q)&=\frac{|C\cap J_q|}{|J_q|},\\
 \operatorname{Ceil}_8(C,q)&=\frac{\min\{8,|C\cap J_q|\}}{|J_q|}.
 \label{eq:coverage_ceiling}
 \end{align}
-Every eight-document output drawn from $C$ has Recall@8 no greater than $\operatorname{Ceil}_8(C,q)$. This follows by counting: the output can contain neither more than eight relevant documents nor more relevant documents than the pool contains. Equality is attainable for this diagnostic objective by selecting as many judged-relevant pool members as the budget permits. It is not a claim that a real system can identify them without judgments.
+An eight-document output drawn from $C$ cannot have Recall@8 above $\operatorname{Ceil}_8(C,q)$. It cannot contain more than eight relevant documents or more relevant documents than the pool contains. The diagnostic equality is attainable by selecting as many judged-relevant pool members as the budget permits, but a practical system is not assumed to identify them without judgments.
 
-When one pool contains another, both diagnostic quantities are nondecreasing. Candidate expansion can therefore increase the opportunity for judged recall, but it need not increase the recall of a particular selector. Conversely, no optimizer operating only on a fixed pool can recover a relevant parent absent from that pool. This separates three effects that aggregate effectiveness often conflates: corpus-to-pool loss, pool-to-selected-set loss, and ordering within the selected set.
+Both quantities are nondecreasing when one pool contains another. Expansion can create more opportunity for judged recall without improving a particular selector's output. An optimizer confined to a pool cannot recover a relevant parent absent from it. This separates losses between corpus and pool from losses between pool and selected set, and from ordering within that set.
 
-The diagnostic applies to observed judgments. Incompletely judged collections may contain useful unjudged documents, so the resulting ceiling bounds the official judged metric rather than every possible definition of relevance. It also ignores the refinement's prefix and score constraints. An expanded-pool ceiling is thus an optimistic relaxation of the constrained task. The search algorithm alone cannot account for a gap to this ceiling.
+The ceilings use observed judgments; a useful document may be unjudged. They bound the official judged metric, not every possible notion of relevance. The expanded-pool ceiling also relaxes the refinement's prefix and score constraints, making it optimistic for the constrained task. A gap to that ceiling cannot be assigned to the search algorithm alone.
 
 \begin{figure*}[t]
 \centering\includegraphics[width=\textwidth]{architecture.pdf}
@@ -38,6 +38,6 @@ The diagnostic applies to observed judgments. Incompletely judged collections ma
 \end{figure*}
 
 \subsection{Implementation and measurement boundaries}
-Figure~\ref{fig:architecture} distinguishes retrieval, neural relevance inference, base selection, and optional refinement. The application code also supports document ingestion and question-answering interfaces. Their existence does not imply that interface quality, optical character recognition accuracy, or live generated answers were evaluated by these experiments. The measured research pipeline uses public parent-document judgments and frozen passage construction.
+Figure~\ref{fig:architecture} separates retrieval, neural relevance inference, base selection, and optional refinement. The application also provides document-ingestion and question-answering interfaces, but the experiments do not measure interface quality, optical character recognition accuracy, or live generated answers. The research pipeline uses public parent-document judgments and frozen passage construction.
 
-The study uses two simulation models. The main selector stores amplitudes for subsets of the required size and constructs their objective values classically. The native study builds reversible circuits with explicit decision and workspace registers. It supplies bounded synthesis and validation evidence; the main selector supplies the retrieval rankings. Neither model includes device routing, noisy execution, or a measured quantum processor.
+The main selector supplies the retrieval rankings using amplitudes for subsets of the required size and classically constructed objective values. The native study constructs reversible circuits with explicit decision and workspace registers for bounded synthesis and validation. Neither model includes device routing, noisy execution, or measurements on a quantum processor.

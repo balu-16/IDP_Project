@@ -15,26 +15,40 @@
     "plan.md"
   ],
   "outside_journal_metadata_changes": [
-    "plan.md",
-    "manuscript_support/latex_source.zip",
-    "docker-compose.yml",
-    "manuscript_support/records/standalone_check.json",
+    "manuscript_support/records/publication_checks.json",
     "manuscript_support/records/bibliography_sources.json",
-    "manuscript_support/README.md",
-    "new_paper/README.md",
+    "plan.md",
     "manuscript_support/reviewer_response.md",
-    "new_paper/main.pdf",
-    "manuscript_support/records/provenance.json",
     "new_paper/main.tex",
+    "docker-compose.yml",
+    "manuscript_support/records/provenance.json",
+    "manuscript_support/README.md",
     "manuscript_support/records/visual_inspection.json",
-    "manuscript_support/build_manuscript.py",
-    "manuscript_support/records/publication_checks.json"
+    "manuscript_support/latex_source.zip",
+    "new_paper/README.md",
+    "manuscript_support/records/standalone_check.json",
+    "new_paper/main.pdf",
+    "manuscript_support/build_manuscript.py"
   ],
   "outside_journal_added_files": [
-    "17. Financial Assistance Policy of SRM University - AP to UG and PG Students for Attending Conferences, Workshops and Competitions.pdf",
+    "main (2) (1).pdf",
+    "main (3).pdf",
     "manuscript_support/records/reference_update_checks.json",
     "manuscript_support/records/requested_references.json",
-    "new_paper/Pasted Image.png"
+    "new_paper/Pasted Image.png",
+    "sample_urop.docx",
+    "urop_report/QubitChat_UROP_LaTeX.zip",
+    "urop_report/QubitChat_UROP_Report.docx",
+    "urop_report/QubitChat_UROP_Report.pdf",
+    "urop_report/QubitChat_UROP_Report.tex",
+    "urop_report/README.md",
+    "urop_report/__pycache__/build_report.cpython-311.pyc",
+    "urop_report/build_report.py",
+    "urop_report/cost_decomposition.pdf",
+    "urop_report/cost_decomposition.png",
+    "urop_report/observed_tradeoffs.pdf",
+    "urop_report/observed_tradeoffs.png",
+    "urop_report/srm_emblem.png"
   ],
   "outside_journal_removed_files": [
     "backend/.pytest_cache/.gitignore",
@@ -982,13 +996,32 @@
     "manuscript_support/records/publication_checks.json",
     "manuscript_support/records/visual_inspection.json",
     "manuscript_support/records/standalone_check.json",
-    "17. Financial Assistance Policy of SRM University - AP to UG and PG Students for Attending Conferences, Workshops and Competitions.pdf",
     "new_paper/README.md",
     "manuscript_support/records/bibliography_sources.json",
     "manuscript_support/records/requested_references.json",
     "manuscript_support/records/reference_update_checks.json",
     "new_paper/Pasted Image.png"
   ],
+  "recognized_preexisting_additions": {
+    "main (2) (1).pdf": "63b23da92f51d07b60e9fc3b8c805ac55aca03be0e8ccb6b21070c285ad7237a",
+    "main (3).pdf": "8543aeb9b54f13874f2c67a6c0122a8df803b79536cf6fbcea70c42990c62c87",
+    "manuscript_support/records/reference_update_checks.json": "b19c4d4c1c516766c82a12298b561e404022685b48ca441cbf2ea59317f5621a",
+    "manuscript_support/records/requested_references.json": "15a077d24be07f4b664707c07cd2da387abb688268192ba1294e8c420e796cfc",
+    "new_paper/Pasted Image.png": "cce1e825289224b6934ad86a801f4acf1baa4d1add25a6ad1947b75e223dcc3a",
+    "sample_urop.docx": "c4971151ca0cb3893697c02dad23e3375111ca81d9f9b721a7c055c7c416430c",
+    "urop_report/QubitChat_UROP_LaTeX.zip": "f83567734bd5ab55f27f28e7e01d6f12506d0dac875ba1d93c779553c5edfc9b",
+    "urop_report/QubitChat_UROP_Report.docx": "c2ded4388b10522086f823ad529971ef8322945dfb6e8ead8a1935ab5080e228",
+    "urop_report/QubitChat_UROP_Report.pdf": "83c35e84a2de00ea8644eaea98a489387932990cac7f149d113c8dd55144d4e4",
+    "urop_report/QubitChat_UROP_Report.tex": "8f114a0999ff23d6736eaeba23fbb2030f610b59d1b04ce635054aa6398b3fdb",
+    "urop_report/README.md": "b34b2694e355e91fafeacf8e6d42cab6067702d744b2c5a54392cd44173eb89c",
+    "urop_report/__pycache__/build_report.cpython-311.pyc": "dd71c50739c241256fdc801fb04c2a5456f56d429f3e0ad5f25a013d21dc3a31",
+    "urop_report/build_report.py": "a04d0d9650d88ca789666f81b9978f36c695f61d72bb6378e65678f41f15177f",
+    "urop_report/cost_decomposition.pdf": "e780d5321b6003efb1a0303eee6ff4b444e90bbc628dfa0e6279a03c80ff18d9",
+    "urop_report/cost_decomposition.png": "f0989562105c4d400313e0b473331e8a8dc9396c2f358319f563c68958f65218",
+    "urop_report/observed_tradeoffs.pdf": "d24d67c06ea219ff54b230c46ef25402360393262a04af23393ed5f1642d5772",
+    "urop_report/observed_tradeoffs.png": "6746e950b42d380d0547d2eb561e8d2028febd9595bb64bcbe7ff4434005cfd0",
+    "urop_report/srm_emblem.png": "6ce75d36b98b49eb1416df026812f52ba6166cd8832ec9e971a9666313dc2a73"
+  },
   "recognized_workspace_cleanup_removals": [
     "backend/.pytest_cache/.gitignore",
     "backend/.pytest_cache/CACHEDIR.TAG",
@@ -1930,6 +1963,7 @@
     "tracked_hash_changes": [],
     "outside_journal_metadata_changes": [],
     "outside_journal_added_files": [],
-    "outside_journal_removed_files": []
+    "outside_journal_removed_files": [],
+    "preexisting_additions_changed": []
   }
 }

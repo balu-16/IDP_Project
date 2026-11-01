@@ -1,5 +1,5 @@
 {
-  "started_at_utc": "2026-10-29T17:41:58.692887+00:00",
+  "started_at_utc": "2026-11-01T06:38:01.601615+00:00",
   "status": "complete",
   "size_convention": "Logical file sizes; hard-linked compiler files may be counted repeatedly.",
   "targets": [
@@ -11,7 +11,7 @@
   "removed_files": [
     {
       "path": "build/main.aux",
-      "bytes": 26944
+      "bytes": 26941
     },
     {
       "path": "build/main.bbl",
@@ -23,11 +23,11 @@
     },
     {
       "path": "build/main.log",
-      "bytes": 39319
+      "bytes": 39112
     },
     {
       "path": "build/main.pdf",
-      "bytes": 602121
+      "bytes": 596630
     },
     {
       "path": "build/main_bibtex.txt",
@@ -35,135 +35,91 @@
     },
     {
       "path": "build/main_pass1.txt",
-      "bytes": 13077
+      "bytes": 13072
     },
     {
       "path": "build/main_pass2.txt",
-      "bytes": 13077
+      "bytes": 13072
     },
     {
       "path": "build/main_pass3.txt",
-      "bytes": 13077
+      "bytes": 13072
     },
     {
       "path": "build/pages/page_01.png",
-      "bytes": 223894
+      "bytes": 224168
     },
     {
       "path": "build/pages/page_02.png",
-      "bytes": 302146
+      "bytes": 301548
     },
     {
       "path": "build/pages/page_03.png",
-      "bytes": 266334
+      "bytes": 250880
     },
     {
       "path": "build/pages/page_04.png",
-      "bytes": 262236
+      "bytes": 252202
     },
     {
       "path": "build/pages/page_05.png",
-      "bytes": 181849
+      "bytes": 202786
     },
     {
       "path": "build/pages/page_06.png",
-      "bytes": 266721
+      "bytes": 286279
     },
     {
       "path": "build/pages/page_07.png",
-      "bytes": 263107
+      "bytes": 248964
     },
     {
       "path": "build/pages/page_08.png",
-      "bytes": 282962
+      "bytes": 277125
     },
     {
       "path": "build/pages/page_09.png",
-      "bytes": 277797
+      "bytes": 216561
     },
     {
       "path": "build/pages/page_10.png",
-      "bytes": 222382
+      "bytes": 200953
     },
     {
       "path": "build/pages/page_11.png",
-      "bytes": 188249
+      "bytes": 171535
     },
     {
       "path": "build/pages/page_12.png",
-      "bytes": 175309
+      "bytes": 203930
     },
     {
       "path": "build/pages/page_13.png",
-      "bytes": 197416
+      "bytes": 202680
     },
     {
       "path": "build/pages/page_14.png",
-      "bytes": 209010
+      "bytes": 301003
     },
     {
       "path": "build/pages/page_15.png",
-      "bytes": 293926
+      "bytes": 176001
     },
     {
       "path": "build/pages/page_16.png",
-      "bytes": 177358
+      "bytes": 277258
     },
     {
       "path": "build/pages/page_17.png",
-      "bytes": 294997
+      "bytes": 309696
     },
     {
       "path": "build/pages/page_18.png",
-      "bytes": 313113
+      "bytes": 290890
     },
     {
       "path": "build/pages/page_19.png",
-      "bytes": 291777
-    },
-    {
-      "path": "build/pages/page_20.png",
-      "bytes": 52983
-    },
-    {
-      "path": "build/pages/sheet_01.png",
-      "bytes": 664954
-    },
-    {
-      "path": "build/pages/sheet_02.png",
-      "bytes": 693441
-    },
-    {
-      "path": "build/pages/sheet_03.png",
-      "bytes": 632205
-    },
-    {
-      "path": "build/pages/sheet_04.png",
-      "bytes": 660455
-    },
-    {
-      "path": "build/pages/sheet_05.png",
-      "bytes": 692799
-    },
-    {
-      "path": "build/pages/sheet_06.png",
-      "bytes": 470478
-    },
-    {
-      "path": "build/pages/sheet_07.png",
-      "bytes": 502034
-    },
-    {
-      "path": "build/pages/sheet_08.png",
-      "bytes": 650179
-    },
-    {
-      "path": "build/pages/sheet_09.png",
-      "bytes": 798937
-    },
-    {
-      "path": "build/pages/sheet_10.png",
-      "bytes": 542107
+      "bytes": 42895
     },
     {
       "path": "build/pdf_fonts.txt",
@@ -175,7 +131,7 @@
     },
     {
       "path": "build/pdf_text.txt",
-      "bytes": 144245
+      "bytes": 135067
     },
     {
       "path": "build/standalone/IEEEtran.bst",
@@ -279,7 +235,7 @@
     },
     {
       "path": "build/standalone/main.tex",
-      "bytes": 4436
+      "bytes": 4318
     },
     {
       "path": "build/standalone/notaglinelogo.png",
@@ -287,7 +243,7 @@
     },
     {
       "path": "build/standalone/output/main.aux",
-      "bytes": 26944
+      "bytes": 26941
     },
     {
       "path": "build/standalone/output/main.bbl",
@@ -299,11 +255,11 @@
     },
     {
       "path": "build/standalone/output/main.log",
-      "bytes": 41714
+      "bytes": 41507
     },
     {
       "path": "build/standalone/output/main.pdf",
-      "bytes": 602670
+      "bytes": 597184
     },
     {
       "path": "build/standalone/references.bib",
@@ -311,7 +267,7 @@
     },
     {
       "path": "build/standalone/sections/appendix.tex",
-      "bytes": 3812
+      "bytes": 3623
     },
     {
       "path": "build/standalone/sections/biographies.tex",
@@ -319,39 +275,39 @@
     },
     {
       "path": "build/standalone/sections/diagnostics.tex",
-      "bytes": 10770
+      "bytes": 9486
     },
     {
       "path": "build/standalone/sections/discussion.tex",
-      "bytes": 8402
+      "bytes": 7440
     },
     {
       "path": "build/standalone/sections/formulation.tex",
-      "bytes": 5187
+      "bytes": 4624
     },
     {
       "path": "build/standalone/sections/introduction.tex",
-      "bytes": 5480
+      "bytes": 4635
     },
     {
       "path": "build/standalone/sections/method.tex",
-      "bytes": 11548
+      "bytes": 10982
     },
     {
       "path": "build/standalone/sections/protocol.tex",
-      "bytes": 8699
+      "bytes": 8116
     },
     {
       "path": "build/standalone/sections/related_work.tex",
-      "bytes": 8647
+      "bytes": 8043
     },
     {
       "path": "build/standalone/sections/resources.tex",
-      "bytes": 7998
+      "bytes": 7599
     },
     {
       "path": "build/standalone/sections/results.tex",
-      "bytes": 8491
+      "bytes": 7675
     },
     {
       "path": "build/standalone/spotcolor.sty",
@@ -527,23 +483,19 @@
     },
     {
       "path": "build/standalone_pass1.txt",
-      "bytes": 15714
+      "bytes": 15709
     },
     {
       "path": "build/standalone_pass2.txt",
-      "bytes": 15714
+      "bytes": 15709
     },
     {
       "path": "build/standalone_pass3.txt",
-      "bytes": 15714
+      "bytes": 15709
     },
     {
       "path": "build/standalone_pdf_text.txt",
-      "bytes": 144245
-    },
-    {
-      "path": "build/tex_bootstrap.log",
-      "bytes": 81
+      "bytes": 135067
     },
     {
       "path": "build/tex_manager_update.log",
@@ -26407,7 +26359,7 @@
     },
     {
       "path": "tools/.TinyTeX/tlpkg/texlive.tlpdb.main.88c882d7573a1c21b56f8665a283d29e",
-      "bytes": 20919586
+      "bytes": 20932326
     },
     {
       "path": "tools/.TinyTeX/tlpkg/tlpobj/00texlive.installation.tlpobj",
@@ -26914,7 +26866,7 @@
       "bytes": 4685
     }
   ],
-  "retained_pdf_sha256": "f4eee34e13d3d27516503ed350fa23e1f46e6eb9a2adfdf103705ab455a4ad41",
-  "retained_source_archive_sha256": "4126803d81fa38d36bd11bd4367a1f4f82feb6669b2c9b82ab11d1f227406d97",
-  "completed_at_utc": "2026-10-29T17:41:58.781940+00:00"
+  "retained_pdf_sha256": "b595ead476c4552570ae43c1ba44bc4b9c1bc209e9fdba308b2dd8a2b8d708b2",
+  "retained_source_archive_sha256": "8b92cf3d377e191abca233d4ca61e1fbb6ada93893a765f14363f04ce9851197",
+  "completed_at_utc": "2026-11-01T06:38:01.688053+00:00"
 }

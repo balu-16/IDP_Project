@@ -1,0 +1,105 @@
+{
+  "baseline_commit": "1f8e65ae3547682e2cddda8ec2dc7e9ae664b8c2",
+  "original_pdf_sha256": "f4eee34e13d3d27516503ed350fa23e1f46e6eb9a2adfdf103705ab455a4ad41",
+  "revised_pdf_sha256": "c361cf6f60ee5a0fb7b981544cd5bdaecbe6a1e0db5c55057bfab590501f81ef",
+  "checks": "Exact ordered comparisons of citation/reference/label commands, protected environments, and inline math; per-file LaTeX-macro and numeric-literal counts; unchanged main document outside abstract; byte comparisons of bibliography, template, tables and figures.",
+  "sentence_method": "Approximate share of original editable sentences without an exact normalized match after revision; protected environments are excluded. This is not a similarity or AI-detection score.",
+  "counts": {
+    "commands": 140,
+    "protected_environments": 46,
+    "inline_math": 119,
+    "equation_environments": 17,
+    "align_environments": 5,
+    "table_environments": 13,
+    "figure_environments": 7,
+    "proposition_environments": 2,
+    "IEEEproof_environments": 2,
+    "includes_files": 12,
+    "figures_files": 7,
+    "template/assets_files": 47
+  },
+  "section_changes": {
+    "Abstract": {
+      "original_sentences": 12,
+      "unchanged_exact_sentences": 0,
+      "estimated_percent_changed": 100
+    },
+    "Detailed Quantization and Constraint Reasoning": {
+      "original_sentences": 14,
+      "unchanged_exact_sentences": 2,
+      "estimated_percent_changed": 86
+    },
+    "Native Validation Bound and Reporting Conventions": {
+      "original_sentences": 14,
+      "unchanged_exact_sentences": 1,
+      "estimated_percent_changed": 93
+    },
+    "Journal Extension: Coverage, Failure, and Cost Diagnostics": {
+      "original_sentences": 70,
+      "unchanged_exact_sentences": 4,
+      "estimated_percent_changed": 94
+    },
+    "Discussion, Limitations, and Reproducibility": {
+      "original_sentences": 57,
+      "unchanged_exact_sentences": 1,
+      "estimated_percent_changed": 98
+    },
+    "Conclusion": {
+      "original_sentences": 9,
+      "unchanged_exact_sentences": 0,
+      "estimated_percent_changed": 100
+    },
+    "Problem Formulation and System Boundaries": {
+      "original_sentences": 39,
+      "unchanged_exact_sentences": 2,
+      "estimated_percent_changed": 95
+    },
+    "Introduction": {
+      "original_sentences": 43,
+      "unchanged_exact_sentences": 0,
+      "estimated_percent_changed": 100
+    },
+    "Relevance-Guided Subset Search": {
+      "original_sentences": 67,
+      "unchanged_exact_sentences": 10,
+      "estimated_percent_changed": 85
+    },
+    "Data and Experimental Protocol": {
+      "original_sentences": 74,
+      "unchanged_exact_sentences": 2,
+      "estimated_percent_changed": 97
+    },
+    "Related Work": {
+      "original_sentences": 48,
+      "unchanged_exact_sentences": 0,
+      "estimated_percent_changed": 100
+    },
+    "Recorded Resource Study and Precision Sensitivity": {
+      "original_sentences": 53,
+      "unchanged_exact_sentences": 3,
+      "estimated_percent_changed": 94
+    },
+    "Recorded Retrieval Results": {
+      "original_sentences": 53,
+      "unchanged_exact_sentences": 0,
+      "estimated_percent_changed": 100
+    }
+  },
+  "conference_prose_overlap": {
+    "source": "new_paper/main.tex at baseline commit",
+    "source_sha256": "d4678950fbf6bb75345eaf84e2322b56b69fcf7859469501d496ed42c1460bb9",
+    "phrase_words": 10,
+    "method": "Approximate LaTeX prose tokens after removing protected environments, inline math, citations and commands; not a publisher similarity or AI-writing score.",
+    "original": {
+      "tokens": 8628,
+      "tokens_in_shared_phrases": 118,
+      "percent": 1.37
+    },
+    "revised": {
+      "tokens": 8048,
+      "tokens_in_shared_phrases": 95,
+      "percent": 1.18
+    }
+  },
+  "issues": []
+}
